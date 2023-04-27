@@ -23,7 +23,7 @@ const StatusProvider: React.FunctionComponent<any> = (props) => {
         setMessageType(type);
       },
     }),
-    []
+    [message,messageType]
   );
   return (
     <StatusContext.Provider value={statusContext}>
