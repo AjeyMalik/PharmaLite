@@ -1,5 +1,5 @@
 import React from "react";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { FormControl, Typography, MenuItem, Select } from "@mui/material";
 
 function AppSelectInput({
   name,
@@ -27,7 +27,7 @@ function AppSelectInput({
 }) {
   return (
     <FormControl fullWidth margin="normal">
-      <InputLabel>{label}</InputLabel>
+      <Typography variant="caption">{label}</Typography>
       <Select
         variant="standard"
         size="small"

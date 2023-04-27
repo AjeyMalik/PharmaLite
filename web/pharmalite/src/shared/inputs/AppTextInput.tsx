@@ -28,22 +28,22 @@ function AppTextInput({
   onChange: any;
   onBlur: any;
   value: any;
-  rows: any;
+  rows?: any;
   placeholder?: string;
   className?: string;
   label?: string;
   error?: boolean;
-  icon: any;
+  icon?: any;
   multiline?: boolean;
   errorText?: string;
   helperText?: string;
-  endIcon: any;
-  mBottom: any;
+  endIcon?: any;
+  mBottom?: any;
   disabled?: boolean;
 }) {
   return (
     <FormControl fullWidth margin="normal">
-      {label && <Typography>{label}</Typography>}
+      {label && <Typography variant="caption">{label}</Typography>}
       <TextField
         variant="standard"
         size="small"

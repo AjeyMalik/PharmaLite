@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import * as React from "react";
 import { isTokenExpired, setToken } from "index/services/util/UtilService";
 import { getCompanyName, loginToApp } from "index/services/auth/AuthService";
+import AppTextInput from "index/shared/inputs/AppTextInput";
 
 interface LoginComponentProps {}
 
@@ -29,7 +30,7 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
   const getCompany = async () => {
     await getCompanyName().then(
       function (successResponse) {
-        if(successResponse){
+        if (successResponse) {
           setCompanyName(successResponse);
         }
       },
@@ -89,65 +90,50 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
                   isSubmitting,
                 }) => (
                   <form onSubmit={handleSubmit}>
-                    <FormControl margin="normal" required fullWidth>
-                      <TextField
-                        variant="standard"
-                        size="small"
-                        id="UserID"
-                        name="UserID"
-                        label="User ID*"
-                        autoComplete="UserID"
-                        autoFocus
-                        onChange={handleChange}
-                        error={errors.UserID && touched.UserID ? true : false}
-                        helperText={
-                          errors.UserID && touched.UserID && errors.UserID
-                        }
-                        onBlur={handleBlur}
-                        value={values.UserID}
-                      />
-                    </FormControl>
-                    <FormControl margin="normal" required fullWidth>
-                      <TextField
-                        variant="standard"
-                        size="small"
-                        name="Password"
-                        type="password"
-                        label="Password*"
-                        autoComplete="current-password"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={
-                          errors.Password && touched.Password ? true : false
-                        }
-                        helperText={
-                          errors.Password && touched.Password && errors.Password
-                        }
-                        value={values.Password}
-                      />
-                    </FormControl>
-                    <FormControl margin="normal" required fullWidth>
-                      <TextField
-                        variant="standard"
-                        disabled
-                        size="small"
-                        name="CompanyName"
-                        label="Company*"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={
-                          errors.CompanyName && touched.CompanyName
-                            ? true
-                            : false
-                        }
-                        helperText={
-                          errors.CompanyName &&
-                          touched.CompanyName &&
-                          errors.CompanyName
-                        }
-                        value={companyName}
-                      />
-                    </FormControl>
+                    <AppTextInput
+                      name="UserID"
+                      label="User ID*"
+                      onChange={handleChange}
+                      placeholder=" "
+                      onBlur={handleBlur}
+                      value={values.UserID}
+                      error={errors.UserID && touched.UserID ? true : false}
+                      errorText={
+                        errors.UserID && touched.UserID ? errors.UserID : ""
+                      }
+                    />
+                    <AppTextInput
+                      name="Password"
+                      label="Password*"
+                      onChange={handleChange}
+                      type="password"
+                      placeholder=" "
+                      onBlur={handleBlur}
+                      value={values.Password}
+                      error={errors.Password && touched.Password ? true : false}
+                      errorText={
+                        errors.Password && touched.Password
+                          ? errors.Password
+                          : ""
+                      }
+                    />
+                    <AppTextInput
+                      name="CompanyName"
+                      label="Company*"
+                      onChange={handleChange}
+                      disabled={true}
+                      placeholder=" "
+                      onBlur={handleBlur}
+                      value={values.CompanyName}
+                      error={
+                        errors.CompanyName && touched.CompanyName ? true : false
+                      }
+                      errorText={
+                        errors.CompanyName && touched.CompanyName
+                          ? errors.CompanyName
+                          : ""
+                      }
+                    />
                     <br />
                     <br />
                     <Grid justifyContent={"center"} container>
