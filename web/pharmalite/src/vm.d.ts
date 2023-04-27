@@ -17,3 +17,9 @@ export interface IMenuGroup {
   MenuGroup: string;
   MenuItems: IMenuItem[];
 }
+
+export interface IStatusContextType {
+  message:string;
+  type: string;
+  updateStatus: Function;
+}

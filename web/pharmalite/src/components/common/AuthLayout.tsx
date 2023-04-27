@@ -7,6 +7,8 @@ import Header from "./Header";
 import { isTokenExpired } from "index/services/util/UtilService";
 import { ThemeProvider } from "@mui/material";
 import { THEME } from "index/utils/Styles";
+import StatusProvider from "./StatusProvider";
+import Footer from "./Footer";
 
 export default function AuthLayout({
   children,
@@ -25,11 +27,14 @@ export default function AuthLayout({
   return (
     <React.Fragment>
       <ThemeProvider theme={THEME}>
-        <CssBaseline />
-        <Header />
-        <main style={{ height: "calc(100vh - 64px)", padding: "16px" }}>
-          {children}
-        </main>
+        <StatusProvider>
+          <CssBaseline />
+          <Header />
+          <main style={{ height: "calc(100vh - 96px)", padding: "16px" }}>
+            {children}
+          </main>
+          <Footer />
+        </StatusProvider>
       </ThemeProvider>
     </React.Fragment>
   );

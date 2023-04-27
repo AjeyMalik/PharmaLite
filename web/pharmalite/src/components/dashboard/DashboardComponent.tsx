@@ -1,5 +1,6 @@
 import { Card, CardContent, Grid, Typography } from "@mui/material";
 import * as React from "react";
+// import { StatusContext } from "../common/StatusProvider";
 
 const DASHBOARD_ITEMS = [
   { name: "Modeling", key: "Modeling" },
@@ -15,6 +16,9 @@ interface DashboardComponentProps {}
 const DashboardComponent: React.FunctionComponent<
   DashboardComponentProps
 > = () => {
+  //to use status bar
+  // const { updateStatus } = React.useContext(StatusContext);
+
   const onCardClick = (item: string) => {
     localStorage.setItem("selectedMenuGroup", item);
   };
