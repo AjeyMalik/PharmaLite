@@ -10,6 +10,10 @@ import {
   Drawer,
   Divider,
   Box,
+  List,
+  ListItem,
+  ListItemButton,
+  Collapse,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
@@ -18,14 +22,17 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import HomeIcon from "@mui/icons-material/Home";
 import { useState, useEffect } from "react";
-import {
-  getToken,
-  removeToken,
-  setToken,
-} from "index/services/util/UtilService";
+import { isTokenExpired, removeToken } from "index/services/util/UtilService";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
 import { DrawerWidth } from "index/Constant";
+import {
+  getMenuGroupsFromApi,
+  getModelingMenuFromApi,
+} from "index/services/header/HeaderService";
+import { IMenuGroup } from "index/vm";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 
 interface HeaderProps {}
 
@@ -35,22 +42,57 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const router = useRouter();
   const theme = useTheme();
+  const [selectedMenuGroup, setSelectedMenuGroup] = useState("");
+  const [selectedMenu, setSelectedMenu] = useState("");
+  const [menuGroups, setMenuGroups] = useState<IMenuGroup[]>([]);
+  const [modelingMenu, setModelingMenu] = useState([]);
 
   useEffect(() => {
-    let token = getToken();
-    if (token) {
+    let hasTokenExpired = isTokenExpired();
+    let selectedMenuGroupFromLocal = localStorage.getItem("selectedMenuGroup");
+    let setSelectedMenuFromLocal = localStorage.getItem("selectedMenu");
+    if (!hasTokenExpired) {
       setIsLoggedIn(true);
+      setSelectedMenuGroup(selectedMenuGroupFromLocal || "");
+      setSelectedMenu(setSelectedMenuFromLocal || "");
+      getMenuGroups();
     }
   }, []);
 
-  const login = () => {
-    setToken("token");
-    router.push("/");
-    setIsLoggedIn(true);
+  const getMenuGroups = async () => {
+    await getMenuGroupsFromApi().then(
+      function (successResponse) {
+        if (successResponse && successResponse.Success) {
+          let menuGroups =
+            (successResponse?.Data && successResponse.Data) || [];
+          setMenuGroups(menuGroups);
+          getModelingMenu();
+        }
+      },
+      function (errorResponse) {
+        console.error(errorResponse);
+      }
+    );
   };
+
+  const getModelingMenu = async () => {
+    await getModelingMenuFromApi().then(
+      function (successResponse) {
+        if (successResponse && successResponse.Success) {
+          setModelingMenu(
+            (successResponse?.Data && successResponse.Data) || []
+          );
+        }
+      },
+      function (errorResponse) {
+        console.error(errorResponse);
+      }
+    );
+  };
+
   const logout = () => {
     removeToken();
-    router.push("/login");
+    router.push("/");
     setIsLoggedIn(false);
   };
 
@@ -74,11 +116,26 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
     router.push(path || "");
   };
 
+  const toggleMenuGroup = (item: IMenuGroup) => {
+    if (item.MenuGroup === selectedMenuGroup) {
+      setSelectedMenuGroup("");
+    } else {
+      setSelectedMenuGroup(item.MenuGroup);
+    }
+  };
+
+  const onMenuItemClicked = (group: IMenuGroup, item: string, path: string) => {
+    setSelectedMenuGroup(group.MenuGroup);
+    setSelectedMenu(item);
+    localStorage.setItem("selectedMenuGroup", group.MenuGroup);
+    localStorage.setItem("selectedMenu", item);
+  };
+
   return (
     <React.Fragment>
       <AppBar position="static" color="primary" className="gradiantHeader">
         <Container maxWidth={false}>
-          <Toolbar disableGutters variant="dense">
+          <Toolbar disableGutters variant="regular">
             {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
             <React.Fragment>
               {isLoggedIn && (
@@ -119,6 +176,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
                   onClick={handleMenu}
                   color="inherit"
                 >
+                  <Typography mr={1}>Super Admin</Typography>
                   <AccountCircle />
                 </IconButton>
                 <Menu
@@ -136,9 +194,6 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleClose}>
-                    <Typography>Super Admin</Typography>
-                  </MenuItem>
                   <MenuItem onClick={logout}>
                     <Typography>Logout</Typography>
                   </MenuItem>
@@ -168,7 +223,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
           sx={{
             display: "flex",
             alignItems: "center",
-            minHeight: 48,
+            minHeight: 64,
             padding: theme.spacing(0, 1),
             justifyContent: "flex-end",
           }}
@@ -182,18 +237,103 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
           </IconButton>
         </Box>
         <Divider />
-        {/* <List component="nav" dense={true}>
-          {SideMenuItems.map((item, index) => (
-            <ListItem key={index} disablePadding>
-              <ListItemButton disabled={item.isDisabled}>
-                <ListItemText
-                  primary={item?.name}
-                  onClick={() => goto(item?.path)}
-                />
+        <List component="nav" dense={true}>
+          {menuGroups.map((groupItem, groupIndex) => (
+            <ListItem
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                justifyContent: "space-between",
+              }}
+              key={groupIndex}
+              disablePadding
+            >
+              <ListItemButton
+                onClick={() => {
+                  toggleMenuGroup(groupItem);
+                }}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "100%",
+                }}
+              >
+                <Typography variant="subtitle2" fontWeight={600}>
+                  {groupItem?.MenuGroup || ""}
+                </Typography>
+                {groupItem.MenuGroup === selectedMenuGroup ? (
+                  <ExpandLess />
+                ) : (
+                  <ExpandMore />
+                )}
               </ListItemButton>
+              <Collapse
+                in={groupItem.MenuGroup === selectedMenuGroup}
+                timeout="auto"
+                unmountOnExit
+              >
+                {groupItem.MenuGroup === "Modeling" ? (
+                  <List component="div" disablePadding>
+                    {modelingMenu.length > 0 &&
+                      modelingMenu.map((menuItem, menuIndex) => (
+                        <ListItemButton
+                          key={menuIndex}
+                          sx={{ pl: 4 }}
+                          selected={
+                            menuItem &&
+                            menuItem[1] &&
+                            menuItem[1] === selectedMenu
+                              ? true
+                              : false
+                          }
+                          onClick={() => {
+                            onMenuItemClicked(
+                              groupItem,
+                              menuItem[1],
+                              menuItem[0]
+                            );
+                          }}
+                        >
+                          <Typography variant="subtitle2">
+                            {menuItem[1] || ""}
+                          </Typography>
+                        </ListItemButton>
+                      ))}
+                  </List>
+                ) : (
+                  <List component="div" disablePadding>
+                    {groupItem.MenuItems.length > 0 &&
+                      groupItem.MenuItems.map((menuItem, menuIndex) => (
+                        <ListItemButton
+                          key={menuIndex}
+                          sx={{ pl: 4 }}
+                          selected={
+                            menuItem &&
+                            menuItem?.Name &&
+                            menuItem?.Name === selectedMenu
+                              ? true
+                              : false
+                          }
+                          onClick={() => {
+                            onMenuItemClicked(
+                              groupItem,
+                              menuItem.Name,
+                              menuItem.URL
+                            );
+                          }}
+                        >
+                          <Typography variant="subtitle2">
+                            {menuItem?.Name || ""}
+                          </Typography>
+                        </ListItemButton>
+                      ))}
+                  </List>
+                )}
+              </Collapse>
             </ListItem>
           ))}
-        </List> */}
+        </List>
       </Drawer>
     </React.Fragment>
   );

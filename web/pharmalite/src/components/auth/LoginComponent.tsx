@@ -22,10 +22,6 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
   const [companyName, setCompanyName] = useState("");
 
   useEffect(() => {
-    let hasTokenExpired = isTokenExpired();
-    if (!hasTokenExpired) {
-      router.push("/dashboard");
-    }
     getCompany();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -33,7 +29,9 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
   const getCompany = async () => {
     await getCompanyName().then(
       function (successResponse) {
-        setCompanyName(successResponse);
+        if(successResponse){
+          setCompanyName(successResponse);
+        }
       },
       function (errorResponse) {
         console.error(errorResponse);
@@ -73,7 +71,7 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
                     CompanyName: companyName,
                   });
                   if (result && result.Success) {
-                    setToken(result.Token as any);
+                    setToken(result.Data && result.Data.Token);
                     router.push("/dashboard");
                   } else {
                     // showToast(result.Message, "error");

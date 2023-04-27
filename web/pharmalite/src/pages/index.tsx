@@ -1,10 +1,7 @@
 import * as React from "react";
 import Head from "next/head";
-import { Inter } from "next/font/google";
 import UnAuthLayout from "index/components/common/UnAuthLayout";
 import LoginComponent from "index/components/auth/LoginComponent";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (

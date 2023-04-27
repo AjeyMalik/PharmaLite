@@ -4,6 +4,9 @@ import { useEffect } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import * as React from "react";
 import Header from "./Header";
+import { isTokenExpired } from "index/services/util/UtilService";
+import { ThemeProvider } from "@mui/material";
+import { THEME } from "index/utils/Styles";
 
 export default function UnAuthLayout({
   children,
@@ -13,17 +16,21 @@ export default function UnAuthLayout({
   const router = useRouter();
 
   useEffect(() => {
-    let token = localStorage.getItem("token");
-    if (token) {
+    let hasTokenExpired = isTokenExpired();
+    if (!hasTokenExpired) {
       router.push("/dashboard");
     }
   });
 
   return (
     <React.Fragment>
-      <CssBaseline />
-      <Header/>
-      <main style={{ padding: "16px" }}>{children}</main>
+      <ThemeProvider theme={THEME}>
+        <CssBaseline />
+        <Header />
+        <main style={{ height: "calc(100vh - 64px)", padding: "16px" }}>
+          {children}
+        </main>
+      </ThemeProvider>
     </React.Fragment>
   );
 }

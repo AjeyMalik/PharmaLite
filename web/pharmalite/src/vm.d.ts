@@ -5,8 +5,15 @@ export interface ILogin {
 }
 
 export interface IStandardAPIResponse<T = any> {
-  Success?: Boolean;
-  Message?: string;
-  Data?: T;
-  Token?:string;
+  Success: Boolean;
+  Message: string;
+  Data: T;
+}
+export interface IMenuItem {
+  Name : string;
+  URL: string;
+}
+export interface IMenuGroup {
+  MenuGroup: string;
+  MenuItems: IMenuItem[];
 }

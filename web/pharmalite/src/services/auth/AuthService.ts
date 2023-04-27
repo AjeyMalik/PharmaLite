@@ -1,5 +1,5 @@
 import { ILogin, IStandardAPIResponse } from "index/vm";
-import { httpClient, httpClientForLogin } from "../util/UtilService";
+import { httpClient } from "../util/UtilService";
 
 export async function validateLicenseKey(): Promise<any> {
   try {
@@ -21,12 +21,12 @@ export async function getCompanyName(): Promise<any> {
 
 export async function loginToApp(
   cred: ILogin
-): Promise<IStandardAPIResponse<{ token: string }>> {
+): Promise<IStandardAPIResponse<{ Token: string }>> {
   try {
-    let res = await httpClientForLogin<{ token: string }>(
-      `Auth/ValidateLogIn`,
+    let res = await httpClient<{ Token: string }>(
+      `auth/login`,
       "POST",
-      { model: cred }
+       cred 
     );
     return res;
   } catch (err: any) {

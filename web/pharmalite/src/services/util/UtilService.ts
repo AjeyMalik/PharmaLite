@@ -10,10 +10,14 @@ export const sanitizeUrl = (url: string) => {
 
 export const setToken = (token: string) => {
   localStorage.setItem('token', token);
+  localStorage.removeItem('selectedMenuGroup')
+  localStorage.removeItem('selectedMenu')
 };
 
 export const removeToken = () => {
   localStorage.removeItem('token');
+  localStorage.removeItem('selectedMenuGroup')
+  localStorage.removeItem('selectedMenu')
 };
 
 export const groupBy = (data: Array<any>, prop: string) => {
@@ -70,40 +74,7 @@ export const httpClient = async <T>(
       body: JSON.stringify(obj),
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
-        at: getToken(),
-      },
-    });
-    return await res.json();
-  } catch (error) {
-    console.group(`API ${type} Error`);
-    console.error(error);
-    console.groupEnd();
-    throw error;
-  }
-};
-export const httpClientForLogin = async <T>(
-  url: string,
-  type: string,
-  obj: any = undefined
-): Promise<IStandardAPIResponse<T>> => {
-  try {
-    type = type.toUpperCase();
-    if (type.toLowerCase() === 'get' && obj) {
-      var params = Object.keys(obj)
-        .map(function (key) {
-          return key + '=' + obj[key];
-        })
-        .join('&');
-      url += '?' + params;
-      obj = undefined;
-    }
-
-    let res = await fetch(LOGIN_API_URL + url, {
-      method: type.toUpperCase(),
-      body: JSON.stringify(obj),
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        at: getToken(),
+        token: getToken(),
       },
     });
     return await res.json();
