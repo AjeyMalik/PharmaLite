@@ -221,9 +221,9 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
             boxSizing: "border-box",
           },
         }}
-        variant="persistent"
         anchor="left"
         open={open}
+        onClose={handleDrawerClose}
       >
         <Box
           component="div"
