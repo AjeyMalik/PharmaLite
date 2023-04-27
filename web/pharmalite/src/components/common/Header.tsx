@@ -33,27 +33,29 @@ import {
 import { IMenuGroup } from "index/vm";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import { SideMenuManageContext } from "index/providers/SideMenuManageProvider";
 
 interface HeaderProps {}
 
 const Header: React.FunctionComponent<HeaderProps> = (props) => {
+
+  const { open,selectedMenuGroup, updateOpenStats, updateSelectedMenuGroup } = React.useContext(SideMenuManageContext);
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const router = useRouter();
   const theme = useTheme();
-  const [selectedMenuGroup, setSelectedMenuGroup] = useState("");
+  // const [selectedMenuGroup, setSelectedMenuGroup] = useState("");
   const [selectedMenu, setSelectedMenu] = useState("");
   const [menuGroups, setMenuGroups] = useState<IMenuGroup[]>([]);
   const [modelingMenu, setModelingMenu] = useState([]);
 
   useEffect(() => {
     let hasTokenExpired = isTokenExpired();
-    let selectedMenuGroupFromLocal = localStorage.getItem("selectedMenuGroup");
     let setSelectedMenuFromLocal = localStorage.getItem("selectedMenu");
     if (!hasTokenExpired) {
       setIsLoggedIn(true);
-      setSelectedMenuGroup(selectedMenuGroupFromLocal || "");
       setSelectedMenu(setSelectedMenuFromLocal || "");
       getMenuGroups();
     }
@@ -105,11 +107,11 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
   };
 
   const handleDrawerOpen = () => {
-    setOpen(true);
+    updateOpenStats(true);
   };
 
   const handleDrawerClose = () => {
-    setOpen(false);
+    updateOpenStats(false);
   };
 
   const goto = (path: string) => {
@@ -118,14 +120,14 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
 
   const toggleMenuGroup = (item: IMenuGroup) => {
     if (item.MenuGroup === selectedMenuGroup) {
-      setSelectedMenuGroup("");
+      updateSelectedMenuGroup("");
     } else {
-      setSelectedMenuGroup(item.MenuGroup);
+      updateSelectedMenuGroup(item.MenuGroup);
     }
   };
 
   const onMenuItemClicked = (group: IMenuGroup, item: string, path: string) => {
-    setSelectedMenuGroup(group.MenuGroup);
+    updateSelectedMenuGroup(group.MenuGroup);
     setSelectedMenu(item);
     localStorage.setItem("selectedMenuGroup", group.MenuGroup);
     localStorage.setItem("selectedMenu", item);

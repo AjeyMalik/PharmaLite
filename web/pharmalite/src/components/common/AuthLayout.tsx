@@ -9,6 +9,7 @@ import { ThemeProvider } from "@mui/material";
 import { THEME } from "index/utils/Styles";
 import StatusProvider from "../../providers/StatusProvider";
 import Footer from "./Footer";
+import SideMenuManageProvider from "index/providers/SideMenuManageProvider";
 
 export default function AuthLayout({
   children,
@@ -28,12 +29,14 @@ export default function AuthLayout({
     <React.Fragment>
       <ThemeProvider theme={THEME}>
         <StatusProvider>
-          <CssBaseline />
-          <Header />
-          <main style={{ height: "calc(100vh - 96px)", padding: "16px" }}>
-            {children}
-          </main>
-          <Footer />
+          <SideMenuManageProvider>
+            <CssBaseline />
+            <Header />
+            <main style={{ height: "calc(100vh - 96px)", padding: "16px" }}>
+              {children}
+            </main>
+            <Footer />
+          </SideMenuManageProvider>
         </StatusProvider>
       </ThemeProvider>
     </React.Fragment>

@@ -23,3 +23,9 @@ export interface IStatusContextType {
   type: string;
   updateStatus: Function;
 }
+export interface ISideMenuManageContextType {
+  open:boolean;
+  selectedMenuGroup:string;
+  updateOpenStats: Function;
+  updateSelectedMenuGroup: Function;
+}
