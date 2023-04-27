@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StatusContext } from "./StatusProvider";
+import { StatusContext } from "../../providers/StatusProvider";
 import { Paper, Typography } from "@mui/material";
 
 interface FooterProps {}

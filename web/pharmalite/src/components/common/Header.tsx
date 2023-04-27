@@ -149,7 +149,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
                   color="inherit"
                   aria-label="menu"
                   onClick={handleDrawerOpen}
-                  sx={{ mr: 2, ...(open && { display: "none" }) }}
+                  sx={{ mr: 2 }}
                 >
                   <MenuIcon />
                 </IconButton>

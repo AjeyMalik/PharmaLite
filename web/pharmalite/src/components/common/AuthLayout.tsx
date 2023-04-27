@@ -7,7 +7,7 @@ import Header from "./Header";
 import { isTokenExpired } from "index/services/util/UtilService";
 import { ThemeProvider } from "@mui/material";
 import { THEME } from "index/utils/Styles";
-import StatusProvider from "./StatusProvider";
+import StatusProvider from "../../providers/StatusProvider";
 import Footer from "./Footer";
 
 export default function AuthLayout({
