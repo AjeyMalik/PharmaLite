@@ -1,23 +1,23 @@
-import { API_URL, LOGIN_API_URL } from "index/Constant";
+import { API_URL } from "index/Constant";
 import { IStandardAPIResponse } from "index/vm";
 
 export const sanitizeUrl = (url: string) => {
-  if (url[url.length - 1] === '/') {
+  if (url[url.length - 1] === "/") {
     return url.slice(0, url.length - 1);
   }
   return url;
 };
 
 export const setToken = (token: string) => {
-  localStorage.setItem('token', token);
-  localStorage.removeItem('selectedMenuGroup')
-  localStorage.removeItem('selectedMenu')
+  localStorage.setItem("token", token);
+  localStorage.removeItem("selectedMenuGroup");
+  localStorage.removeItem("selectedMenu");
 };
 
 export const removeToken = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('selectedMenuGroup')
-  localStorage.removeItem('selectedMenu')
+  localStorage.removeItem("token");
+  localStorage.removeItem("selectedMenuGroup");
+  localStorage.removeItem("selectedMenu");
 };
 
 export const groupBy = (data: Array<any>, prop: string) => {
@@ -30,9 +30,9 @@ export const groupBy = (data: Array<any>, prop: string) => {
 };
 
 export function getToken() {
-  let res = localStorage.getItem('token');
+  let res = localStorage.getItem("token");
   if (res === null || res === undefined) {
-    return '';
+    return "";
   }
   return res;
 }
@@ -45,8 +45,8 @@ export const parseJwt = (tokenParsed?: string) => {
     token = tokenParsed;
   }
   if (token) {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace('-', '+').replace('_', '/');
+    var base64Url = token.split(".")[1];
+    var base64 = base64Url.replace("-", "+").replace("_", "/");
     return JSON.parse(window.atob(base64));
   }
   return undefined;
@@ -59,13 +59,13 @@ export const httpClient = async <T>(
 ): Promise<IStandardAPIResponse<T>> => {
   try {
     type = type.toUpperCase();
-    if (type.toLowerCase() === 'get' && obj) {
+    if (type.toLowerCase() === "get" && obj) {
       var params = Object.keys(obj)
         .map(function (key) {
-          return key + '=' + obj[key];
+          return key + "=" + obj[key];
         })
-        .join('&');
-      url += '?' + params;
+        .join("&");
+      url += "?" + params;
       obj = undefined;
     }
 
@@ -73,7 +73,7 @@ export const httpClient = async <T>(
       method: type.toUpperCase(),
       body: JSON.stringify(obj),
       headers: {
-        'Content-Type': 'application/json; charset=utf-8',
+        "Content-Type": "application/json; charset=utf-8",
         token: getToken(),
       },
     });
@@ -102,9 +102,9 @@ export const isTokenExpired = () => {
 
 export const removeNulls = (obj: any) => {
   Object.keys(obj).forEach((key) => {
-    if (obj[key] && typeof obj[key] === 'object') {
+    if (obj[key] && typeof obj[key] === "object") {
       removeNulls(obj[key]);
-    } else if (obj[key] === '' || obj[key] === null) {
+    } else if (obj[key] === "" || obj[key] === null) {
       delete obj[key];
     }
   });

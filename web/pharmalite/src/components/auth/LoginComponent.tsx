@@ -1,18 +1,10 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  FormControl,
-  Grid,
-  TextField,
-} from "@mui/material";
+import { Button, Card, CardContent, CardHeader, Grid } from "@mui/material";
 import { Formik } from "formik";
 import { ILogin } from "index/vm";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import * as React from "react";
-import { isTokenExpired, setToken } from "index/services/util/UtilService";
+import { setToken } from "index/services/util/UtilService";
 import { getCompanyName, loginToApp } from "index/services/auth/AuthService";
 import AppTextInput from "index/shared/inputs/AppTextInput";
 
@@ -72,7 +64,7 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
                     CompanyName: companyName,
                   });
                   if (result && result.Success) {
-                    setToken(result.Data && result.Data.Token);
+                    setToken((result.Data && result?.Data?.Token) || "");
                     router.push("/dashboard");
                   } else {
                     // showToast(result.Message, "error");

@@ -1,7 +1,6 @@
 import React from "react";
 import { FormControl } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import moment from "moment";
 
 function AppDatePicker({
   name,
@@ -33,7 +32,6 @@ function AppDatePicker({
 }) {
   return (
     <FormControl fullWidth margin="normal">
-      {/* <Typography variant="caption">{label}</Typography> */}
       <DatePicker
         label={label}
         format="DD/MM/YYYY"

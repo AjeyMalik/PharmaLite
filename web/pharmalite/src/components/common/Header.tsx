@@ -147,7 +147,6 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
       >
         <Container maxWidth={false}>
           <Toolbar disableGutters variant="regular" sx={{ height: 64 }}>
-            {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
             <React.Fragment>
               {isLoggedIn && (
                 <IconButton
