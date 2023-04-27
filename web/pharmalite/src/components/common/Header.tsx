@@ -133,7 +133,11 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
 
   return (
     <React.Fragment>
-      <AppBar position="static" color="primary" className="gradiantHeader">
+      <AppBar
+        position="static"
+        className="gradiantHeader"
+        sx={{ backgroundColor: "#1b68c0" }}
+      >
         <Container maxWidth={false}>
           <Toolbar disableGutters variant="regular">
             {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
@@ -151,14 +155,17 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
                 </IconButton>
               )}
             </React.Fragment>
-            <Typography
+            {/* <Typography
               variant="h6"
               noWrap
               component="div"
               sx={{ flexGrow: 1 }}
             >
               PharmaLite
-            </Typography>
+            </Typography> */}
+            <div style={{ flexGrow: 1, height: 64 }}>
+              <img src="images/PharmaLite.png" alt="PharmaLite" height={64} />
+            </div>
             {isLoggedIn ? (
               <React.Fragment>
                 <IconButton

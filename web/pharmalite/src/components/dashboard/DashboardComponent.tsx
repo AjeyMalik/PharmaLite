@@ -27,7 +27,7 @@ const DashboardComponent: React.FunctionComponent<
         alignItems={"center"}
         height={"100%"}
       >
-        <Grid item xs={12} sm={12} md={12} lg={8}>
+        <Grid item xs={8} sm={8} md={8} lg={8}>
           <Grid container spacing={2}>
             {DASHBOARD_ITEMS.map((item, index) => (
               <Grid key={index} item xs={12} sm={12} md={6} lg={4}>
