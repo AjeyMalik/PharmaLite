@@ -10,6 +10,8 @@ import { THEME } from "index/utils/Styles";
 import StatusProvider from "../../providers/StatusProvider";
 import Footer from "./Footer";
 import SideMenuManageProvider from "index/providers/SideMenuManageProvider";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
 export default function AuthLayout({
   children,
@@ -28,16 +30,18 @@ export default function AuthLayout({
   return (
     <React.Fragment>
       <ThemeProvider theme={THEME}>
-        <StatusProvider>
-          <SideMenuManageProvider>
-            <CssBaseline />
-            <Header />
-            <main style={{ height: "calc(100vh - 96px)", padding: "16px" }}>
-              {children}
-            </main>
-            <Footer />
-          </SideMenuManageProvider>
-        </StatusProvider>
+        <LocalizationProvider dateAdapter={AdapterMoment} > 
+          <StatusProvider>
+            <SideMenuManageProvider>
+              <CssBaseline />
+              <Header />
+              <main style={{ height: "calc(100vh - 96px)", padding: "16px" }}>
+                {children}
+              </main>
+              <Footer />
+            </SideMenuManageProvider>
+          </StatusProvider>
+        </LocalizationProvider>
       </ThemeProvider>
     </React.Fragment>
   );
