@@ -22,7 +22,11 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import HomeIcon from "@mui/icons-material/Home";
 import { useState, useEffect } from "react";
-import { isTokenExpired, removeToken } from "index/services/util/UtilService";
+import {
+  isTokenExpired,
+  parseJwt,
+  removeToken,
+} from "index/services/util/UtilService";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
 import { DrawerWidth } from "index/Constant";
@@ -38,15 +42,14 @@ import { SideMenuManageContext } from "index/providers/SideMenuManageProvider";
 interface HeaderProps {}
 
 const Header: React.FunctionComponent<HeaderProps> = (props) => {
-
-  const { open,selectedMenuGroup, updateOpenStats, updateSelectedMenuGroup } = React.useContext(SideMenuManageContext);
+  const { open, selectedMenuGroup, updateOpenStats, updateSelectedMenuGroup } =
+    React.useContext(SideMenuManageContext);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // const [open, setOpen] = useState(false);
+  const [user, setUser] = useState({} as any);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const router = useRouter();
   const theme = useTheme();
-  // const [selectedMenuGroup, setSelectedMenuGroup] = useState("");
   const [selectedMenu, setSelectedMenu] = useState("");
   const [menuGroups, setMenuGroups] = useState<IMenuGroup[]>([]);
   const [modelingMenu, setModelingMenu] = useState([]);
@@ -57,6 +60,8 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
     if (!hasTokenExpired) {
       setIsLoggedIn(true);
       setSelectedMenu(setSelectedMenuFromLocal || "");
+      let parsedToken = parseJwt();
+      setUser(parsedToken);
       getMenuGroups();
     }
   }, []);
@@ -138,10 +143,10 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
       <AppBar
         position="static"
         className="gradiantHeader"
-        sx={{ backgroundColor: "#1b68c0" }}
+        sx={{ backgroundColor: "#1b68c0", height: 64 }}
       >
         <Container maxWidth={false}>
-          <Toolbar disableGutters variant="regular">
+          <Toolbar disableGutters variant="regular" sx={{ height: 64 }}>
             {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
             <React.Fragment>
               {isLoggedIn && (
@@ -157,24 +162,27 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
                 </IconButton>
               )}
             </React.Fragment>
-            {/* <Typography
+            <Box
+              component="div"
+              sx={{
+                flexGrow: 1,
+                height: 64,
+                display: { xs: "none", md: "flex" },
+              }}
+            >
+              <img src="images/PharmaLite.png" alt="PharmaLite" />
+            </Box>
+            <Typography
               variant="h6"
               noWrap
               component="div"
-              sx={{ flexGrow: 1 }}
+              sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
             >
               PharmaLite
-            </Typography> */}
-            <div style={{ flexGrow: 1, height: 64 }}>
-              <img src="images/PharmaLite.png" alt="PharmaLite" height={64} />
-            </div>
+            </Typography>
             {isLoggedIn ? (
               <React.Fragment>
-                <IconButton
-                  sx={{ mr: 2 }}
-                  color="inherit"
-                  onClick={() => goto("/dashboard")}
-                >
+                <IconButton color="inherit" onClick={() => goto("/dashboard")}>
                   <HomeIcon />
                 </IconButton>
                 <IconButton
@@ -185,20 +193,20 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
                   onClick={handleMenu}
                   color="inherit"
                 >
-                  <Typography mr={1}>Super Admin</Typography>
+                  <Typography mr={1}>{user?.USER_ROLE || ""}</Typography>
                   <AccountCircle />
                 </IconButton>
                 <Menu
                   id="menu-appbar"
                   anchorEl={anchorEl}
                   anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
+                    vertical: "bottom",
+                    horizontal: "center",
                   }}
                   keepMounted
                   transformOrigin={{
                     vertical: "top",
-                    horizontal: "right",
+                    horizontal: "center",
                   }}
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
