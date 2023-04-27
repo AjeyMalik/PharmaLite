@@ -45,6 +45,7 @@ function AppTextInput({
     <FormControl fullWidth margin="normal">
       {label && <Typography>{label}</Typography>}
       <TextField
+        variant="standard"
         size="small"
         name={name}
         type={type || "text"}
@@ -65,7 +66,6 @@ function AppTextInput({
             bgcolor: "background.grid",
           },
         }}
-
         {...rest}
         InputProps={{
           startAdornment: (
