@@ -15,10 +15,11 @@ const Footer: React.FunctionComponent<FooterProps> = () => {
           position: "fixed",
           paddingX: "24px",
           display: "flex",
-          height:'32px'
+          height:'32px',
+          alignItems: "center"
         }}
       >
-        <Typography variant="subtitle1" fontSize={14} fontWeight={600}>
+        <Typography variant="subtitle1" fontSize={14} fontWeight={600} textAlign="center">
           Status Message:  <Typography component="span" variant="subtitle2">{message || "No Status"}</Typography>
         </Typography>
        
