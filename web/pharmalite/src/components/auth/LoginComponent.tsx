@@ -22,8 +22,8 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
   const getCompany = async () => {
     await getCompanyName().then(
       function (successResponse) {
-        if (successResponse) {
-          setCompanyName(successResponse);
+        if (successResponse && successResponse.resultMessage) {
+          setCompanyName(successResponse.resultMessage);
         }
       },
       function (errorResponse) {
@@ -44,27 +44,31 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
             <CardContent>
               <Formik
                 initialValues={{
-                  UserID: "",
-                  Password: "",
-                  CompanyName: companyName,
+                  networkid: "",
+                  password: "",
+                  Company: companyName,
                 }}
                 validate={(values) => {
                   let errors: any = {};
-                  if (!values.UserID) {
-                    errors.UserID = "User ID is Required";
+                  if (!values.networkid) {
+                    errors.networkid = "User ID is Required";
                   }
-                  if (!values.Password) {
-                    errors.Password = "Password is Required";
+                  if (!values.password) {
+                    errors.password = "Password is Required";
                   }
                   return errors;
                 }}
                 onSubmit={async (values: ILogin, { setSubmitting }) => {
-                  let result = await loginToApp({
+                  let result: any = await loginToApp({
                     ...values,
-                    CompanyName: companyName,
+                    Company: companyName,
                   });
-                  if (result && result.Success) {
-                    setToken((result.Data && result?.Data?.Token) || "");
+                  if (result && result.resultMessage) {
+                    setToken(
+                      (result && result?.resultMessage) || "",
+                      values.networkid
+                    );
+                    localStorage.setItem("company", companyName);
                     router.push("/dashboard");
                   } else {
                     // showToast(result.Message, "error");
@@ -83,47 +87,47 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
                 }) => (
                   <form onSubmit={handleSubmit}>
                     <AppTextInput
-                      name="UserID"
+                      name="networkid"
                       label="User ID*"
                       onChange={handleChange}
                       placeholder=" "
                       onBlur={handleBlur}
-                      value={values.UserID}
-                      error={errors.UserID && touched.UserID ? true : false}
+                      value={values.networkid}
+                      error={
+                        errors.networkid && touched.networkid ? true : false
+                      }
                       errorText={
-                        errors.UserID && touched.UserID ? errors.UserID : ""
+                        errors.networkid && touched.networkid
+                          ? errors.networkid
+                          : ""
                       }
                     />
                     <AppTextInput
-                      name="Password"
+                      name="password"
                       label="Password*"
                       onChange={handleChange}
                       type="password"
                       placeholder=" "
                       onBlur={handleBlur}
-                      value={values.Password}
-                      error={errors.Password && touched.Password ? true : false}
+                      value={values.password}
+                      error={errors.password && touched.password ? true : false}
                       errorText={
-                        errors.Password && touched.Password
-                          ? errors.Password
+                        errors.password && touched.password
+                          ? errors.password
                           : ""
                       }
                     />
                     <AppTextInput
-                      name="CompanyName"
+                      name="Company"
                       label="Company*"
                       onChange={handleChange}
                       disabled={true}
                       placeholder=" "
                       onBlur={handleBlur}
-                      value={values.CompanyName}
-                      error={
-                        errors.CompanyName && touched.CompanyName ? true : false
-                      }
+                      value={companyName}
+                      error={errors.Company && touched.Company ? true : false}
                       errorText={
-                        errors.CompanyName && touched.CompanyName
-                          ? errors.CompanyName
-                          : ""
+                        errors.Company && touched.Company ? errors.Company : ""
                       }
                     />
                     <br />

@@ -8,14 +8,17 @@ export const sanitizeUrl = (url: string) => {
   return url;
 };
 
-export const setToken = (token: string) => {
+export const setToken = (token: string,userId:string) => {
   localStorage.setItem("token", token);
+  localStorage.setItem("userid", userId);
   localStorage.removeItem("selectedMenuGroup");
   localStorage.removeItem("selectedMenu");
 };
 
 export const removeToken = () => {
   localStorage.removeItem("token");
+  localStorage.removeItem("userid");
+  localStorage.removeItem("company");
   localStorage.removeItem("selectedMenuGroup");
   localStorage.removeItem("selectedMenu");
 };
@@ -31,6 +34,14 @@ export const groupBy = (data: Array<any>, prop: string) => {
 
 export function getToken() {
   let res = localStorage.getItem("token");
+  if (res === null || res === undefined) {
+    return "";
+  }
+  return res;
+}
+
+export function getUserId() {
+  let res = localStorage.getItem("userid");
   if (res === null || res === undefined) {
     return "";
   }
@@ -75,6 +86,7 @@ export const httpClient = async <T>(
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         token: getToken(),
+        userid: getUserId()
       },
     });
     return await res.json();

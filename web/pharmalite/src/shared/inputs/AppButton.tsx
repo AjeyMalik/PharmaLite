@@ -4,6 +4,7 @@ import React from "react";
 function AppButton({
   btnText,
   variant,
+  color,
   type,
   onClick,
   className,
@@ -12,19 +13,20 @@ function AppButton({
 }: {
   btnText: string;
   variant?: "text" | "outlined" | "contained";
+  color?: "primary" | "secondary" | "success" | "warning" | "error";
   type: any;
   onClick: any;
   className?: string;
-  startIcon: any;
+  startIcon?: any;
 }) {
   return (
     <Button
-      startIcon={startIcon}
+      startIcon={startIcon || ""}
       type={type}
       onClick={onClick}
       fullWidth
       variant={variant || "contained"}
-      color={"primary"}
+      color={color || "primary"}
       className={className}
       {...rest}
     >

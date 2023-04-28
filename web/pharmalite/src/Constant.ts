@@ -1,3 +1,5 @@
-export const API_URL = "http://65.20.82.161/api/";
+export const API_URL = "http://65.20.82.161/pl_api2/api/";
 
-export const DrawerWidth = 240;
+export const SideMenuWidth = 240;
+
+export const DrawerWidth = 650;

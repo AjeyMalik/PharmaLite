@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import * as React from "react";
 import Header from "./Header";
-import { isTokenExpired } from "index/services/util/UtilService";
+import { getToken, isTokenExpired } from "index/services/util/UtilService";
 import { ThemeProvider } from "@mui/material";
 import { THEME } from "index/utils/Styles";
 import StatusProvider from "../../providers/StatusProvider";
@@ -21,8 +21,12 @@ export default function AuthLayout({
   const router = useRouter();
 
   useEffect(() => {
-    let hasTokenExpired = isTokenExpired();
-    if (hasTokenExpired) {
+    // let hasTokenExpired = isTokenExpired();
+    // if (hasTokenExpired) {
+    //   router.push("/");
+    // }
+    let token = getToken();
+    if (!token) {
       router.push("/");
     }
   });
@@ -30,7 +34,7 @@ export default function AuthLayout({
   return (
     <React.Fragment>
       <ThemeProvider theme={THEME}>
-        <LocalizationProvider dateAdapter={AdapterMoment} > 
+        <LocalizationProvider dateAdapter={AdapterMoment}>
           <StatusProvider>
             <SideMenuManageProvider>
               <CssBaseline />

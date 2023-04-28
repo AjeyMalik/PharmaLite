@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import * as React from "react";
 import Header from "./Header";
-import { isTokenExpired } from "index/services/util/UtilService";
+import { getToken, isTokenExpired } from "index/services/util/UtilService";
 import { ThemeProvider } from "@mui/material";
 import { THEME } from "index/utils/Styles";
 
@@ -16,8 +16,12 @@ export default function UnAuthLayout({
   const router = useRouter();
 
   useEffect(() => {
-    let hasTokenExpired = isTokenExpired();
-    if (!hasTokenExpired) {
+    // let hasTokenExpired = isTokenExpired();
+    // if (!hasTokenExpired) {
+    //   router.push("/dashboard");
+    // }
+    let token = getToken();
+    if (token) {
       router.push("/dashboard");
     }
   });

@@ -12,7 +12,7 @@ export async function validateLicenseKey(): Promise<any> {
 
 export async function getCompanyName(): Promise<any> {
   try {
-    let res = await httpClient<any>(`auth/getCompanyName`, "GET");
+    let res = await httpClient<any>(`auth/getLicensedtocompany`, "POST",{});
     return res;
   } catch (err: any) {
     return err && err.response ? err.response.data : undefined;
@@ -24,7 +24,7 @@ export async function loginToApp(
 ): Promise<IStandardAPIResponse<{ Token: string }>> {
   try {
     let res = await httpClient<{ Token: string }>(
-      `auth/login`,
+      `auth/doLoginDetails`,
       "POST",
        cred 
     );

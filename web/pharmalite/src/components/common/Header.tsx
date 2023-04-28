@@ -23,13 +23,14 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import HomeIcon from "@mui/icons-material/Home";
 import { useState, useEffect } from "react";
 import {
+  getToken,
   isTokenExpired,
   parseJwt,
   removeToken,
 } from "index/services/util/UtilService";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
-import { DrawerWidth } from "index/Constant";
+import { SideMenuWidth } from "index/Constant";
 import {
   getMenuGroupsFromApi,
   getModelingMenuFromApi,
@@ -55,47 +56,48 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
   const [modelingMenu, setModelingMenu] = useState([]);
 
   useEffect(() => {
-    let hasTokenExpired = isTokenExpired();
+    // let hasTokenExpired = isTokenExpired();
+    let token = getToken();
     let setSelectedMenuFromLocal = localStorage.getItem("selectedMenu");
-    if (!hasTokenExpired) {
+    if (token) {
       setIsLoggedIn(true);
       setSelectedMenu(setSelectedMenuFromLocal || "");
-      let parsedToken = parseJwt();
-      setUser(parsedToken);
-      getMenuGroups();
+      // let parsedToken = parseJwt();
+      // setUser(parsedToken);
+      // getMenuGroups();
     }
   }, []);
 
-  const getMenuGroups = async () => {
-    await getMenuGroupsFromApi().then(
-      function (successResponse) {
-        if (successResponse && successResponse.Success) {
-          let menuGroups =
-            (successResponse?.Data && successResponse.Data) || [];
-          setMenuGroups(menuGroups);
-          getModelingMenu();
-        }
-      },
-      function (errorResponse) {
-        console.error(errorResponse);
-      }
-    );
-  };
+  // const getMenuGroups = async () => {
+  //   await getMenuGroupsFromApi().then(
+  //     function (successResponse) {
+  //       if (successResponse && successResponse.Success) {
+  //         let menuGroups =
+  //           (successResponse?.Data && successResponse.Data) || [];
+  //         setMenuGroups(menuGroups);
+  //         getModelingMenu();
+  //       }
+  //     },
+  //     function (errorResponse) {
+  //       console.error(errorResponse);
+  //     }
+  //   );
+  // };
 
-  const getModelingMenu = async () => {
-    await getModelingMenuFromApi().then(
-      function (successResponse) {
-        if (successResponse && successResponse.Success) {
-          setModelingMenu(
-            (successResponse?.Data && successResponse.Data) || []
-          );
-        }
-      },
-      function (errorResponse) {
-        console.error(errorResponse);
-      }
-    );
-  };
+  // const getModelingMenu = async () => {
+  //   await getModelingMenuFromApi().then(
+  //     function (successResponse) {
+  //       if (successResponse && successResponse.Success) {
+  //         setModelingMenu(
+  //           (successResponse?.Data && successResponse.Data) || []
+  //         );
+  //       }
+  //     },
+  //     function (errorResponse) {
+  //       console.error(errorResponse);
+  //     }
+  //   );
+  // };
 
   const logout = () => {
     removeToken();
@@ -169,7 +171,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
                 display: { xs: "none", md: "flex" },
               }}
             >
-              <img src="images/PharmaLite.png" alt="PharmaLite" />
+              <img src="/images/PharmaLite.png" alt="PharmaLite" />
             </Box>
             <Typography
               variant="h6"
@@ -223,10 +225,10 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
       </AppBar>
       <Drawer
         sx={{
-          width: DrawerWidth,
+          width: SideMenuWidth,
           flexShrink: 0,
           "& .MuiDrawer-paper": {
-            width: DrawerWidth,
+            width: SideMenuWidth,
             boxSizing: "border-box",
           },
         }}
