@@ -12,6 +12,7 @@ import Footer from "./Footer";
 import SideMenuManageProvider from "index/providers/SideMenuManageProvider";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { ConfirmDialogProvider } from "index/providers/ConfirmDialogProvider";
 
 export default function AuthLayout({
   children,
@@ -37,12 +38,14 @@ export default function AuthLayout({
         <LocalizationProvider dateAdapter={AdapterMoment}>
           <StatusProvider>
             <SideMenuManageProvider>
-              <CssBaseline />
-              <Header />
-              <main style={{ height: "calc(100vh - 96px)", padding: "16px" }}>
-                {children}
-              </main>
-              <Footer />
+              <ConfirmDialogProvider>
+                <CssBaseline />
+                <Header />
+                <main style={{ height: "calc(100vh - 96px)", padding: "16px" }}>
+                  {children}
+                </main>
+                <Footer />
+              </ConfirmDialogProvider>
             </SideMenuManageProvider>
           </StatusProvider>
         </LocalizationProvider>
