@@ -40,8 +40,16 @@ export function getToken() {
   return res;
 }
 
-export function getUserId() {
+export function getUserRole() {
   let res = localStorage.getItem("userid");
+  if (res === null || res === undefined) {
+    return "";
+  }
+  return res;
+}
+
+export function getCompany() {
+  let res = localStorage.getItem("company");
   if (res === null || res === undefined) {
     return "";
   }
@@ -86,7 +94,7 @@ export const httpClient = async <T>(
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         token: getToken(),
-        userid: getUserId()
+        userid: getUserRole()
       },
     });
     return await res.json();

@@ -64,25 +64,53 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
       setSelectedMenu(setSelectedMenuFromLocal || "");
       // let parsedToken = parseJwt();
       // setUser(parsedToken);
-      // getMenuGroups();
+      getMenuGroups();
     }
   }, []);
 
-  // const getMenuGroups = async () => {
-  //   await getMenuGroupsFromApi().then(
-  //     function (successResponse) {
-  //       if (successResponse && successResponse.Success) {
-  //         let menuGroups =
-  //           (successResponse?.Data && successResponse.Data) || [];
-  //         setMenuGroups(menuGroups);
-  //         getModelingMenu();
-  //       }
-  //     },
-  //     function (errorResponse) {
-  //       console.error(errorResponse);
-  //     }
-  //   );
-  // };
+  const getMenuGroups = async () => {
+    await getMenuGroupsFromApi().then(
+      function (successResponse) {
+        if (successResponse && successResponse.dTable) {
+          // let menuGroups =
+          //   (successResponse?.Data && successResponse.Data) || [];
+          let response =
+            successResponse.dTable && successResponse.dTable.length > 0
+              ? successResponse.dTable
+              : [];
+          let tempMenuGroups: string[] = [];
+          let groups: IMenuGroup[] = [];
+
+          response.forEach(
+            (ele: { group_name: string; menu_name: string; url: string }) => {
+              if (tempMenuGroups.includes(ele.group_name)) {
+                let index = groups.findIndex(
+                  (e) => e.MenuGroup === ele.group_name
+                );
+                groups[index].MenuItems.push({
+                  Name: ele?.menu_name || "",
+                  URL: ele?.url || "",
+                });
+              } else {
+                tempMenuGroups.push(ele.group_name);
+                groups.push({
+                  MenuGroup: ele.group_name,
+                  MenuItems: [
+                    { Name: ele?.menu_name || "", URL: ele?.url || "" },
+                  ],
+                });
+              }
+            }
+          );
+          setMenuGroups(groups);
+          // getModelingMenu();
+        }
+      },
+      function (errorResponse) {
+        console.error(errorResponse);
+      }
+    );
+  };
 
   // const getModelingMenu = async () => {
   //   await getModelingMenuFromApi().then(
