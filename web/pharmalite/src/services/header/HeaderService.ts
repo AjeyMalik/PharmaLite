@@ -23,8 +23,11 @@ export async function getMenuGroupsFromApi(): Promise<
 export async function getModelingMenuFromApi(): Promise<
   IStandardAPIResponse<any>
 > {
+  const company = getCompany();
   try {
-    let res = await httpClient<any>(`menu/getModelingMenu`, "GET");
+    let res = await httpClient<any>(`query/getMaintObjects`, "POST", {
+      company: company,
+    });
     return res;
   } catch (err: any) {
     return err && err.response ? err.response.data : undefined;

@@ -52,3 +52,8 @@ export interface IModelingSearch {
   boM_STATUSID?: string;
   ordeR_STATUSID?: string;
 }
+
+export interface IDrawerOpen {
+  isOpen: boolean;
+  index?: number;
+}

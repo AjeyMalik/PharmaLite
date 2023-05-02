@@ -53,7 +53,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
   const theme = useTheme();
   const [selectedMenu, setSelectedMenu] = useState("");
   const [menuGroups, setMenuGroups] = useState<IMenuGroup[]>([]);
-  const [modelingMenu, setModelingMenu] = useState([]);
+  const [modelingMenu, setModelingMenu] = useState<any[]>([]);
 
   useEffect(() => {
     // let hasTokenExpired = isTokenExpired();
@@ -103,7 +103,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
             }
           );
           setMenuGroups(groups);
-          // getModelingMenu();
+          getModelingMenu();
         }
       },
       function (errorResponse) {
@@ -112,20 +112,18 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
     );
   };
 
-  // const getModelingMenu = async () => {
-  //   await getModelingMenuFromApi().then(
-  //     function (successResponse) {
-  //       if (successResponse && successResponse.Success) {
-  //         setModelingMenu(
-  //           (successResponse?.Data && successResponse.Data) || []
-  //         );
-  //       }
-  //     },
-  //     function (errorResponse) {
-  //       console.error(errorResponse);
-  //     }
-  //   );
-  // };
+  const getModelingMenu = async () => {
+    await getModelingMenuFromApi().then(
+      function (successResponse) {
+        if (successResponse && successResponse.errorNo === 0) {
+          setModelingMenu(successResponse.dTable);
+        }
+      },
+      function (errorResponse) {
+        console.error(errorResponse);
+      }
+    );
+  };
 
   const logout = () => {
     removeToken();
@@ -166,6 +164,12 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
     setSelectedMenu(item);
     localStorage.setItem("selectedMenuGroup", group.MenuGroup);
     localStorage.setItem("selectedMenu", item);
+    if (group.MenuGroup === "Modeling") {
+      goto("/modeling/" + path);
+    } else {
+      goto("/" + path);
+    }
+    updateOpenStats(false);
   };
 
   return (
@@ -327,22 +331,20 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
                           key={menuIndex}
                           sx={{ pl: 4 }}
                           selected={
-                            menuItem &&
-                            menuItem[1] &&
-                            menuItem[1] === selectedMenu
+                            menuItem && menuItem.tablE_NAME === selectedMenu
                               ? true
                               : false
                           }
                           onClick={() => {
                             onMenuItemClicked(
                               groupItem,
-                              menuItem[1],
-                              menuItem[0]
+                              menuItem.tablE_NAME,
+                              menuItem.tablE_NAME
                             );
                           }}
                         >
                           <Typography variant="subtitle2">
-                            {menuItem[1] || ""}
+                            {menuItem.table_caption || ""}
                           </Typography>
                         </ListItemButton>
                       ))}

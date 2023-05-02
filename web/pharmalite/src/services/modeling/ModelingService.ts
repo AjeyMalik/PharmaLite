@@ -12,3 +12,43 @@ export async function getObjectDetails(
     return err && err.response ? err.response.data : undefined;
   }
 }
+export async function getTableFieldCaptions(
+  type: string
+): Promise<IStandardAPIResponse<any>> {
+  try {
+    let res = await httpClient<any>(`query/getTableFieldCaptions`, "POST", {
+      tablename: type,
+    });
+    return res;
+  } catch (err: any) {
+    return err && err.response ? err.response.data : undefined;
+  }
+}
+
+export async function addOrUpdateObjectDetails(
+  type: string,
+  data: any
+): Promise<IStandardAPIResponse<any>> {
+  try {
+    let res = await httpClient<any>(`${type}/maintObjectDetails`, "POST", data);
+    return res;
+  } catch (err: any) {
+    return err && err.response ? err.response.data : undefined;
+  }
+}
+
+export async function removeObjectDetails(
+  type: string,
+  data: any
+): Promise<IStandardAPIResponse<any>> {
+  try {
+    let res = await httpClient<any>(
+      `${type}/deleteObjectDetails`,
+      "POST",
+      data
+    );
+    return res;
+  } catch (err: any) {
+    return err && err.response ? err.response.data : undefined;
+  }
+}

@@ -1,4 +1,12 @@
-import { Box, Grid, Button, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Button,
+  Paper,
+  Typography,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 import * as React from "react";
 import { useEffect, useState, useMemo } from "react";
 import "ag-grid-community/styles/ag-grid.css";
@@ -9,9 +17,21 @@ import SearchIcon from "@mui/icons-material/Search";
 import ReplayIcon from "@mui/icons-material/Replay";
 import AddIcon from "@mui/icons-material/Add";
 import AppTextInput from "index/shared/inputs/AppTextInput";
-import { IModelingSearch } from "index/vm";
-import { getObjectDetails } from "index/services/modeling/ModelingService";
+import { IDrawerOpen } from "index/vm";
+import {
+  getObjectDetails,
+  getTableFieldCaptions,
+  removeObjectDetails,
+} from "index/services/modeling/ModelingService";
 import CustomDrawerComponent from "../common/CustomDrawer";
+import { ICellRendererParams } from "ag-grid-community";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { ConfirmDialogContext } from "index/providers/ConfirmDialogProvider";
+import ManageModelingType from "./ManageModelingType";
+import moment from "moment";
+import AppDatePicker from "index/shared/inputs/AppDateSelect";
+import AppSelectInput from "index/shared/inputs/AppSelectInput";
 
 interface ModelingTypesComponentProps {
   type: string;
@@ -20,45 +40,125 @@ interface ModelingTypesComponentProps {
 const ModelingTypesComponent: React.FunctionComponent<
   ModelingTypesComponentProps
 > = (props) => {
+  const gridRef = React.useRef<AgGridReact>(null);
+
+  const { showConfirmDialog } = React.useContext(ConfirmDialogContext);
+
+  const [fieldCaptions, setFieldCaptions] = useState<any[]>([]);
   const [rowData, setRowData] = useState<any>([]);
-  const [columnDefs, setColumnsDefs] = useState<
-    { field: string; headerName: string }[]
-  >([]);
+  const [columnDefs, setColumnsDefs] = useState<any[]>([]);
   const [companyName, setCompanyName] = useState("");
   const [expanded, setExpanded] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(
-    {} as {
-      data: {
-        title?: string;
-        object?: any;
-      };
-    }
-  );
+  const [dialog, setIsDialogOpen] = useState({
+    isOpen: false,
+    index: -1,
+  } as IDrawerOpen);
+  const [selectedItem, setSelectedItem] = useState<any>();
 
-  const [search, setSearch] = useState<IModelingSearch>({});
+  const customButtonCell = (cellprops: ICellRendererParams) => {
+    return (
+      <span>
+        <Tooltip title="Edit">
+          <IconButton
+            onClick={() => handleEdit(cellprops.data, cellprops.rowIndex)}
+          >
+            <EditIcon color="secondary" />
+          </IconButton>
+        </Tooltip>{" "}
+        <Tooltip title="Delete">
+          <IconButton
+            onClick={() => handleDelete(cellprops.data, cellprops.rowIndex)}
+          >
+            <DeleteIcon color="error" />
+          </IconButton>
+        </Tooltip>
+      </span>
+    );
+  };
+
+  const customCell = (cellprops: ICellRendererParams) => {
+    return <span>{cellprops?.value || "-"}</span>;
+  };
+  const customDateCell = (cellprops: ICellRendererParams) => {
+    return (
+      <span>
+        {cellprops.value ? moment(cellprops.value).format("DD-MM-YYYY") : "-"}
+      </span>
+    );
+  };
+
+  const [search, setSearch] = useState<any>({});
 
   useEffect(() => {
     const companyName = localStorage.getItem("company");
     setCompanyName(companyName || "");
-    getList();
-  }, []);
+    setSearch({ company: companyName });
+    const getFields = async (type: string) => {
+      const result = await getTableFieldCaptions(type);
+      if (result && result.errorNo == 0) {
+        let formLoadData = result?.formLoadData || [];
+        let fieldCaptionsList: any = [];
+        result.dTable.length > 0 &&
+          result.dTable.forEach((ele) => {
+            if (ele.uireturntype === "LIST") {
+              let listItem = formLoadData.find(
+                (e: any) => e.columnName === ele.field_name
+              );
+              fieldCaptionsList.push({
+                ...ele,
+                field_name: ele.field_name ? ele.field_name.toLowerCase() : "",
+                listValues: listItem?.columnData || [],
+              });
+            } else {
+              fieldCaptionsList.push({
+                ...ele,
+                field_name: ele.field_name ? ele.field_name.toLowerCase() : "",
+              });
+            }
+          });
+        console.log("fieldCaptions", fieldCaptionsList);
+        setFieldCaptions(fieldCaptionsList);
+        getList({}, fieldCaptionsList);
+      }
+    };
+    getFields(props.type);
+  }, [props.type]);
 
-  const getList = async (searchObj?: IModelingSearch) => {
+  const getList = async (searchObj?: any, fieldCaptionsList?: any[]) => {
     const companyName = localStorage.getItem("company");
     let obj = searchObj
-      ? { ...searchObj, Company: companyName || "" }
-      : { ...search, Company: companyName || "" };
+      ? { ...searchObj, company: companyName || "" }
+      : { ...search, company: companyName || "" };
     let result = await getObjectDetails(props.type, obj);
-    if (result && result.columnDetails) {
-      let colDefs = result.columnDetails.map((item) => {
-        return {
-          field: item.columnName && item.columnName.toLowerCase(),
-          headerName: item.columnCaption,
-        };
+    let tempFieldCaptions =
+      fieldCaptionsList && fieldCaptionsList.length > 0
+        ? [...fieldCaptionsList]
+        : [...fieldCaptions];
+    let colDefs: any = [];
+    tempFieldCaptions.forEach((item: any) => {
+      colDefs.push({
+        field: item.field_name,
+        headerName: item.field_caption,
+        colId: item.field_name,
+        filter:
+          item.field_type === "DATETIME"
+            ? "agDateColumnFilter"
+            : item.field_type === "NUMBER"
+            ? "agNumberColumnFilter"
+            : "agTextColumnFilter",
+        cellRenderer:
+          item.field_type === "DATETIME" ? customDateCell : customCell,
       });
-      setColumnsDefs(colDefs);
-    }
+    });
+    colDefs.push({
+      field: "button",
+      headerName: "Manage",
+      cellRenderer: customButtonCell,
+      editable: false,
+      minWidth: 150,
+      colId: "params",
+    });
+    setColumnsDefs(colDefs);
     let row =
       result &&
       result.dTable &&
@@ -68,33 +168,56 @@ const ModelingTypesComponent: React.FunctionComponent<
         let itemstoReturn = headers.reduce((e, acc) => {
           return { ...e, [acc.toLowerCase()]: ele[acc] };
         }, {});
-        console.log("rowdata", itemstoReturn);
         return itemstoReturn;
       });
+    console.log("columnDefs", colDefs);
+    console.log("rowData", row);
     setRowData(row || []);
   };
 
   const reset = () => {
-    setSearch({});
+    setSearch({ company: companyName });
     getList({});
   };
 
   const defaultColDef = useMemo(
     () => ({
       resizable: true,
-      sortable: true,
+      // sortable: true,
       // editable: true,
       flex: 1,
+      minWidth: 160,
+      minHeight: 80,
     }),
     []
   );
 
   const onGridReady = () => {
-    // getList();
+    // setTimeout(() => {
+    //   getList({});
+    // }, 1000);
   };
 
-  const addNew = () => {
-    setIsDialogOpen(true);
+  const handelAdd = () => {
+    setIsDialogOpen({ index: -1, isOpen: true });
+    setSelectedItem(undefined);
+  };
+  const handleEdit = (data: any, index: number) => {
+    setSelectedItem(data);
+    setIsDialogOpen({ index, isOpen: true });
+  };
+  const handleDelete = (data: any, index: number) => {
+    showConfirmDialog("Are you sure", "Do you want to delete?", async () => {
+      const result = await removeObjectDetails(props.type, data);
+      if (result && result.resultMessage) {
+        getList({});
+        // let newRowData = [...rowData];
+        // newRowData.splice(index, 1);
+        // setRowData(newRowData);
+        // gridRef.current?.api.setRowData(newRowData);
+        // gridRef.current?.api.refreshCells();
+      }
+    });
   };
 
   return (
@@ -119,100 +242,94 @@ const ModelingTypesComponent: React.FunctionComponent<
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={10} lg={10}>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <AppTextInput
-                      label="Name"
-                      onBlur={() => {}}
-                      onChange={(e: any) => {
-                        let tempValue = e.target.value;
-                        setSearch({
-                          ...search,
-                          name: tempValue || undefined,
-                        });
-                      }}
-                      value={search.name || ""}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <AppTextInput
-                      label="BOM ID"
-                      onBlur={() => {}}
-                      onChange={(e: any) => {
-                        let tempValue = e.target.value;
-                        setSearch({
-                          ...search,
-                          BOMID: tempValue || undefined,
-                        });
-                      }}
-                      value={search.BOMID || ""}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <AppTextInput
-                      label="Revision"
-                      onBlur={() => {}}
-                      onChange={(e: any) => {
-                        let tempValue = e.target.value;
-                        setSearch({
-                          ...search,
-                          revision: tempValue || undefined,
-                        });
-                      }}
-                      value={search.revision || ""}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <AppTextInput
-                      label="Batch Size"
-                      type="number"
-                      onBlur={() => {}}
-                      onChange={(e: any) => {
-                        let tempValue = e.target.value;
-                        setSearch({
-                          ...search,
-                          batcH_SIZE: tempValue || undefined,
-                        });
-                      }}
-                      value={search.batcH_SIZE || ""}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <AppTextInput
-                      label="BOM Status ID"
-                      onBlur={() => {}}
-                      onChange={(e: any) => {
-                        let tempValue = e.target.value;
-                        setSearch({
-                          ...search,
-                          boM_STATUSID: tempValue || undefined,
-                        });
-                      }}
-                      value={search.boM_STATUSID || ""}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <AppTextInput
-                      label="Order Status ID"
-                      onBlur={() => {}}
-                      onChange={(e: any) => {
-                        let tempValue = e.target.value;
-                        setSearch({
-                          ...search,
-                          ordeR_STATUSID: tempValue || undefined,
-                        });
-                      }}
-                      value={search.ordeR_STATUSID || ""}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <AppTextInput
-                      label="Company*"
-                      disabled={true}
-                      onBlur={() => {}}
-                      onChange={(e: any) => {}}
-                      value={companyName || ""}
-                    />
-                  </Grid>
+                  {fieldCaptions.map((item, index) => (
+                    <React.Fragment key={index}>
+                      {item.uireturntype === "SINGLE" &&
+                        item.field_type === "STRING" && (
+                          <Grid item xs={12} sm={6} md={4} lg={4}>
+                            <AppTextInput
+                              label={item.field_caption}
+                              type="text"
+                              disabled={item.readOnly != 0}
+                              onBlur={() => {}}
+                              onChange={(e: any) => {
+                                let tempValue = e.target.value;
+                                setSearch({
+                                  ...search,
+                                  [item.field_name]: tempValue || undefined,
+                                });
+                              }}
+                              value={search[item.field_name] || ""}
+                            />
+                          </Grid>
+                        )}
+                      {item.uireturntype === "SINGLE" &&
+                        item.field_type === "NUMERIC" && (
+                          <Grid item xs={12} sm={6} md={4} lg={4}>
+                            <AppTextInput
+                              label={item.field_caption}
+                              type="number"
+                              disabled={item.readOnly != 0}
+                              onBlur={() => {}}
+                              onChange={(e: any) => {
+                                let tempValue = e.target.value;
+                                setSearch({
+                                  ...search,
+                                  [item.field_name]: tempValue || undefined,
+                                });
+                              }}
+                              value={search[item.field_name] || ""}
+                            />
+                          </Grid>
+                        )}
+                      {item.uireturntype === "SINGLE" &&
+                        item.field_type === "DATETIME" && (
+                          <Grid item key={index} xs={12} sm={6} md={4} lg={4}>
+                            <AppDatePicker
+                              label={item.field_caption}
+                              onBlur={() => {}}
+                              disabled={item.readOnly != 0}
+                              onChange={(e: any) => {
+                                let tempValue = "";
+                                if (e) {
+                                  tempValue = moment(e).toISOString();
+                                }
+                                setSearch({
+                                  ...search,
+                                  [item.field_name]: tempValue || undefined,
+                                });
+                              }}
+                              value={search[item.field_name] || ""}
+                            />
+                          </Grid>
+                        )}
+                      {item.uireturntype === "LIST" && (
+                        <Grid item key={index} xs={12} sm={6} md={4} lg={4}>
+                          <AppSelectInput
+                            // menuItems={item.listValues}
+                            menuItems={[
+                              ...item.listValues,
+                              { name: "All", value: "all" },
+                            ]}
+                            label={item.field_caption}
+                            disabled={item.readOnly != 0}
+                            onBlur={() => {}}
+                            onChange={(e: any) => {
+                              let tempValue = e.target.value;
+                              setSearch({
+                                ...search,
+                                [item.field_name]:
+                                  tempValue && tempValue != "all"
+                                    ? tempValue
+                                    : undefined,
+                              });
+                            }}
+                            value={search[item.field_name] || "all"}
+                          />
+                        </Grid>
+                      )}
+                    </React.Fragment>
+                  ))}
                 </Grid>
               </Grid>
               <Grid item xs={12} sm={12} md={2} lg={2}>
@@ -245,7 +362,7 @@ const ModelingTypesComponent: React.FunctionComponent<
                     <AppButton
                       btnText="Add"
                       onClick={() => {
-                        addNew();
+                        handelAdd();
                       }}
                       startIcon={<AddIcon />}
                       type="button"
@@ -261,7 +378,7 @@ const ModelingTypesComponent: React.FunctionComponent<
         </Grid>
         <Grid item xs={12} paddingBottom={6}>
           <Paper elevation={4} component="div">
-            <Box
+            {/* <Box
               component="div"
               padding={2}
               justifyContent="end"
@@ -279,17 +396,19 @@ const ModelingTypesComponent: React.FunctionComponent<
                   <Typography variant="caption">Show Less</Typography>
                 )}
               </Button>
-            </Box>
+            </Box> */}
             {/* <Collapse in={!expanded} timeout="auto" unmountOnExit> */}
             <div
               style={{
-                height: expanded
-                  ? "calc(100vh - 300px)"
-                  : "calc(100vh - 552px)",
+                // height: expanded
+                //   ? "calc(100vh - 225px)"
+                //   : "calc(100vh - 552px)",
+                height: "calc(100vh - 210px)",
               }}
             >
               <AgGridReact
-                rowData={rowData}
+                ref={gridRef}
+                rowData={[...rowData]}
                 columnDefs={columnDefs}
                 className="ag-theme-alpine"
                 animateRows={true}
@@ -297,6 +416,11 @@ const ModelingTypesComponent: React.FunctionComponent<
                 pagination={true}
                 paginationPageSize={10}
                 onGridReady={onGridReady}
+                context={{
+                  customButtonCell,
+                  customDateCell,
+                  customCell,
+                }}
               ></AgGridReact>
             </div>
             {/* </Collapse> */}
@@ -304,15 +428,33 @@ const ModelingTypesComponent: React.FunctionComponent<
         </Grid>
       </Grid>
 
-      {isDialogOpen && (
+      {dialog.isOpen && (
         <CustomDrawerComponent
-          title={selectedItem?.data?.title || "Add"}
+          title={dialog.index != -1 ? "Edit" : "Add"}
           isOpen={true}
           onClose={() => {
-            setIsDialogOpen(false);
+            setIsDialogOpen({ index: -1, isOpen: false });
           }}
         >
-          test
+          <ManageModelingType
+            type={props.type}
+            fieldCaptions={fieldCaptions}
+            modelingData={selectedItem}
+            onClose={(data?: any) => {
+              // if (dialog.index != -1) {
+              //   setRowData([data, ...rowData]);
+              // } else {
+              //   const temp = rowData;
+              //   temp[dialog.index as number] = data;
+              //   setRowData(temp);
+              //   setSelectedItem(undefined);
+              // }
+              if (data) {
+                getList();
+              }
+              setIsDialogOpen({ index: -1, isOpen: false });
+            }}
+          />
         </CustomDrawerComponent>
       )}
     </React.Fragment>

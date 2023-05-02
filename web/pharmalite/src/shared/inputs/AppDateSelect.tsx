@@ -1,6 +1,7 @@
 import React from "react";
 import { FormControl } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
+import moment from "moment";
 
 function AppDatePicker({
   name,
@@ -35,7 +36,7 @@ function AppDatePicker({
       <DatePicker
         label={label}
         format="DD/MM/YYYY"
-        value={value}
+        value={value ? moment(value) : ""}
         onChange={onChange}
         maxDate={maxDate}
         minDate={minDate}

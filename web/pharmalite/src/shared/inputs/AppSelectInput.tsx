@@ -10,6 +10,7 @@ function AppSelectInput({
   menuItems,
   className,
   disabled,
+  touched,
   error,
   errorText,
   ...rest
@@ -19,11 +20,12 @@ function AppSelectInput({
   className?: string;
   label?: string;
   disabled?: boolean;
+  touched?: boolean;
   error?: boolean;
   onChange: any;
   onBlur: any;
   errorText?: string;
-  menuItems: { name: string; value: string }[];
+  menuItems: { name: string; value?: string }[];
 }) {
   return (
     <FormControl fullWidth margin="normal">
@@ -49,6 +51,11 @@ function AppSelectInput({
             </MenuItem>
           ))}
       </Select>
+      {(error || errorText) && touched && (
+        <Typography variant="caption" color="error">
+          &nbsp; &nbsp;{errorText || ""}
+        </Typography>
+      )}
     </FormControl>
   );
 }
