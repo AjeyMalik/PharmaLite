@@ -39,12 +39,14 @@ import { IMenuGroup } from "index/vm";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { SideMenuManageContext } from "index/providers/SideMenuManageProvider";
+import { StatusContext } from "index/providers/StatusProvider";
 
 interface HeaderProps {}
 
 const Header: React.FunctionComponent<HeaderProps> = (props) => {
   const { open, selectedMenuGroup, updateOpenStats, updateSelectedMenuGroup } =
     React.useContext(SideMenuManageContext);
+  const { updateStatus } = React.useContext(StatusContext);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({} as any);
@@ -71,7 +73,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
   const getMenuGroups = async () => {
     await getMenuGroupsFromApi().then(
       function (successResponse) {
-        if (successResponse && successResponse.dTable) {
+        if (successResponse && successResponse.errorNo === 0) {
           // let menuGroups =
           //   (successResponse?.Data && successResponse.Data) || [];
           let response =
@@ -104,6 +106,8 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
           );
           setMenuGroups(groups);
           getModelingMenu();
+        } else {
+          updateStatus(successResponse?.resultMessage,'error');
         }
       },
       function (errorResponse) {
@@ -117,6 +121,8 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
       function (successResponse) {
         if (successResponse && successResponse.errorNo === 0) {
           setModelingMenu(successResponse.dTable);
+        }else{
+          updateStatus(successResponse?.resultMessage,'error');
         }
       },
       function (errorResponse) {
@@ -165,7 +171,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
     localStorage.setItem("selectedMenuGroup", group.MenuGroup);
     localStorage.setItem("selectedMenu", item);
     if (group.MenuGroup === "Modeling") {
-      goto("/modeling/" + path);
+      goto("/modeling/" + (path).toLocaleLowerCase());
     } else {
       goto("/" + path);
     }

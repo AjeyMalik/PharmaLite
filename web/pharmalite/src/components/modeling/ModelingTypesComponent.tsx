@@ -19,6 +19,7 @@ import AddIcon from "@mui/icons-material/Add";
 import AppTextInput from "index/shared/inputs/AppTextInput";
 import { IDrawerOpen } from "index/vm";
 import {
+  getListItemValues,
   getObjectDetails,
   getTableFieldCaptions,
   removeObjectDetails,
@@ -32,6 +33,7 @@ import ManageModelingType from "./ManageModelingType";
 import moment from "moment";
 import AppDatePicker from "index/shared/inputs/AppDateSelect";
 import AppSelectInput from "index/shared/inputs/AppSelectInput";
+import { StatusContext } from "index/providers/StatusProvider";
 
 interface ModelingTypesComponentProps {
   type: string;
@@ -43,6 +45,7 @@ const ModelingTypesComponent: React.FunctionComponent<
   const gridRef = React.useRef<AgGridReact>(null);
 
   const { showConfirmDialog } = React.useContext(ConfirmDialogContext);
+  const { updateStatus } = React.useContext(StatusContext);
 
   const [fieldCaptions, setFieldCaptions] = useState<any[]>([]);
   const [rowData, setRowData] = useState<any>([]);
@@ -96,19 +99,44 @@ const ModelingTypesComponent: React.FunctionComponent<
     const getFields = async (type: string) => {
       const result = await getTableFieldCaptions(type);
       if (result && result.errorNo == 0) {
-        let formLoadData = result?.formLoadData || [];
         let fieldCaptionsList: any = [];
         result.dTable.length > 0 &&
-          result.dTable.forEach((ele) => {
-            if (ele.uireturntype === "LIST") {
-              let listItem = formLoadData.find(
-                (e: any) => e.columnName === ele.field_name
-              );
-              fieldCaptionsList.push({
-                ...ele,
-                field_name: ele.field_name ? ele.field_name.toLowerCase() : "",
-                listValues: listItem?.columnData || [],
-              });
+          result.dTable.forEach(async (ele) => {
+            if (ele.uireturntype === "LIST" && ele.fielD_QUERY) {
+              let listsResult = await getListItemValues(ele.fielD_QUERY);
+              // let listItem = formLoadData.find(
+              //   (e: any) => e.columnName === ele.field_name
+              // );
+              if (listsResult && listsResult.errorNo === 0) {
+                let tempName =
+                  listsResult.columnDetails.length > 0 &&
+                  listsResult.columnDetails[1].columnName &&
+                  listsResult.columnDetails[1].columnName.toLowerCase();
+                let tempValue =
+                  listsResult.columnDetails.length > 0 &&
+                  listsResult.columnDetails[0].columnName &&
+                  listsResult.columnDetails[0].columnName.toLowerCase();
+
+                let tempList =
+                  listsResult.dTable.length > 0
+                    ? listsResult.dTable.map((listItem) => {
+                        return {
+                          name: listItem[tempName],
+                          value: listItem[tempValue],
+                        };
+                      })
+                    : [];
+                console.log("--list--", tempList);
+                fieldCaptionsList.push({
+                  ...ele,
+                  field_name: ele.field_name
+                    ? ele.field_name.toLowerCase()
+                    : "",
+                  listValues: tempList,
+                });
+              } else {
+                updateStatus(listsResult?.resultMessage, "error");
+              }
             } else {
               fieldCaptionsList.push({
                 ...ele,
@@ -119,6 +147,9 @@ const ModelingTypesComponent: React.FunctionComponent<
         console.log("fieldCaptions", fieldCaptionsList);
         setFieldCaptions(fieldCaptionsList);
         getList({}, fieldCaptionsList);
+        updateStatus("", "");
+      } else {
+        updateStatus(result?.resultMessage, "error");
       }
     };
     getFields(props.type);
@@ -129,7 +160,10 @@ const ModelingTypesComponent: React.FunctionComponent<
     let obj = searchObj
       ? { ...searchObj, company: companyName || "" }
       : { ...search, company: companyName || "" };
-    let result = await getObjectDetails(props.type, obj);
+    let convertedType = props.type
+      ? props.type.replaceAll("_", "").toLowerCase()
+      : "";
+    let result = await getObjectDetails(convertedType, obj);
     let tempFieldCaptions =
       fieldCaptionsList && fieldCaptionsList.length > 0
         ? [...fieldCaptionsList]
@@ -159,20 +193,26 @@ const ModelingTypesComponent: React.FunctionComponent<
       colId: "params",
     });
     setColumnsDefs(colDefs);
-    let row =
-      result &&
-      result.dTable &&
-      result.dTable.length > 0 &&
-      result.dTable.map((ele: any) => {
-        let headers = Object.entries(ele).map((e) => e[0]);
-        let itemstoReturn = headers.reduce((e, acc) => {
-          return { ...e, [acc.toLowerCase()]: ele[acc] };
-        }, {});
-        return itemstoReturn;
-      });
-    console.log("columnDefs", colDefs);
-    console.log("rowData", row);
-    setRowData(row || []);
+
+    if (result && result.errorNo === 0) {
+      let row =
+        result.dTable &&
+        result.dTable.length > 0 &&
+        result.dTable.map((ele: any) => {
+          let headers = Object.entries(ele).map((e) => e[0]);
+          let itemstoReturn = headers.reduce((e, acc) => {
+            return { ...e, [acc.toLowerCase()]: ele[acc] };
+          }, {});
+          return itemstoReturn;
+        });
+      console.log("columnDefs", colDefs);
+      console.log("rowData", row);
+      setRowData(row || []);
+      updateStatus("", "");
+    } else {
+      setRowData([]);
+      updateStatus(result?.resultMessage, "error");
+    }
   };
 
   const reset = () => {
@@ -192,11 +232,7 @@ const ModelingTypesComponent: React.FunctionComponent<
     []
   );
 
-  const onGridReady = () => {
-    // setTimeout(() => {
-    //   getList({});
-    // }, 1000);
-  };
+  const onGridReady = () => {};
 
   const handelAdd = () => {
     setIsDialogOpen({ index: -1, isOpen: true });
@@ -209,13 +245,11 @@ const ModelingTypesComponent: React.FunctionComponent<
   const handleDelete = (data: any, index: number) => {
     showConfirmDialog("Are you sure", "Do you want to delete?", async () => {
       const result = await removeObjectDetails(props.type, data);
-      if (result && result.resultMessage) {
+      if (result && result.errorNo === 0) {
+        updateStatus(result?.resultMessage, "success");
         getList({});
-        // let newRowData = [...rowData];
-        // newRowData.splice(index, 1);
-        // setRowData(newRowData);
-        // gridRef.current?.api.setRowData(newRowData);
-        // gridRef.current?.api.refreshCells();
+      } else {
+        updateStatus(result?.resultMessage, "error");
       }
     });
   };
@@ -227,7 +261,7 @@ const ModelingTypesComponent: React.FunctionComponent<
           <Paper elevation={4} component="div" sx={{ padding: 2 }}>
             <Box component="div" justifyContent="flex-start" display="flex">
               <Typography variant="h5" textTransform="capitalize">
-                {props.type}
+                {props.type ? props.type.replaceAll("_", " ") : "-"}
               </Typography>
               {/* <IconButton
                 onClick={() => {
@@ -441,14 +475,6 @@ const ModelingTypesComponent: React.FunctionComponent<
             fieldCaptions={fieldCaptions}
             modelingData={selectedItem}
             onClose={(data?: any) => {
-              // if (dialog.index != -1) {
-              //   setRowData([data, ...rowData]);
-              // } else {
-              //   const temp = rowData;
-              //   temp[dialog.index as number] = data;
-              //   setRowData(temp);
-              //   setSelectedItem(undefined);
-              // }
               if (data) {
                 getList();
               }

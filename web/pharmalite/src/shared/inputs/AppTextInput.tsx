@@ -35,8 +35,8 @@ function AppTextInput({
   error?: boolean;
   icon?: any;
   multiline?: boolean;
-  errorText?: string;
-  helperText?: string;
+  errorText?: any;
+  helperText?: any;
   endIcon?: any;
   mBottom?: any;
   disabled?: boolean;

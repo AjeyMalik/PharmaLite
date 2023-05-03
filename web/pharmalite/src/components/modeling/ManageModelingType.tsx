@@ -1,5 +1,6 @@
 import { Button, Grid } from "@mui/material";
 import { Formik } from "formik";
+import { StatusContext } from "index/providers/StatusProvider";
 import { addOrUpdateObjectDetails } from "index/services/modeling/ModelingService";
 import { getCompany } from "index/services/util/UtilService";
 import AppDatePicker from "index/shared/inputs/AppDateSelect";
@@ -22,6 +23,11 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
   fieldCaptions,
 }) => {
   let companyName = getCompany();
+
+  const { updateStatus } = React.useContext(StatusContext);
+  const [isSubmited, setSubmitted] = React.useState(false);
+  console.log("--fieldCaptions--", fieldCaptions);
+  console.log("--modelingData--", modelingData);
   return (
     <React.Fragment>
       <Formik
@@ -30,13 +36,21 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
         }
         validate={(values: any) => {
           let errors: any = {};
+          fieldCaptions.forEach((ele) => {
+            if (ele.userrequired != 0 && !values[ele.field_name]) {
+              errors[ele.field_name] = "Required";
+            }
+          });
+          return errors;
         }}
         onSubmit={async (values, { setSubmitting }) => {
           const obj = { ...values };
           let result = await addOrUpdateObjectDetails(type, obj);
           if (result && result.errorNo === 0) {
+            updateStatus(result?.resultMessage, "success");
             onClose(values);
-          }else{
+          } else {
+            updateStatus(result?.resultMessage, "error");
             onClose();
           }
           setSubmitting(false);
@@ -51,7 +65,6 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
           handleSubmit,
           isSubmitting,
           setFieldValue,
-          setFieldError,
         }) => (
           <div style={{ padding: "16px" }}>
             <form onSubmit={handleSubmit}>
@@ -69,6 +82,17 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
                             onBlur={handleBlur}
                             onChange={handleChange}
                             value={values[item.field_name] || ""}
+                            error={
+                              errors[item.field_name] &&
+                              (touched[item.field_name] || isSubmited)
+                                ? true
+                                : false
+                            }
+                            helperText={
+                              errors[item.field_name] &&
+                              (touched[item.field_name] || isSubmited) &&
+                              errors[item.field_name]
+                            }
                           />
                         </Grid>
                       )}
@@ -83,6 +107,17 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
                             onBlur={handleBlur}
                             onChange={handleChange}
                             value={values[item.field_name] || ""}
+                            error={
+                              errors[item.field_name] &&
+                              (touched[item.field_name] || isSubmited)
+                                ? true
+                                : false
+                            }
+                            helperText={
+                              errors[item.field_name] &&
+                              (touched[item.field_name] || isSubmited) &&
+                              errors[item.field_name]
+                            }
                           />
                         </Grid>
                       )}
@@ -92,10 +127,27 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
                           <AppDatePicker
                             label={item.field_caption}
                             name={item.field_name}
-                            onBlur={() => {}}
+                            onBlur={handleBlur}
                             disabled={item.readOnly != 0}
-                            onChange={handleChange}
+                            onChange={(e: any) => {
+                              let tempValue = "";
+                              if (e) {
+                                tempValue = moment(e).toISOString();
+                              }
+                              setFieldValue(item.field_name, tempValue);
+                            }}
                             value={values[item.field_name] || ""}
+                            error={
+                              errors[item.field_name] &&
+                              (touched[item.field_name] || isSubmited)
+                                ? true
+                                : false
+                            }
+                            helperText={
+                              errors[item.field_name] &&
+                              (touched[item.field_name] || isSubmited) &&
+                              errors[item.field_name]
+                            }
                           />
                         </Grid>
                       )}
@@ -103,15 +155,24 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
                       <Grid item key={index} xs={12} sm={12} md={12} lg={12}>
                         <AppSelectInput
                           // menuItems={item.listValues}
-                          menuItems={[
-                            ...item.listValues,
-                            { name: "All", value: "all" },
-                          ]}
+                          menuItems={item.listValues}
                           label={item.field_caption}
+                          name={item.field_name}
                           disabled={item.readOnly != 0}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          value={values[item.field_name] || "all"}
+                          value={values[item.field_name]}
+                          error={
+                            errors[item.field_name] &&
+                            (touched[item.field_name] || isSubmited)
+                              ? true
+                              : false
+                          }
+                          helperText={
+                            errors[item.field_name] &&
+                            (touched[item.field_name] || isSubmited) &&
+                            errors[item.field_name]
+                          }
                         />
                       </Grid>
                     )}
@@ -136,6 +197,11 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
                     variant="contained"
                     className="add-btn"
                     color="primary"
+                    onClick={() => {
+                      if (!isSubmited) {
+                        setSubmitted(true);
+                      }
+                    }}
                     disabled={isSubmitting}
                   >
                     {modelingData ? "Update" : "Add"}

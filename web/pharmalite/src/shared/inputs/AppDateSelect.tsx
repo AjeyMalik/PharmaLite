@@ -26,8 +26,8 @@ function AppDatePicker({
   error?: boolean;
   onChange: any;
   onBlur?: any;
-  errorText?: string;
-  helperText?: string;
+  errorText?: any;
+  helperText?: any;
   maxDate?: any;
   minDate?: any;
 }) {
