@@ -30,6 +30,7 @@ export async function getObjectDetails(
   data: IModelingSearch
 ): Promise<IStandardAPIResponse<any>> {
   try {
+    type = type.replaceAll("_", "").toLowerCase();
     let res = await httpClient<any>(`${type}/getObjectDetails`, "POST", data);
     return res;
   } catch (err: any) {
@@ -42,6 +43,7 @@ export async function addOrUpdateObjectDetails(
   data: any
 ): Promise<IStandardAPIResponse<any>> {
   try {
+    type = type.replaceAll("_", "").toLowerCase();
     let res = await httpClient<any>(`${type}/maintObjectDetails`, "POST", data);
     return res;
   } catch (err: any) {
@@ -54,6 +56,7 @@ export async function removeObjectDetails(
   data: any
 ): Promise<IStandardAPIResponse<any>> {
   try {
+    type = type.replaceAll("_", "").toLowerCase();
     let res = await httpClient<any>(
       `${type}/deleteObjectDetails`,
       "POST",

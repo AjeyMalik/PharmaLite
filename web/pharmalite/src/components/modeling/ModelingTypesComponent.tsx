@@ -160,10 +160,7 @@ const ModelingTypesComponent: React.FunctionComponent<
     let obj = searchObj
       ? { ...searchObj, company: companyName || "" }
       : { ...search, company: companyName || "" };
-    let convertedType = props.type
-      ? props.type.replaceAll("_", "").toLowerCase()
-      : "";
-    let result = await getObjectDetails(convertedType, obj);
+    let result = await getObjectDetails(props.type, obj);
     let tempFieldCaptions =
       fieldCaptionsList && fieldCaptionsList.length > 0
         ? [...fieldCaptionsList]
@@ -208,7 +205,7 @@ const ModelingTypesComponent: React.FunctionComponent<
       console.log("columnDefs", colDefs);
       console.log("rowData", row);
       setRowData(row || []);
-      updateStatus("", "");
+      // updateStatus("", "");
     } else {
       setRowData([]);
       updateStatus(result?.resultMessage, "error");

@@ -59,11 +59,11 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
                   return errors;
                 }}
                 onSubmit={async (values: ILogin, { setSubmitting }) => {
-                  let result: any = await loginToApp({
+                  let result = await loginToApp({
                     ...values,
                     Company: companyName,
                   });
-                  if (result && result.resultMessage) {
+                  if (result && result.errorNo === 0) {
                     setToken(
                       (result && result?.resultMessage) || "",
                       values.networkid
