@@ -29,10 +29,10 @@ const Footer: React.FunctionComponent<FooterProps> = () => {
           Status Message:{" "}
           <Typography
             component="span"
-            color={FOOTER_COLORS[type || "default"]}
+            color={FOOTER_COLORS[type || "success"]}
             variant="subtitle2"
           >
-            {message || "No Status"}
+            {message || ""}
           </Typography>
         </Typography>
       </Paper>
