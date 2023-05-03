@@ -56,6 +56,7 @@ const ModelingTypesComponent: React.FunctionComponent<
     isOpen: false,
     index: -1,
   } as IDrawerOpen);
+
   const [selectedItem, setSelectedItem] = useState<any>();
 
   const customButtonCell = (cellprops: ICellRendererParams) => {
@@ -82,6 +83,7 @@ const ModelingTypesComponent: React.FunctionComponent<
   const customCell = (cellprops: ICellRendererParams) => {
     return <span>{cellprops?.value || "-"}</span>;
   };
+
   const customDateCell = (cellprops: ICellRendererParams) => {
     return (
       <span>
@@ -96,66 +98,67 @@ const ModelingTypesComponent: React.FunctionComponent<
     const companyName = localStorage.getItem("company");
     setCompanyName(companyName || "");
     setSearch({ company: companyName });
-    const getFields = async (type: string) => {
-      const result = await getTableFieldCaptions(type);
-      if (result && result.errorNo == 0) {
-        let fieldCaptionsList: any = [];
-        result.dTable.length > 0 &&
-          result.dTable.forEach(async (ele) => {
-            if (ele.uireturntype === "LIST") {
-              if (ele.fielD_QUERY) {
-                let listsResult = await getListItemValues(ele.fielD_QUERY);
-                // let listItem = formLoadData.find(
-                //   (e: any) => e.columnName === ele.field_name
-                // );
-                if (listsResult && listsResult.errorNo === 0) {
-                  let tempName =
-                    listsResult.columnDetails.length > 0 &&
-                    listsResult.columnDetails[1].columnName &&
-                    listsResult.columnDetails[1].columnName.toLowerCase();
-                  let tempValue =
-                    listsResult.columnDetails.length > 0 &&
-                    listsResult.columnDetails[0].columnName &&
-                    listsResult.columnDetails[0].columnName.toLowerCase();
-
-                  let tempList =
-                    listsResult.dTable.length > 0
-                      ? listsResult.dTable.map((listItem) => {
-                          return {
-                            name: listItem[tempName],
-                            value: listItem[tempValue],
-                          };
-                        })
-                      : [];
-                  console.log("--list--", tempList);
-                  fieldCaptionsList.push({
-                    ...ele,
-                    field_name: ele.field_name
-                      ? ele.field_name.toLowerCase()
-                      : "",
-                    listValues: tempList,
-                  });
-                } else {
-                  updateStatus(listsResult?.resultMessage, "error");
-                }
-              }
-            } else {
-              fieldCaptionsList.push({
-                ...ele,
-                field_name: ele.field_name ? ele.field_name.toLowerCase() : "",
-              });
-            }
-          });
-        console.log("fieldCaptions", fieldCaptionsList);
-        setFieldCaptions(fieldCaptionsList);
-        getList({}, fieldCaptionsList);
-        updateStatus("", "");
-      } else {
-        updateStatus(result?.resultMessage, "error");
-      }
-    };
     getFields(props.type);
   }, [props.type]);
+
+  const getFields = async (type: string) => {
+    const result = await getTableFieldCaptions(type);
+    if (result && result.errorNo == 0) {
+      let fieldCaptionsList: any = [];
+      result.dTable.length > 0 &&
+        result.dTable.forEach(async (ele) => {
+          if (ele.uireturntype === "LIST") {
+            if (ele.fielD_QUERY) {
+              let listsResult = await getListItemValues(ele.fielD_QUERY);
+              // let listItem = formLoadData.find(
+              //   (e: any) => e.columnName === ele.field_name
+              // );
+              if (listsResult && listsResult.errorNo === 0) {
+                let tempName =
+                  listsResult.columnDetails.length > 0 &&
+                  listsResult.columnDetails[1].columnName &&
+                  listsResult.columnDetails[1].columnName.toLowerCase();
+                let tempValue =
+                  listsResult.columnDetails.length > 0 &&
+                  listsResult.columnDetails[0].columnName &&
+                  listsResult.columnDetails[0].columnName.toLowerCase();
+
+                let tempList =
+                  listsResult.dTable.length > 0
+                    ? listsResult.dTable.map((listItem) => {
+                        return {
+                          name: listItem[tempName],
+                          value: listItem[tempValue],
+                        };
+                      })
+                    : [];
+                console.log("--list--", tempList);
+                fieldCaptionsList.push({
+                  ...ele,
+                  field_name: ele.field_name
+                    ? ele.field_name.toLowerCase()
+                    : "",
+                  listValues: tempList,
+                });
+              } else {
+                updateStatus(listsResult?.resultMessage, "error");
+              }
+            }
+          } else {
+            fieldCaptionsList.push({
+              ...ele,
+              field_name: ele.field_name ? ele.field_name.toLowerCase() : "",
+            });
+          }
+        });
+      console.log("fieldCaptions", fieldCaptionsList);
+      setFieldCaptions(fieldCaptionsList);
+      getList({}, fieldCaptionsList);
+      updateStatus("", "");
+    } else {
+      updateStatus(result?.resultMessage, "error");
+    }
+  };
 
   const getList = async (searchObj?: any, fieldCaptionsList?: any[]) => {
     const companyName = localStorage.getItem("company");
@@ -226,7 +229,6 @@ const ModelingTypesComponent: React.FunctionComponent<
       // editable: true,
       flex: 1,
       minWidth: 160,
-      minHeight: 80,
     }),
     []
   );
@@ -237,10 +239,12 @@ const ModelingTypesComponent: React.FunctionComponent<
     setIsDialogOpen({ index: -1, isOpen: true });
     setSelectedItem(undefined);
   };
+
   const handleEdit = (data: any, index: number) => {
     setSelectedItem(data);
     setIsDialogOpen({ index, isOpen: true });
   };
+
   const handleDelete = (data: any, index: number) => {
     showConfirmDialog("Are you sure", "Do you want to delete?", async () => {
       const result = await removeObjectDetails(props.type, data);
