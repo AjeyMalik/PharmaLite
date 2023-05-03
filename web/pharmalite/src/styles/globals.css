@@ -4,3 +4,8 @@ body {
   background: #f5f5f5;
   margin: 0;
 }
+
+.selected-side-menu-item {
+  background-color: #009688 !important;
+  color: #ffff !important;
+}

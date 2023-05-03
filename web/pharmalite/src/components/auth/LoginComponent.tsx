@@ -7,6 +7,7 @@ import * as React from "react";
 import { setToken } from "index/services/util/UtilService";
 import { getCompanyName, loginToApp } from "index/services/auth/AuthService";
 import AppTextInput from "index/shared/inputs/AppTextInput";
+import { COLOR_WHITE, PRIMARY_COLOR } from "index/Constant";
 
 interface LoginComponentProps {}
 
@@ -39,7 +40,7 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
           <Card variant="outlined">
             <CardHeader
               title="Login"
-              sx={{ backgroundColor: "#2196f3", color: "#fff" }}
+              sx={{ backgroundColor: PRIMARY_COLOR, color: COLOR_WHITE }}
             />
             <CardContent>
               <Formik

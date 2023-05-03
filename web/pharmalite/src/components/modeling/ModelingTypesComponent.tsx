@@ -102,40 +102,42 @@ const ModelingTypesComponent: React.FunctionComponent<
         let fieldCaptionsList: any = [];
         result.dTable.length > 0 &&
           result.dTable.forEach(async (ele) => {
-            if (ele.uireturntype === "LIST" && ele.fielD_QUERY) {
-              let listsResult = await getListItemValues(ele.fielD_QUERY);
-              // let listItem = formLoadData.find(
-              //   (e: any) => e.columnName === ele.field_name
-              // );
-              if (listsResult && listsResult.errorNo === 0) {
-                let tempName =
-                  listsResult.columnDetails.length > 0 &&
-                  listsResult.columnDetails[1].columnName &&
-                  listsResult.columnDetails[1].columnName.toLowerCase();
-                let tempValue =
-                  listsResult.columnDetails.length > 0 &&
-                  listsResult.columnDetails[0].columnName &&
-                  listsResult.columnDetails[0].columnName.toLowerCase();
+            if (ele.uireturntype === "LIST") {
+              if (ele.fielD_QUERY) {
+                let listsResult = await getListItemValues(ele.fielD_QUERY);
+                // let listItem = formLoadData.find(
+                //   (e: any) => e.columnName === ele.field_name
+                // );
+                if (listsResult && listsResult.errorNo === 0) {
+                  let tempName =
+                    listsResult.columnDetails.length > 0 &&
+                    listsResult.columnDetails[1].columnName &&
+                    listsResult.columnDetails[1].columnName.toLowerCase();
+                  let tempValue =
+                    listsResult.columnDetails.length > 0 &&
+                    listsResult.columnDetails[0].columnName &&
+                    listsResult.columnDetails[0].columnName.toLowerCase();
 
-                let tempList =
-                  listsResult.dTable.length > 0
-                    ? listsResult.dTable.map((listItem) => {
-                        return {
-                          name: listItem[tempName],
-                          value: listItem[tempValue],
-                        };
-                      })
-                    : [];
-                console.log("--list--", tempList);
-                fieldCaptionsList.push({
-                  ...ele,
-                  field_name: ele.field_name
-                    ? ele.field_name.toLowerCase()
-                    : "",
-                  listValues: tempList,
-                });
-              } else {
-                updateStatus(listsResult?.resultMessage, "error");
+                  let tempList =
+                    listsResult.dTable.length > 0
+                      ? listsResult.dTable.map((listItem) => {
+                          return {
+                            name: listItem[tempName],
+                            value: listItem[tempValue],
+                          };
+                        })
+                      : [];
+                  console.log("--list--", tempList);
+                  fieldCaptionsList.push({
+                    ...ele,
+                    field_name: ele.field_name
+                      ? ele.field_name.toLowerCase()
+                      : "",
+                    listValues: tempList,
+                  });
+                } else {
+                  updateStatus(listsResult?.resultMessage, "error");
+                }
               }
             } else {
               fieldCaptionsList.push({

@@ -1,4 +1,5 @@
 import { Card, CardContent, Grid, Typography } from "@mui/material";
+import { COLOR_WHITE } from "index/Constant";
 import { SideMenuManageContext } from "index/providers/SideMenuManageProvider";
 import * as React from "react";
 
@@ -49,7 +50,7 @@ const DashboardComponent: React.FunctionComponent<
                       background: "linear-gradient(to right, #2a5298, #1e3c72)",
                       alignItems: "center",
                       justifyContent: "center",
-                      color: "#fff",
+                      color: COLOR_WHITE,
                       height: "180px",
                       display: "flex",
                     }}

@@ -30,7 +30,7 @@ import {
 } from "index/services/util/UtilService";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
-import { SideMenuWidth } from "index/Constant";
+import { HEADER_COLOR, SideMenuWidth } from "index/Constant";
 import {
   getMenuGroupsFromApi,
   getModelingMenuFromApi,
@@ -107,7 +107,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
           setMenuGroups(groups);
           getModelingMenu();
         } else {
-          updateStatus(successResponse?.resultMessage,'error');
+          updateStatus(successResponse?.resultMessage, "error");
         }
       },
       function (errorResponse) {
@@ -121,8 +121,8 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
       function (successResponse) {
         if (successResponse && successResponse.errorNo === 0) {
           setModelingMenu(successResponse.dTable);
-        }else{
-          updateStatus(successResponse?.resultMessage,'error');
+        } else {
+          updateStatus(successResponse?.resultMessage, "error");
         }
       },
       function (errorResponse) {
@@ -171,7 +171,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
     localStorage.setItem("selectedMenuGroup", group.MenuGroup);
     localStorage.setItem("selectedMenu", item);
     if (group.MenuGroup === "Modeling") {
-      goto("/modeling/" + (path).toLocaleLowerCase());
+      goto("/modeling/" + path.toLocaleLowerCase());
     } else {
       goto("/" + path);
     }
@@ -183,7 +183,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
       <AppBar
         position="static"
         className="gradiantHeader"
-        sx={{ backgroundColor: "#1b68c0", height: 64 }}
+        sx={{ backgroundColor: HEADER_COLOR, height: 64 }}
       >
         <Container maxWidth={false}>
           <Toolbar disableGutters variant="regular" sx={{ height: 64 }}>
@@ -341,6 +341,11 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
                               ? true
                               : false
                           }
+                          className={
+                            menuItem && menuItem.tablE_NAME === selectedMenu
+                              ? "selected-side-menu-item"
+                              : ""
+                          }
                           onClick={() => {
                             onMenuItemClicked(
                               groupItem,
@@ -368,6 +373,13 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
                             menuItem?.Name === selectedMenu
                               ? true
                               : false
+                          }
+                          className={
+                            menuItem &&
+                            menuItem?.Name &&
+                            menuItem?.Name === selectedMenu
+                              ? "selected-side-menu-item"
+                              : ""
                           }
                           onClick={() => {
                             onMenuItemClicked(
