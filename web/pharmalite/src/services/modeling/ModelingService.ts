@@ -2,11 +2,13 @@ import { IModelingSearch, IStandardAPIResponse } from "index/vm";
 import { httpClient } from "../util/UtilService";
 
 export async function getTableFieldCaptions(
-  type: string
+  type: string,
+  company: string
 ): Promise<IStandardAPIResponse<any>> {
   try {
     let res = await httpClient<any>(`query/getTableFieldCaptions`, "POST", {
       tablename: type,
+      company: company,
     });
     return res;
   } catch (err: any) {
@@ -14,6 +16,20 @@ export async function getTableFieldCaptions(
   }
 }
 
+export async function getTransactionObject(
+  type: string,
+  values: string[]
+): Promise<any> {
+  try {
+    let res = await httpClient<any>(`query/getTransactionObject`, "POST", {
+      ObjectName: type,
+      InputValues: values,
+    });
+    return res;
+  } catch (err: any) {
+    return err && err.response ? err.response.data : undefined;
+  }
+}
 export async function getListItemValues(
   field_query: string
 ): Promise<IStandardAPIResponse<any>> {

@@ -1,7 +1,10 @@
 import { Button, Grid } from "@mui/material";
 import { Formik } from "formik";
 import { StatusContext } from "index/providers/StatusProvider";
-import { addOrUpdateObjectDetails } from "index/services/modeling/ModelingService";
+import {
+  addOrUpdateObjectDetails,
+  getTransactionObject,
+} from "index/services/modeling/ModelingService";
 import { getCompany } from "index/services/util/UtilService";
 import AppDatePicker from "index/shared/inputs/AppDateSelect";
 import AppSelectInput from "index/shared/inputs/AppSelectInput";
@@ -30,9 +33,10 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
   const [isSubmited, setSubmitted] = React.useState(false);
   console.log("--fieldCaptions--", fieldCaptions);
   console.log("--modelingData--", modelingData);
+
   return (
     <React.Fragment>
-      {isLoading && <Loading message="processing.."/>}
+      {isLoading && <Loading message="processing.." />}
       <Formik
         initialValues={
           modelingData ? modelingData : ({ company: companyName } as any)
@@ -49,15 +53,25 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
         onSubmit={async (values, { setSubmitting }) => {
           setLoading(true);
           const obj = { ...values };
-          let result = await addOrUpdateObjectDetails(type, obj);
-          if (result && result.errorNo === 0) {
+          var objectArr: string[] = [];
+          Object.keys(obj).forEach(function (key) {
+            objectArr.push(key);
+            objectArr.push(obj[key]);
+          });
+          let transactionObj = await getTransactionObject(type, objectArr);
+          if (transactionObj) {
+            let result = await addOrUpdateObjectDetails(type, transactionObj);
+            if (result && result.errorNo === 0) {
+              setLoading(false);
+              updateStatus(result?.resultMessage, "success");
+              onClose(values);
+            } else {
+              setLoading(false);
+              updateStatus(result?.resultMessage, "error");
+              onClose();
+            }
+          }else{
             setLoading(false);
-            updateStatus(result?.resultMessage, "success");
-            onClose(values);
-          } else {
-            setLoading(false);
-            updateStatus(result?.resultMessage, "error");
-            onClose();
           }
           setSubmitting(false);
         }}

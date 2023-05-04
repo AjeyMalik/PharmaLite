@@ -22,6 +22,7 @@ import {
   getListItemValues,
   getObjectDetails,
   getTableFieldCaptions,
+  getTransactionObject,
   removeObjectDetails,
 } from "index/services/modeling/ModelingService";
 import CustomDrawerComponent from "../common/CustomDrawer";
@@ -83,13 +84,17 @@ const ModelingTypesComponent: React.FunctionComponent<
   };
 
   const customCell = (cellprops: ICellRendererParams) => {
-    return <span>{cellprops?.value || "-"}</span>;
+    return (
+      <span>
+        {cellprops?.value || cellprops?.value == 0 ? cellprops.value : "-"}
+      </span>
+    );
   };
 
   const customDateCell = (cellprops: ICellRendererParams) => {
     return (
       <span>
-        {cellprops.value ? moment(cellprops.value).format("DD-MM-YYYY") : "-"}
+        {cellprops.value ? moment(cellprops.value).format("DD/MM/YYYY") : "-"}
       </span>
     );
   };
@@ -100,53 +105,58 @@ const ModelingTypesComponent: React.FunctionComponent<
     const companyName = localStorage.getItem("company");
     setCompanyName(companyName || "");
     setSearch({ company: companyName });
-    getFields(props.type);
+    if (companyName) {
+      getFields(props.type, companyName);
+    }
   }, [props.type]);
 
-  const getFields = async (type: string) => {
+  const getFields = async (type: string, company: string) => {
     setLoading(true);
-    const result = await getTableFieldCaptions(type);
+    const result = await getTableFieldCaptions(type, company);
     if (result && result.errorNo == 0) {
       let fieldCaptionsList: any = [];
+      let formLoadData: any = result?.formLoadData || [];
+
       result.dTable.length > 0 &&
         result.dTable.forEach(async (ele) => {
           if (ele.uireturntype === "LIST") {
-            if (ele.fielD_QUERY) {
-              let listsResult = await getListItemValues(ele.fielD_QUERY);
-              // let listItem = formLoadData.find(
-              //   (e: any) => e.columnName === ele.field_name
-              // );
-              if (listsResult && listsResult.errorNo === 0) {
-                let tempName =
-                  listsResult.columnDetails.length > 0 &&
-                  listsResult.columnDetails[1].columnName &&
-                  listsResult.columnDetails[1].columnName.toLowerCase();
-                let tempValue =
-                  listsResult.columnDetails.length > 0 &&
-                  listsResult.columnDetails[0].columnName &&
-                  listsResult.columnDetails[0].columnName.toLowerCase();
+            // let listsResult = await getListItemValues(ele.fielD_QUERY);
+            // if (listsResult && listsResult.errorNo === 0) {
+            //   let tempName =
+            //     listsResult.columnDetails.length > 0 &&
+            //     listsResult.columnDetails[1].columnName &&
+            //     listsResult.columnDetails[1].columnName.toLowerCase();
+            //   let tempValue =
+            //     listsResult.columnDetails.length > 0 &&
+            //     listsResult.columnDetails[0].columnName &&
+            //     listsResult.columnDetails[0].columnName.toLowerCase();
 
-                let tempList =
-                  listsResult.dTable.length > 0
-                    ? listsResult.dTable.map((listItem) => {
-                        return {
-                          name: listItem[tempName],
-                          value: listItem[tempValue],
-                        };
-                      })
-                    : [];
-                console.log("--list--", tempList);
-                fieldCaptionsList.push({
-                  ...ele,
-                  field_name: ele.field_name
-                    ? ele.field_name.toLowerCase()
-                    : "",
-                  listValues: tempList,
-                });
-              } else {
-                updateStatus(listsResult?.resultMessage, "error");
-              }
-            }
+            let listItem = formLoadData.find(
+              (e: any) => e.columnName === ele.field_name
+            );
+            let tempList =
+              listItem && listItem.columnData && listItem.columnData.length > 0
+                ? listItem.columnData.map(
+                    (e: { keyID: string; keyValue: string }) => {
+                      return {
+                        value: e.keyID,
+                        name: e.keyValue,
+                      };
+                    }
+                  )
+                : [];
+            console.log("--list--", tempList);
+            fieldCaptionsList.push({
+              ...ele,
+              field_name: ele.field_name
+                ? ele.field_name &&
+                  ele.field_type &&
+                  ele.field_name === ele.field_type
+                  ? ele.field_name.toLowerCase() + "id"
+                  : ele.field_name.toLowerCase()
+                : "",
+              listValues: tempList || [],
+            });
           } else {
             fieldCaptionsList.push({
               ...ele,
@@ -170,55 +180,77 @@ const ModelingTypesComponent: React.FunctionComponent<
     let obj = searchObj
       ? { ...searchObj, company: companyName || "" }
       : { ...search, company: companyName || "" };
-    let result = await getObjectDetails(props.type, obj);
-    let tempFieldCaptions =
-      fieldCaptionsList && fieldCaptionsList.length > 0
-        ? [...fieldCaptionsList]
-        : [...fieldCaptions];
-    let colDefs: any = [];
-    tempFieldCaptions.forEach((item: any) => {
-      colDefs.push({
-        field: item.field_name,
-        headerName: item.field_caption,
-        colId: item.field_name,
-        filter:
-          item.field_type === "DATETIME"
-            ? "agDateColumnFilter"
-            : item.field_type === "NUMBER"
-            ? "agNumberColumnFilter"
-            : "agTextColumnFilter",
-        cellRenderer:
-          item.field_type === "DATETIME" ? customDateCell : customCell,
-      });
+    var objectArr: string[] = [];
+    Object.keys(obj).forEach(function (key) {
+      objectArr.push(key);
+      objectArr.push(obj[key]);
     });
-    colDefs.push({
-      field: "button",
-      headerName: "Manage",
-      cellRenderer: customButtonCell,
-      editable: false,
-      minWidth: 150,
-      colId: "params",
-    });
-    setColumnsDefs(colDefs);
-
-    if (result && result.errorNo === 0) {
-      let row =
-        result.dTable &&
-        result.dTable.length > 0 &&
-        result.dTable.map((ele: any) => {
-          let headers = Object.entries(ele).map((e) => e[0]);
-          let itemstoReturn = headers.reduce((e, acc) => {
-            return { ...e, [acc.toLowerCase()]: ele[acc] };
-          }, {});
-          return itemstoReturn;
+    let transactionObj = await getTransactionObject(props.type, objectArr);
+    if (transactionObj) {
+      let result = await getObjectDetails(props.type, transactionObj);
+      let tempFieldCaptions =
+        fieldCaptionsList && fieldCaptionsList.length > 0
+          ? [...fieldCaptionsList]
+          : [...fieldCaptions];
+      let colDefs: any = [];
+      if (result && result.errorNo === 0) {
+        result.columnDetails.forEach((item: any) => {
+          if (
+            item?.columnName &&
+            item?.columnName.toLowerCase().includes("_hide") === false
+          ) {
+            let selectedFieldCation = tempFieldCaptions.find(
+              (fieldCaptionItem) =>
+                fieldCaptionItem.field_name === item?.columnName.toLowerCase()
+            );
+            colDefs.push({
+              field: item.columnName.toLowerCase(),
+              headerName: item.columnCaption,
+              colId: item.columnName.toLowerCase(),
+              filter:
+                selectedFieldCation &&
+                selectedFieldCation.field_type === "DATETIME"
+                  ? "agDateColumnFilter"
+                  : selectedFieldCation &&
+                    selectedFieldCation.field_type === "NUMBER"
+                  ? "agNumberColumnFilter"
+                  : "agTextColumnFilter",
+              cellRenderer:
+                selectedFieldCation &&
+                selectedFieldCation.field_type === "DATETIME"
+                  ? customDateCell
+                  : customCell,
+            });
+          }
         });
-      console.log("columnDefs", colDefs);
-      console.log("rowData", row);
-      setRowData(row || []);
-      // updateStatus("", "");
-    } else {
-      setRowData([]);
-      updateStatus(result?.resultMessage, "error");
+        colDefs.push({
+          field: "button",
+          headerName: "Manage",
+          cellRenderer: customButtonCell,
+          editable: false,
+          minWidth: 150,
+          colId: "params",
+        });
+        setColumnsDefs(colDefs);
+
+        let row =
+          result.dTable &&
+          result.dTable.length > 0 &&
+          result.dTable.map((ele: any) => {
+            let headers = Object.entries(ele).map((e) => e[0]);
+            let itemstoReturn = headers.reduce((e, acc) => {
+              return { ...e, [acc.toLowerCase()]: ele[acc] };
+            }, {});
+            return itemstoReturn;
+          });
+        console.log("columnDefs", colDefs);
+        console.log("rowData", row);
+        setRowData(row || []);
+        // updateStatus("", "");
+      } else {
+        setRowData([]);
+        updateStatus(result?.resultMessage, "error");
+      }
     }
   };
 
@@ -246,6 +278,10 @@ const ModelingTypesComponent: React.FunctionComponent<
   };
 
   const handleEdit = (data: any, index: number) => {
+    let isHideAvailable = Object.keys(data).find((e) => e.includes("_hide"));
+    if (isHideAvailable) {
+      data[isHideAvailable.split("_hide")[0]] = data[isHideAvailable];
+    }
     setSelectedItem(data);
     setIsDialogOpen({ index, isOpen: true });
   };
@@ -349,10 +385,9 @@ const ModelingTypesComponent: React.FunctionComponent<
                       {item.uireturntype === "LIST" && (
                         <Grid item key={index} xs={12} sm={6} md={4} lg={4}>
                           <AppSelectInput
-                            // menuItems={item.listValues}
                             menuItems={[
-                              ...item.listValues,
                               { name: "All", value: "all" },
+                              ...item.listValues,
                             ]}
                             label={item.field_caption}
                             disabled={item.readOnly != 0}
