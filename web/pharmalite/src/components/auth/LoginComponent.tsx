@@ -8,11 +8,13 @@ import { setToken } from "index/services/util/UtilService";
 import { getCompanyName, loginToApp } from "index/services/auth/AuthService";
 import AppTextInput from "index/shared/inputs/AppTextInput";
 import { COLOR_WHITE, PRIMARY_COLOR } from "index/Constant";
+import Loading from "../common/Loading";
 
 interface LoginComponentProps {}
 
 const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
   const router = useRouter();
+  const [isLoading, setLoading] = useState(false);
   const [companyName, setCompanyName] = useState("");
 
   useEffect(() => {
@@ -23,7 +25,11 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
   const getCompany = async () => {
     await getCompanyName().then(
       function (successResponse) {
-        if (successResponse && successResponse.resultMessage) {
+        if (
+          successResponse &&
+          successResponse.errorNo === 0 &&
+          successResponse.resultMessage
+        ) {
           setCompanyName(successResponse.resultMessage);
         }
       },
@@ -35,6 +41,7 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
 
   return (
     <React.Fragment>
+      {isLoading && <Loading message="loading.." />}
       <Grid container justifyContent="center">
         <Grid item xs={12} sm={12} md={6} lg={4}>
           <Card variant="outlined">
@@ -60,6 +67,7 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
                   return errors;
                 }}
                 onSubmit={async (values: ILogin, { setSubmitting }) => {
+                  setLoading(true);
                   let result = await loginToApp({
                     ...values,
                     Company: companyName,
@@ -70,9 +78,10 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
                       values.networkid
                     );
                     localStorage.setItem("company", companyName);
+                    setLoading(false);
                     router.push("/dashboard");
                   } else {
-                    // showToast(result.Message, "error");
+                    setLoading(false);
                   }
                   setSubmitting(false);
                 }}

@@ -34,6 +34,7 @@ import moment from "moment";
 import AppDatePicker from "index/shared/inputs/AppDateSelect";
 import AppSelectInput from "index/shared/inputs/AppSelectInput";
 import { StatusContext } from "index/providers/StatusProvider";
+import Loading from "../common/Loading";
 
 interface ModelingTypesComponentProps {
   type: string;
@@ -47,6 +48,7 @@ const ModelingTypesComponent: React.FunctionComponent<
   const { showConfirmDialog } = React.useContext(ConfirmDialogContext);
   const { updateStatus } = React.useContext(StatusContext);
 
+  const [isLoading, setLoading] = useState(false);
   const [fieldCaptions, setFieldCaptions] = useState<any[]>([]);
   const [rowData, setRowData] = useState<any>([]);
   const [columnDefs, setColumnsDefs] = useState<any[]>([]);
@@ -102,6 +104,7 @@ const ModelingTypesComponent: React.FunctionComponent<
   }, [props.type]);
 
   const getFields = async (type: string) => {
+    setLoading(true);
     const result = await getTableFieldCaptions(type);
     if (result && result.errorNo == 0) {
       let fieldCaptionsList: any = [];
@@ -153,10 +156,12 @@ const ModelingTypesComponent: React.FunctionComponent<
         });
       console.log("fieldCaptions", fieldCaptionsList);
       setFieldCaptions(fieldCaptionsList);
-      getList({}, fieldCaptionsList);
+      setLoading(false);
       updateStatus("", "");
+      getList({}, fieldCaptionsList);
     } else {
       updateStatus(result?.resultMessage, "error");
+      setLoading(false);
     }
   };
 
@@ -259,6 +264,7 @@ const ModelingTypesComponent: React.FunctionComponent<
 
   return (
     <React.Fragment>
+      {isLoading && <Loading />}
       <Grid container direction="column" spacing={3}>
         <Grid item xs={12}>
           <Paper elevation={4} component="div" sx={{ padding: 2 }}>

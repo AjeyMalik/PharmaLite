@@ -9,3 +9,13 @@ body {
   background-color: #009688 !important;
   color: #ffff !important;
 }
+
+.loading-dialog>div>div {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.loading {
+  color: #fff;
+  padding-top: 8px;
+}

@@ -8,6 +8,7 @@ import AppSelectInput from "index/shared/inputs/AppSelectInput";
 import AppTextInput from "index/shared/inputs/AppTextInput";
 import moment from "moment";
 import * as React from "react";
+import Loading from "../common/Loading";
 
 interface ManageModelingTypeProps {
   type: string;
@@ -25,11 +26,13 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
   let companyName = getCompany();
 
   const { updateStatus } = React.useContext(StatusContext);
+  const [isLoading, setLoading] = React.useState(false);
   const [isSubmited, setSubmitted] = React.useState(false);
   console.log("--fieldCaptions--", fieldCaptions);
   console.log("--modelingData--", modelingData);
   return (
     <React.Fragment>
+      {isLoading && <Loading message="processing.."/>}
       <Formik
         initialValues={
           modelingData ? modelingData : ({ company: companyName } as any)
@@ -44,12 +47,15 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
           return errors;
         }}
         onSubmit={async (values, { setSubmitting }) => {
+          setLoading(true);
           const obj = { ...values };
           let result = await addOrUpdateObjectDetails(type, obj);
           if (result && result.errorNo === 0) {
+            setLoading(false);
             updateStatus(result?.resultMessage, "success");
             onClose(values);
           } else {
+            setLoading(false);
             updateStatus(result?.resultMessage, "error");
             onClose();
           }
