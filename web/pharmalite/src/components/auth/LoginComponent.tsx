@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, Grid } from "@mui/material";
+import { Card, CardContent, CardHeader, Grid } from "@mui/material";
 import { Formik } from "formik";
 import { ILogin } from "index/vm";
 import { useEffect, useState } from "react";
@@ -9,6 +9,7 @@ import { getCompanyName, loginToApp } from "index/services/auth/AuthService";
 import AppTextInput from "index/shared/inputs/AppTextInput";
 import { COLOR_WHITE, PRIMARY_COLOR } from "index/Constant";
 import Loading from "../common/Loading";
+import AppButton from "index/shared/inputs/AppButton";
 
 interface LoginComponentProps {}
 
@@ -144,14 +145,13 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
                     <br />
                     <Grid justifyContent={"center"} container>
                       <Grid item>
-                        <Button
+                        <AppButton
+                          btnText="Login"
                           type="submit"
                           variant="contained"
                           color="primary"
                           disabled={isSubmitting}
-                        >
-                          Login
-                        </Button>
+                        />
                       </Grid>
                     </Grid>
                   </form>

@@ -1,7 +1,6 @@
 import {
   Box,
   Grid,
-  Button,
   Paper,
   Typography,
   IconButton,
@@ -422,6 +421,7 @@ const ModelingTypesComponent: React.FunctionComponent<
                       type="button"
                       variant="contained"
                       color="primary"
+                      fullWidth={true}
                     />
                   </Grid>
                   <Grid item xs={4} sm={4} md={12} lg={12}>
@@ -434,6 +434,7 @@ const ModelingTypesComponent: React.FunctionComponent<
                       type="rest"
                       variant="outlined"
                       color="primary"
+                      fullWidth={true}
                     />
                   </Grid>
                   <Grid item xs={4} sm={4} md={12} lg={12}>
@@ -446,6 +447,7 @@ const ModelingTypesComponent: React.FunctionComponent<
                       type="button"
                       variant="contained"
                       color="secondary"
+                      fullWidth={true}
                     />
                   </Grid>
                 </Grid>

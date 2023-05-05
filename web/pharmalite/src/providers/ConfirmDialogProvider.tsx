@@ -1,6 +1,12 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import AppButton from "index/shared/inputs/AppButton";
 import React from "react";
-
 
 interface showConfirmDialogFunc {
   (title: string, content: string, successHandler: Function): void;
@@ -55,27 +61,23 @@ export const ConfirmDialogProvider: React.FC<any> = (props) => {
             <DialogContentText>{state.content}</DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button
-              className="cancel-btn"
+            <AppButton
               onClick={closeDialog}
               color="secondary"
-            >
-              Cancel
-            </Button>
-            <Button
+              btnText="Cancel"
+            />
+            <AppButton
               onClick={() => {
                 if (state.successHandler) {
                   state.successHandler();
                 }
                 closeDialog();
               }}
-              className="add-btn"
               variant="contained"
               color="primary"
-              autoFocus
-            >
-              Yes
-            </Button>
+              btnText="Yes"
+              autoFocus={true}
+            />
           </DialogActions>
         </Dialog>
         {props.children}

@@ -8,26 +8,37 @@ function AppButton({
   type,
   onClick,
   className,
+  size,
   startIcon,
+  disabled,
+  fullWidth,
+  autoFocus,
   ...rest
 }: {
   btnText: string;
   variant?: "text" | "outlined" | "contained";
   color?: "primary" | "secondary" | "success" | "warning" | "error";
-  type: any;
-  onClick: any;
+  type?: any;
+  onClick?: any;
   className?: string;
+  size?: any;
   startIcon?: any;
+  disabled?: boolean;
+  fullWidth?: boolean;
+  autoFocus?: boolean;
 }) {
   return (
     <Button
+      size={size || "medium"}
       startIcon={startIcon || ""}
-      type={type}
+      disabled={disabled}
+      type={type || "button"}
       onClick={onClick}
-      fullWidth
-      variant={variant || "contained"}
+      fullWidth={fullWidth}
+      variant={variant || "text"}
       color={color || "primary"}
       className={className}
+      autoFocus={autoFocus}
       {...rest}
     >
       {btnText}

@@ -1,4 +1,4 @@
-import { Button, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { Formik } from "formik";
 import { StatusContext } from "index/providers/StatusProvider";
 import {
@@ -12,6 +12,7 @@ import AppTextInput from "index/shared/inputs/AppTextInput";
 import moment from "moment";
 import * as React from "react";
 import Loading from "../common/Loading";
+import AppButton from "index/shared/inputs/AppButton";
 
 interface ManageModelingTypeProps {
   type: string;
@@ -70,7 +71,7 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
               updateStatus(result?.resultMessage, "error");
               onClose();
             }
-          }else{
+          } else {
             setLoading(false);
           }
           setSubmitting(false);
@@ -202,17 +203,16 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
               <br />
               <Grid container justifyContent="flex-end" spacing={2}>
                 <Grid item>
-                  <Button
+                  <AppButton
                     variant="outlined"
                     color="secondary"
                     className="cancel-btn"
                     onClick={() => onClose()}
-                  >
-                    Cancel
-                  </Button>
+                    btnText="Cancel"
+                  />
                 </Grid>
                 <Grid item>
-                  <Button
+                  <AppButton
                     type="submit"
                     variant="contained"
                     className="add-btn"
@@ -223,9 +223,8 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
                       }
                     }}
                     disabled={isSubmitting}
-                  >
-                    {modelingData ? "Update" : "Add"}
-                  </Button>
+                    btnText={modelingData ? "Update" : "Add"}
+                  />
                 </Grid>
               </Grid>
             </form>
