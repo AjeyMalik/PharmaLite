@@ -1,24 +1,31 @@
 import AuthLayout from "index/components/common/AuthLayout";
 import ModelingTypesComponent from "index/components/modeling/ModelingTypesComponent";
-import { GetServerSideProps } from "next";
+// import { GetServerSideProps } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import * as React from "react";
 
-export const getServerSideProps: GetServerSideProps<{
-  data: any;
-}> = async ({ query, params }) => {
-  return {
-    props: {
-      data: { query, params },
-    },
-  };
-};
+// export const getServerSideProps: GetServerSideProps<{
+//   data: any;
+// }> = async ({ query, params }) => {
+//   return {
+//     props: {
+//       data: { query, params },
+//     },
+//   };
+// };
 
 interface ModelingTypePageProps {}
 
-const ModelingTypePage: React.FunctionComponent<ModelingTypePageProps> = ({
-  data,
-}: any) => {
+const ModelingTypePage: React.FunctionComponent<ModelingTypePageProps> = () => {
+  const [data, setData] = React.useState<any>({});
+  const router = useRouter();
+
+  React.useEffect(() => {
+    let queryParams = router.query;
+    setData(queryParams);
+  }, [router]);
+
   console.log("ModelingType -- ", data);
   return (
     <>
@@ -29,7 +36,7 @@ const ModelingTypePage: React.FunctionComponent<ModelingTypePageProps> = ({
       </Head>
       <React.Fragment>
         <AuthLayout>
-          <ModelingTypesComponent type={data&&data.params&&data.params["type"]} />
+          <ModelingTypesComponent type={data && data["type"]} />
         </AuthLayout>
       </React.Fragment>
     </>
