@@ -32,6 +32,7 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
           successResponse.resultMessage
         ) {
           setCompanyName(successResponse.resultMessage);
+          localStorage.setItem("company", successResponse.resultMessage);
         }
       },
       function (errorResponse) {

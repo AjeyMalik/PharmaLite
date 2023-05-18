@@ -23,6 +23,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import HomeIcon from "@mui/icons-material/Home";
 import { useState, useEffect } from "react";
 import {
+  getCompany,
   getToken,
   isTokenExpired,
   parseJwt,
@@ -56,6 +57,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
   const [selectedMenu, setSelectedMenu] = useState("");
   const [menuGroups, setMenuGroups] = useState<IMenuGroup[]>([]);
   const [modelingMenu, setModelingMenu] = useState<any[]>([]);
+  const [companyName, setcompanyName] = useState<string>("");
 
   useEffect(() => {
     // let hasTokenExpired = isTokenExpired();
@@ -68,6 +70,8 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
       // setUser(parsedToken);
       getMenuGroups();
     }
+    let company = getCompany();
+    setcompanyName(company ? company : "");
   }, []);
 
   const getMenuGroups = async () => {
@@ -209,7 +213,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
                 display: { xs: "none", md: "flex" },
               }}
             >
-              <img src="/images/PharmaLite.png" alt="PharmaLite" />
+              <img src="/images/PharmaLite.png" alt="PharmaCtrl" />
             </Box>
             <Typography
               variant="h6"
@@ -217,7 +221,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
               component="div"
               sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
             >
-              PharmaLite
+              {companyName}
             </Typography>
             {isLoggedIn ? (
               <React.Fragment>
