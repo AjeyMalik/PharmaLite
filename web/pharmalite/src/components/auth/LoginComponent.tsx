@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Grid } from "@mui/material";
+import { Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
 import { Formik } from "formik";
 import { ILogin } from "index/vm";
 import { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ import * as React from "react";
 import { setToken } from "index/services/util/UtilService";
 import { getCompanyName, loginToApp } from "index/services/auth/AuthService";
 import AppTextInput from "index/shared/inputs/AppTextInput";
-import { COLOR_WHITE, PRIMARY_COLOR } from "index/Constant";
+import { COLOR_WHITE, FOOTER_COLORS, PRIMARY_COLOR } from "index/Constant";
 import Loading from "../common/Loading";
 import AppButton from "index/shared/inputs/AppButton";
 
@@ -17,6 +17,7 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
   const router = useRouter();
   const [isLoading, setLoading] = useState(false);
   const [companyName, setCompanyName] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     getCompany();
@@ -24,21 +25,14 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
   }, []);
 
   const getCompany = async () => {
-    await getCompanyName().then(
-      function (successResponse) {
-        if (
-          successResponse &&
-          successResponse.errorNo === 0 &&
-          successResponse.resultMessage
-        ) {
-          setCompanyName(successResponse.resultMessage);
-          localStorage.setItem("company", successResponse.resultMessage);
-        }
-      },
-      function (errorResponse) {
-        console.error(errorResponse);
-      }
-    );
+    let result = await getCompanyName();
+    if (result && result?.errorNo === 0) {
+      setCompanyName(result.resultMessage);
+      setErrorMessage("");
+      localStorage.setItem("company", result.resultMessage);
+    } else {
+      setErrorMessage(result?.resultMessage);
+    }
   };
 
   return (
@@ -81,8 +75,10 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
                     );
                     localStorage.setItem("company", companyName);
                     setLoading(false);
+                    setErrorMessage("");
                     router.push("/dashboard");
                   } else {
+                    setErrorMessage(result?.resultMessage);
                     setLoading(false);
                   }
                   setSubmitting(false);
@@ -142,6 +138,14 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
                         errors.Company && touched.Company ? errors.Company : ""
                       }
                     />
+                    {errorMessage && (
+                      <Typography
+                        variant="caption"
+                        color={FOOTER_COLORS["error"]}
+                      >
+                        {errorMessage}
+                      </Typography>
+                    )}
                     <br />
                     <br />
                     <Grid justifyContent={"center"} container>
