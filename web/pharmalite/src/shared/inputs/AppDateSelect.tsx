@@ -16,6 +16,7 @@ function AppDatePicker({
   helperText,
   maxDate,
   minDate,
+  required,
   ...rest
 }: {
   name?: string;
@@ -30,11 +31,12 @@ function AppDatePicker({
   helperText?: any;
   maxDate?: any;
   minDate?: any;
+  required?:boolean
 }) {
   return (
     <FormControl fullWidth margin="normal">
       <DatePicker
-        label={label}
+        label={`${label}${required?'*':''}`}
         format="DD/MM/YYYY"
         value={value ? moment(value) : ""}
         onChange={onChange}

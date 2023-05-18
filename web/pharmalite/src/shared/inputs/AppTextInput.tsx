@@ -21,6 +21,7 @@ function AppTextInput({
   endIcon,
   mBottom,
   disabled,
+  required,
   ...rest
 }: {
   type?: string;
@@ -40,10 +41,11 @@ function AppTextInput({
   endIcon?: any;
   mBottom?: any;
   disabled?: boolean;
+  required?: boolean;
 }) {
   return (
     <FormControl fullWidth margin="normal">
-      {label && <Typography variant="caption">{label}</Typography>}
+      {label && <Typography variant="caption">{label}{required?'*':''}</Typography>}
       <TextField
         variant="standard"
         size="small"

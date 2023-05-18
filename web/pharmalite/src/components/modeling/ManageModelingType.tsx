@@ -98,6 +98,7 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
                           <AppTextInput
                             label={item.field_caption}
                             name={item.field_name}
+                            required={item.userrequired != 0}
                             type="text"
                             disabled={item.readOnly != 0}
                             onBlur={handleBlur}
@@ -123,6 +124,7 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
                           <AppTextInput
                             label={item.field_caption}
                             name={item.field_name}
+                            required={item.userrequired != 0}
                             type="number"
                             disabled={item.readOnly != 0}
                             onBlur={handleBlur}
@@ -147,6 +149,7 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
                         <Grid item key={index} xs={12} sm={12} md={12} lg={12}>
                           <AppDatePicker
                             label={item.field_caption}
+                            required={item.userrequired != 0}
                             name={item.field_name}
                             onBlur={handleBlur}
                             disabled={item.readOnly != 0}
@@ -176,6 +179,7 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
                       <Grid item key={index} xs={12} sm={12} md={12} lg={12}>
                         <AppSelectInput
                           // menuItems={item.listValues}
+                          required={item.userrequired != 0}
                           menuItems={item.listValues}
                           label={item.field_caption}
                           name={item.field_name}
