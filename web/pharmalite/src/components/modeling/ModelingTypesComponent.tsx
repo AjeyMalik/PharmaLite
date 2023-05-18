@@ -135,14 +135,15 @@ const ModelingTypesComponent: React.FunctionComponent<
             );
             let tempList =
               listItem && listItem.columnData && listItem.columnData.length > 0
-                ? listItem.columnData.map(
-                    (e: { keyID: string; keyValue: string }) => {
-                      return {
-                        value: e.keyID,
-                        name: e.keyValue,
-                      };
-                    }
-                  )
+                ? listItem.columnData.map((e: any) => {
+                    let itemstoReturn:any = Object.keys(e).reduce((acc, key) => {
+                      return { ...acc, [key.toLowerCase()]: e[key] };
+                    }, {});
+                    return {
+                      value: itemstoReturn.keyid,
+                      name: itemstoReturn.keyvalue,
+                    };
+                  })
                 : [];
             console.log("--list--", tempList);
             fieldCaptionsList.push({
