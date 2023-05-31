@@ -15,6 +15,7 @@ function AppSelectInput({
   errorText,
   helperText,
   required,
+  encrypted,
   ...rest
 }: {
   name?: string;
@@ -30,10 +31,11 @@ function AppSelectInput({
   helperText?: any;
   menuItems: { name: string; value?: string }[];
   required?:boolean
+  encrypted?:boolean
 }) {
   return (
-    <FormControl fullWidth margin="normal">
-      <Typography variant="caption">{label}{required?'*':''}</Typography>
+    <FormControl fullWidth margin="dense">
+      <Typography variant="caption">{encrypted?'#':''}{label}{required?'*':''}</Typography>
       <Select
         variant="standard"
         size="small"

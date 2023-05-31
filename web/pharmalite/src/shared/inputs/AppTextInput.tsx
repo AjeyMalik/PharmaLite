@@ -22,6 +22,7 @@ function AppTextInput({
   mBottom,
   disabled,
   required,
+  encrypted,
   ...rest
 }: {
   type?: string;
@@ -42,10 +43,11 @@ function AppTextInput({
   mBottom?: any;
   disabled?: boolean;
   required?: boolean;
+  encrypted?: boolean;
 }) {
   return (
-    <FormControl fullWidth margin="normal">
-      {label && <Typography variant="caption">{label}{required?'*':''}</Typography>}
+    <FormControl fullWidth margin="dense">
+      {label && <Typography variant="caption">{encrypted?'#':''}{label}{required?'*':''}</Typography>}
       <TextField
         variant="standard"
         size="small"

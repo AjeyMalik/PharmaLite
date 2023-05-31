@@ -189,17 +189,16 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
         className="gradiantHeader"
         sx={{ backgroundColor: HEADER_COLOR, height: 64 }}
       >
-        <Container maxWidth={false}>
+        <Container maxWidth={false} className={isLoggedIn ? "px-0" : ""}>
           <Toolbar disableGutters variant="regular" sx={{ height: 64 }}>
             <React.Fragment>
               {isLoggedIn && (
                 <IconButton
                   size="small"
                   edge="start"
-                  color="inherit"
                   aria-label="menu"
                   onClick={handleDrawerOpen}
-                  sx={{ mr: 2 }}
+                  className="header-menu-icon"
                 >
                   <MenuIcon />
                 </IconButton>
@@ -235,6 +234,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
                   aria-haspopup="true"
                   onClick={handleMenu}
                   color="inherit"
+                  sx={{ paddingRight: "24px" }}
                 >
                   <Typography mr={1}>{user?.USER_ROLE || ""}</Typography>
                   <AccountCircle />

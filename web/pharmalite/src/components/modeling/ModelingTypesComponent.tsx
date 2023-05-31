@@ -18,7 +18,6 @@ import AddIcon from "@mui/icons-material/Add";
 import AppTextInput from "index/shared/inputs/AppTextInput";
 import { IDrawerOpen } from "index/vm";
 import {
-  getListItemValues,
   getObjectDetails,
   getTableFieldCaptions,
   getTransactionObject,
@@ -35,6 +34,7 @@ import AppDatePicker from "index/shared/inputs/AppDateSelect";
 import AppSelectInput from "index/shared/inputs/AppSelectInput";
 import { StatusContext } from "index/providers/StatusProvider";
 import Loading from "../common/Loading";
+import Collapse from "@mui/material/Collapse";
 
 interface ModelingTypesComponentProps {
   type: string;
@@ -53,13 +53,15 @@ const ModelingTypesComponent: React.FunctionComponent<
   const [rowData, setRowData] = useState<any>([]);
   const [columnDefs, setColumnsDefs] = useState<any[]>([]);
   const [companyName, setCompanyName] = useState("");
-  const [expanded, setExpanded] = useState(false);
+  const [hideTable, setHideTable] = useState(false);
   const [dialog, setIsDialogOpen] = useState({
     isOpen: false,
     index: -1,
   } as IDrawerOpen);
 
   const [selectedItem, setSelectedItem] = useState<any>();
+
+  const [isFirst, setIsFirst] = useState(true);
 
   const customButtonCell = (cellprops: ICellRendererParams) => {
     return (
@@ -104,6 +106,7 @@ const ModelingTypesComponent: React.FunctionComponent<
     const companyName = localStorage.getItem("company");
     setCompanyName(companyName || "");
     setSearch({ company: companyName });
+    setIsFirst(true);
     if (companyName) {
       getFields(props.type, companyName);
     }
@@ -119,26 +122,18 @@ const ModelingTypesComponent: React.FunctionComponent<
       result.dTable.length > 0 &&
         result.dTable.forEach(async (ele) => {
           if (ele.uireturntype === "LIST") {
-            // let listsResult = await getListItemValues(ele.fielD_QUERY);
-            // if (listsResult && listsResult.errorNo === 0) {
-            //   let tempName =
-            //     listsResult.columnDetails.length > 0 &&
-            //     listsResult.columnDetails[1].columnName &&
-            //     listsResult.columnDetails[1].columnName.toLowerCase();
-            //   let tempValue =
-            //     listsResult.columnDetails.length > 0 &&
-            //     listsResult.columnDetails[0].columnName &&
-            //     listsResult.columnDetails[0].columnName.toLowerCase();
-
             let listItem = formLoadData.find(
               (e: any) => e.columnName === ele.field_name
             );
             let tempList =
               listItem && listItem.columnData && listItem.columnData.length > 0
                 ? listItem.columnData.map((e: any) => {
-                    let itemstoReturn:any = Object.keys(e).reduce((acc, key) => {
-                      return { ...acc, [key.toLowerCase()]: e[key] };
-                    }, {});
+                    let itemstoReturn: any = Object.keys(e).reduce(
+                      (acc, key) => {
+                        return { ...acc, [key.toLowerCase()]: e[key] };
+                      },
+                      {}
+                    );
                     return {
                       value: itemstoReturn.keyid,
                       name: itemstoReturn.keyvalue,
@@ -168,14 +163,18 @@ const ModelingTypesComponent: React.FunctionComponent<
       setFieldCaptions(fieldCaptionsList);
       setLoading(false);
       updateStatus("", "");
-      getList({}, fieldCaptionsList);
+      getList({}, fieldCaptionsList, true);
     } else {
       updateStatus(result?.resultMessage, "error");
       setLoading(false);
     }
   };
 
-  const getList = async (searchObj?: any, fieldCaptionsList?: any[]) => {
+  const getList = async (
+    searchObj?: any,
+    fieldCaptionsList?: any[],
+    isFirstLoad?: boolean
+  ) => {
     const companyName = localStorage.getItem("company");
     let obj = searchObj
       ? { ...searchObj, company: companyName || "" }
@@ -245,8 +244,13 @@ const ModelingTypesComponent: React.FunctionComponent<
           });
         console.log("columnDefs", colDefs);
         console.log("rowData", row);
-        setRowData(row || []);
-        // updateStatus("", "");
+        if (!isFirstLoad) {
+          setRowData(row || []);
+          setIsFirst(false);
+        } else {
+          setRowData([]);
+          setIsFirst(true);
+        }
       } else {
         setRowData([]);
         updateStatus(result?.resultMessage, "error");
@@ -301,210 +305,204 @@ const ModelingTypesComponent: React.FunctionComponent<
   return (
     <React.Fragment>
       {isLoading && <Loading />}
-      <Grid container direction="column" spacing={3}>
+      <Grid container direction="column" spacing={2}>
         <Grid item xs={12}>
           <Paper elevation={4} component="div" sx={{ padding: 2 }}>
-            <Box component="div" justifyContent="flex-start" display="flex">
-              <Typography variant="h5" textTransform="capitalize">
+            <Box component="div" justifyContent="space-between" display="flex">
+              <Typography
+                variant="h6"
+                fontWeight={700}
+                textTransform="capitalize"
+              >
                 {props.type ? props.type.replaceAll("_", " ") : "-"}
               </Typography>
-              {/* <IconButton
-                onClick={() => {
-                  setExpanded(!expanded);
-                }}
-              >
-                {!expanded ? <ExpandMoreIcon /> : <ExpandLessIcon />}{" "}
-              </IconButton> */}
+              <Box component="div" display="flex" flexDirection="row">
+                <AppButton
+                  btnText="Search"
+                  onClick={() => {
+                    getList();
+                  }}
+                  startIcon={<SearchIcon />}
+                  type="button"
+                  variant="contained"
+                  color="primary"
+                  fullWidth={true}
+                />
+                <AppButton
+                  btnText="Reset"
+                  onClick={() => {
+                    reset();
+                  }}
+                  startIcon={<ReplayIcon />}
+                  type="rest"
+                  variant="outlined"
+                  color="primary"
+                  fullWidth={true}
+                  className="ml-2"
+                />
+                <AppButton
+                  btnText="Add"
+                  onClick={() => {
+                    handelAdd();
+                  }}
+                  startIcon={<AddIcon />}
+                  type="button"
+                  variant="contained"
+                  color="secondary"
+                  fullWidth={true}
+                  className="ml-2"
+                />
+              </Box>
             </Box>
-            {/* <Collapse in={expanded} timeout="auto" unmountOnExit> */}
             <br />
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={12} md={10} lg={10}>
-                <Grid container spacing={2}>
-                  {fieldCaptions.map((item, index) => (
-                    <React.Fragment key={index}>
-                      {item.uireturntype === "SINGLE" &&
-                        item.field_type === "STRING" && (
-                          <Grid item xs={12} sm={6} md={4} lg={4}>
-                            <AppTextInput
-                              label={item.field_caption}
-                              type="text"
-                              disabled={item.readOnly != 0}
-                              onBlur={() => {}}
-                              onChange={(e: any) => {
-                                let tempValue = e.target.value;
-                                setSearch({
-                                  ...search,
-                                  [item.field_name]: tempValue || undefined,
-                                });
-                              }}
-                              value={search[item.field_name] || ""}
-                            />
-                          </Grid>
-                        )}
-                      {item.uireturntype === "SINGLE" &&
-                        item.field_type === "NUMERIC" && (
-                          <Grid item xs={12} sm={6} md={4} lg={4}>
-                            <AppTextInput
-                              label={item.field_caption}
-                              type="number"
-                              disabled={item.readOnly != 0}
-                              onBlur={() => {}}
-                              onChange={(e: any) => {
-                                let tempValue = e.target.value;
-                                setSearch({
-                                  ...search,
-                                  [item.field_name]: tempValue || undefined,
-                                });
-                              }}
-                              value={search[item.field_name] || ""}
-                            />
-                          </Grid>
-                        )}
-                      {item.uireturntype === "SINGLE" &&
-                        item.field_type === "DATETIME" && (
-                          <Grid item key={index} xs={12} sm={6} md={4} lg={4}>
-                            <AppDatePicker
-                              label={item.field_caption}
-                              onBlur={() => {}}
-                              disabled={item.readOnly != 0}
-                              onChange={(e: any) => {
-                                let tempValue = "";
-                                if (e) {
-                                  tempValue = moment(e).toISOString();
-                                }
-                                setSearch({
-                                  ...search,
-                                  [item.field_name]: tempValue || undefined,
-                                });
-                              }}
-                              value={search[item.field_name] || ""}
-                            />
-                          </Grid>
-                        )}
-                      {item.uireturntype === "LIST" && (
-                        <Grid item key={index} xs={12} sm={6} md={4} lg={4}>
-                          <AppSelectInput
-                            menuItems={[
-                              { name: "All", value: "all" },
-                              ...item.listValues,
-                            ]}
+            <Box sx={{ height: hideTable?"calc(100vh - 290px)":"210px", overflow: "auto", padding: "0 24px" }}>
+              <Grid container spacing={1}>
+                {fieldCaptions.map((item, index) => (
+                  <React.Fragment key={index}>
+                    {item.uireturntype === "SINGLE" &&
+                      item.field_type === "STRING" && (
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
+                          <AppTextInput
                             label={item.field_caption}
+                            type="text"
+                            required={item.userrequired != 0}
+                            encrypted={item.encrypted !== 0}
                             disabled={item.readOnly != 0}
                             onBlur={() => {}}
                             onChange={(e: any) => {
                               let tempValue = e.target.value;
                               setSearch({
                                 ...search,
-                                [item.field_name]:
-                                  tempValue && tempValue != "all"
-                                    ? tempValue
-                                    : undefined,
+                                [item.field_name]: tempValue || undefined,
                               });
                             }}
-                            value={search[item.field_name] || "all"}
+                            value={search[item.field_name] || ""}
                           />
                         </Grid>
                       )}
-                    </React.Fragment>
-                  ))}
-                </Grid>
-              </Grid>
-              <Grid item xs={12} sm={12} md={2} lg={2}>
-                <Grid container spacing={2} justifyContent="center">
-                  <Grid item xs={4} sm={4} md={12} lg={12}>
-                    <AppButton
-                      btnText="Search"
-                      onClick={() => {
-                        getList();
-                      }}
-                      startIcon={<SearchIcon />}
-                      type="button"
-                      variant="contained"
-                      color="primary"
-                      fullWidth={true}
-                    />
-                  </Grid>
-                  <Grid item xs={4} sm={4} md={12} lg={12}>
-                    <AppButton
-                      btnText="Reset"
-                      onClick={() => {
-                        reset();
-                      }}
-                      startIcon={<ReplayIcon />}
-                      type="rest"
-                      variant="outlined"
-                      color="primary"
-                      fullWidth={true}
-                    />
-                  </Grid>
-                  <Grid item xs={4} sm={4} md={12} lg={12}>
-                    <AppButton
-                      btnText="Add"
-                      onClick={() => {
-                        handelAdd();
-                      }}
-                      startIcon={<AddIcon />}
-                      type="button"
-                      variant="contained"
-                      color="secondary"
-                      fullWidth={true}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-            {/* </Collapse> */}
+                    {item.uireturntype === "SINGLE" &&
+                      item.field_type === "NUMERIC" && (
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
+                          <AppTextInput
+                            label={item.field_caption}
+                            type="number"
+                            required={item.userrequired != 0}
+                            encrypted={item.encrypted !== 0}
+                            disabled={item.readOnly != 0}
+                            onBlur={() => {}}
+                            onChange={(e: any) => {
+                              let tempValue = e.target.value;
+                              setSearch({
+                                ...search,
+                                [item.field_name]: tempValue || undefined,
+                              });
+                            }}
+                            value={search[item.field_name] || ""}
+                          />
+                        </Grid>
+                      )}
+                    {item.uireturntype === "SINGLE" &&
+                      item.field_type === "DATETIME" && (
+                        <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                          <AppDatePicker
+                            label={item.field_caption}
+                            onBlur={() => {}}
+                            required={item.userrequired != 0}
+                            encrypted={item.encrypted !== 0}
+                            disabled={item.readOnly != 0}
+                            onChange={(e: any) => {
+                              let tempValue = "";
+                              if (e) {
+                                tempValue = moment(e).toISOString();
+                              }
+                              setSearch({
+                                ...search,
+                                [item.field_name]: tempValue || undefined,
+                              });
+                            }}
+                            value={search[item.field_name] || ""}
+                          />
+                        </Grid>
+                      )}
+                    {item.uireturntype === "LIST" && (
+                      <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                        <AppSelectInput
+                          menuItems={[
+                            { name: "All", value: "all" },
+                            ...item.listValues,
+                          ]}
+                          label={item.field_caption}
+                          required={item.userrequired != 0}
+                          encrypted={item.encrypted !== 0}
+                          disabled={item.readOnly != 0}
+                          onBlur={() => {}}
+                          onChange={(e: any) => {
+                            let tempValue = e.target.value;
+                            setSearch({
+                              ...search,
+                              [item.field_name]:
+                                tempValue && tempValue != "all"
+                                  ? tempValue
+                                  : undefined,
+                            });
+                          }}
+                          value={search[item.field_name] || "all"}
+                        />
+                      </Grid>
+                    )}
+                  </React.Fragment>
+                ))}
+              </Grid>{" "}
+            </Box>
           </Paper>
         </Grid>
         <Grid item xs={12} paddingBottom={6}>
-          <Paper elevation={4} component="div">
-            {/* <Box
-              component="div"
-              padding={2}
-              justifyContent="end"
-              display="flex"
-            >
-              <Button
-                variant="text"
+          <Paper elevation={4} component="div" sx={{ padding: 2 }}>
+            <Box component="div" display="flex">
+              <Typography
+                variant="subtitle2"
+                component="a"
+                color="primary"
                 onClick={() => {
-                  setExpanded(!expanded);
+                  setHideTable(!hideTable);
+                }}
+                sx={{ cursor: "pointer", textDecoration: "underline" }}
+              >
+                {!hideTable ? "Hide" : "Show"}
+              </Typography>
+            </Box>
+            <Collapse in={!hideTable}>
+              <div
+                style={{
+                  height: "calc(100vh - 500px)",
                 }}
               >
-                {!expanded ? (
-                  <Typography variant="caption">Show More</Typography>
-                ) : (
-                  <Typography variant="caption">Show Less</Typography>
-                )}
-              </Button>
-            </Box> */}
-            {/* <Collapse in={!expanded} timeout="auto" unmountOnExit> */}
-            <div
-              style={{
-                // height: expanded
-                //   ? "calc(100vh - 225px)"
-                //   : "calc(100vh - 552px)",
-                height: "calc(100vh - 210px)",
-              }}
-            >
-              <AgGridReact
-                ref={gridRef}
-                rowData={[...rowData]}
-                columnDefs={columnDefs}
-                className="ag-theme-alpine"
-                animateRows={true}
-                defaultColDef={defaultColDef}
-                pagination={true}
-                paginationPageSize={10}
-                onGridReady={onGridReady}
-                context={{
-                  customButtonCell,
-                  customDateCell,
-                  customCell,
-                }}
-              ></AgGridReact>
-            </div>
-            {/* </Collapse> */}
+                <AgGridReact
+                  ref={gridRef}
+                  rowData={rowData}
+                  columnDefs={columnDefs}
+                  className="custom-grid ag-theme-alpine"
+                  rowSelection="single"
+                  rowHeight={36}
+                  animateRows={true}
+                  defaultColDef={defaultColDef}
+                  pagination={true}
+                  paginationPageSize={10}
+                  onGridReady={onGridReady}
+                  suppressMovableColumns={true}
+                  overlayNoRowsTemplate={
+                    isFirst
+                      ? "Please Search To Load The Data"
+                      : "No Rows To Show"
+                  }
+                  context={{
+                    customButtonCell,
+                    customDateCell,
+                    customCell,
+                  }}
+                ></AgGridReact>
+              </div>
+            </Collapse>
           </Paper>
         </Grid>
       </Grid>

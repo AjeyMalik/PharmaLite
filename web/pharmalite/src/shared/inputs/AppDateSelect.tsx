@@ -17,6 +17,7 @@ function AppDatePicker({
   maxDate,
   minDate,
   required,
+  encrypted,
   ...rest
 }: {
   name?: string;
@@ -32,11 +33,12 @@ function AppDatePicker({
   maxDate?: any;
   minDate?: any;
   required?:boolean
+  encrypted?:boolean
 }) {
   return (
-    <FormControl fullWidth margin="normal">
+    <FormControl fullWidth margin="dense">
       <DatePicker
-        label={`${label}${required?'*':''}`}
+        label={`${encrypted?'#':''}${label}${required?'*':''}`}
         format="DD/MM/YYYY"
         value={value ? moment(value) : ""}
         onChange={onChange}
