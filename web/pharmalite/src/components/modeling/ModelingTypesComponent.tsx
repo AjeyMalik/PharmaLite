@@ -126,7 +126,13 @@ const ModelingTypesComponent: React.FunctionComponent<
           } else {
             fieldCaptionsList.push({
               ...ele,
-              field_name: ele.field_name ? ele.field_name.toLowerCase() : "",
+              field_name: ele.field_name
+                ? ele.field_name &&
+                  ele.field_type &&
+                  ele.field_name === ele.field_type
+                  ? ele.field_name.toLowerCase() + "id"
+                  : ele.field_name.toLowerCase()
+                : "",
             });
           }
         });
@@ -249,6 +255,8 @@ const ModelingTypesComponent: React.FunctionComponent<
       if (result && result.errorNo === 0) {
         updateStatus(result?.resultMessage, "success");
         getList({ company: companyName });
+        setIsEdit(false);
+        setSubmitted(false);
       } else {
         updateStatus(result?.resultMessage, "error");
       }
@@ -281,7 +289,11 @@ const ModelingTypesComponent: React.FunctionComponent<
                 validate={(values: any) => {
                   let errors: any = {};
                   fieldCaptions.forEach((ele) => {
-                    if (ele.userrequired != 0 && !values[ele.field_name]) {
+                    if (
+                      ele.userrequired != 0 &&
+                      !values[ele.field_name] &&
+                      values[ele.field_name] !== 0
+                    ) {
                       errors[ele.field_name] = "Required";
                     }
                   });
@@ -290,7 +302,7 @@ const ModelingTypesComponent: React.FunctionComponent<
                   }
                   return errors;
                 }}
-                onSubmit={async (values, { setSubmitting }) => {
+                onSubmit={async (values, { setSubmitting, resetForm }) => {
                   if (isEdit || isAdd) {
                     // setLoading(true);
                     const obj = { ...values };
@@ -312,7 +324,8 @@ const ModelingTypesComponent: React.FunctionComponent<
                         setLoading(false);
                         updateStatus(result?.resultMessage, "success");
                         setIsEdit(false);
-                        getList({ company: companyName });
+                        resetForm();
+                        reset();
                       } else {
                         setLoading(false);
                         updateStatus(result?.resultMessage, "error");
@@ -434,46 +447,17 @@ const ModelingTypesComponent: React.FunctionComponent<
                         {fieldCaptions.map((item, index) => (
                           <React.Fragment key={index}>
                             {item.uireturntype === "SINGLE" &&
-                              item.field_type === "STRING" && (
+                              item.field_type !== "DATETIME" && (
                                 <Grid item xs={12} sm={6} md={4} lg={3}>
                                   <AppTextInput
                                     label={item.field_caption}
                                     name={item.field_name}
                                     required={item.userrequired != 0}
-                                    type="text"
-                                    disabled={item.readOnly != 0}
-                                    onBlur={handleBlur}
-                                    onChange={(e: any) => {
-                                      let tempValue = e.target.value;
-                                      setFieldValue(
-                                        item.field_name,
-                                        tempValue || undefined
-                                      );
-                                    }}
-                                    value={values[item.field_name] || ""}
-                                    error={
-                                      errors[item.field_name] &&
-                                      (touched[item.field_name] || isSubmited)
-                                        ? true
-                                        : false
+                                    type={
+                                      item.field_type === "NUMERIC"
+                                        ? "number"
+                                        : "text"
                                     }
-                                    helperText={
-                                      errors[item.field_name] &&
-                                      (touched[item.field_name] ||
-                                        isSubmited) &&
-                                      errors[item.field_name]
-                                    }
-                                  />
-                                </Grid>
-                              )}
-                            {item.uireturntype === "SINGLE" &&
-                              item.field_type === "NUMERIC" && (
-                                <Grid item xs={12} sm={6} md={4} lg={3}>
-                                  <AppTextInput
-                                    label={item.field_caption}
-                                    name={item.field_name}
-                                    required={item.userrequired != 0}
-                                    type="number"
                                     disabled={item.readOnly != 0}
                                     onBlur={handleBlur}
                                     onChange={(e: any) => {
@@ -556,10 +540,7 @@ const ModelingTypesComponent: React.FunctionComponent<
                                   onBlur={handleBlur}
                                   onChange={(e: any) => {
                                     let tempValue = e.target.value;
-                                    setFieldValue(
-                                      item.field_name,
-                                      tempValue || ""
-                                    );
+                                    setFieldValue(item.field_name, tempValue);
                                   }}
                                   value={values[item.field_name]}
                                   error={
@@ -628,7 +609,9 @@ const ModelingTypesComponent: React.FunctionComponent<
             <Collapse in={!hideTable}>
               <div
                 style={{
-                  height: !zoomTable?"calc(100vh - 500px)":"calc(100vh - 184px)",
+                  height: !zoomTable
+                    ? "calc(100vh - 500px)"
+                    : "calc(100vh - 184px)",
                 }}
               >
                 <AgGridReact
