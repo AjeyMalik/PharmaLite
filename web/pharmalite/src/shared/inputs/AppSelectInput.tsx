@@ -40,7 +40,8 @@ function AppSelectInput({
         variant="standard"
         size="small"
         name={name}
-        value={value}
+        defaultValue={''}
+        value={value ?? ''}
         onChange={onChange}
         onBlur={onBlur}
         error={error || errorText ? true : false}
