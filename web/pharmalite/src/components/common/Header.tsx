@@ -45,8 +45,13 @@ import { StatusContext } from "index/providers/StatusProvider";
 interface HeaderProps {}
 
 const Header: React.FunctionComponent<HeaderProps> = (props) => {
-  const { open, selectedMenuGroup, updateOpenStats, updateSelectedMenuGroup } =
-    React.useContext(SideMenuManageContext);
+  const {
+    open,
+    selectedMenuGroup,
+    updateOpenStats,
+    updateSelectedMenuGroup,
+    updateMenuGroups,
+  } = React.useContext(SideMenuManageContext);
   const { updateStatus } = React.useContext(StatusContext);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -109,6 +114,8 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
             }
           );
           setMenuGroups(groups);
+          let menuGroups: string[] = groups.map((e) => e.MenuGroup);
+          updateMenuGroups(menuGroups);
           getModelingMenu();
         } else {
           updateStatus(successResponse?.resultMessage, "error");
@@ -218,6 +225,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
               variant="h6"
               noWrap
               component="div"
+              className="ml-2"
               sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
             >
               {companyName}

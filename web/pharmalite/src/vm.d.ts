@@ -37,8 +37,10 @@ export interface IStatusContextType {
 export interface ISideMenuManageContextType {
   open: boolean;
   selectedMenuGroup: string;
+  menuGroups: string[];
   updateOpenStats: Function;
   updateSelectedMenuGroup: Function;
+  updateMenuGroups: Function;
 }
 
 export interface IModelingSearch {

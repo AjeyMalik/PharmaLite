@@ -22,7 +22,11 @@ export default function UnAuthLayout({
     // }
     let token = getToken();
     if (token) {
-      router.push("/dashboard");
+      let unauthUrls = ["/"];
+      let currentUrl = router.route;
+      if (unauthUrls.includes(currentUrl)) {
+        router.push("/dashboard");
+      }
     }
   });
 

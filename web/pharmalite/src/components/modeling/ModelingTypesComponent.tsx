@@ -443,7 +443,7 @@ const ModelingTypesComponent: React.FunctionComponent<
                         padding: "0 24px",
                       }}
                     >
-                      <Grid container spacing={2}>
+                      <Grid container spacing={1}>
                         {fieldCaptions.map((item, index) => (
                           <React.Fragment key={index}>
                             {item.uireturntype === "SINGLE" &&
@@ -572,7 +572,7 @@ const ModelingTypesComponent: React.FunctionComponent<
             <Box
               component="div"
               display="flex"
-              justifyContent="space-between"
+              justifyContent="end"
               alignItems="center"
             >
               {!zoomTable ? (
@@ -599,6 +599,7 @@ const ModelingTypesComponent: React.FunctionComponent<
                     setZoomTable(!zoomTable);
                   }}
                   sx={{ cursor: "pointer", textDecoration: "underline" }}
+                  className="ml-2"
                 >
                   {!zoomTable ? "Maximize" : "Minimize"}
                 </Typography>

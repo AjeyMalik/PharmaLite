@@ -17,9 +17,8 @@ interface DashboardComponentProps {}
 const DashboardComponent: React.FunctionComponent<
   DashboardComponentProps
 > = () => {
-  const { updateOpenStats, updateSelectedMenuGroup } = React.useContext(
-    SideMenuManageContext
-  );
+  const { updateOpenStats, updateSelectedMenuGroup, menuGroups } =
+    React.useContext(SideMenuManageContext);
 
   const onCardClick = (item: string) => {
     localStorage.setItem("selectedMenuGroup", item);
@@ -40,7 +39,22 @@ const DashboardComponent: React.FunctionComponent<
             {DASHBOARD_ITEMS.map((item, index) => (
               <Grid key={index} item xs={12} sm={12} md={6} lg={4}>
                 <Card
-                  sx={{ cursor: "pointer" }}
+                  sx={{
+                    cursor: menuGroups.includes(
+                      item.key !== "Quality Assurance"
+                        ? item.key
+                        : item.key || "Quality Control"
+                    )
+                      ? "pointer"
+                      : "default",
+                  }}
+                  className={
+                    menuGroups.includes(
+                      item.key !== "Quality Assurance"
+                        ? item.key
+                        : item.key || "Quality Control"
+                    ) ? "" : "card-disabled"
+                  }
                   onClick={() => {
                     onCardClick(item.key);
                   }}

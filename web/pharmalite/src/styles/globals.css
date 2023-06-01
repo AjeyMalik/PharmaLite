@@ -48,6 +48,16 @@ body {
   color: #fff;
 }
 
+.card-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(100%);
+}
+
+.card-disabled .MuiCardContent-root {
+      color: gray;
+  }
+
 ::-webkit-scrollbar {
   background-color: #F5F5F5;
   width: 8px;
