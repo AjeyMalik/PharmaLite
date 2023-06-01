@@ -1,9 +1,4 @@
-import {
-  Box,
-  Grid,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import * as React from "react";
 import { useEffect, useState, useMemo } from "react";
 import "ag-grid-community/styles/ag-grid.css";
@@ -51,6 +46,7 @@ const ModelingTypesComponent: React.FunctionComponent<
   const [columnDefs, setColumnsDefs] = useState<any[]>([]);
   const [companyName, setCompanyName] = useState("");
   const [hideTable, setHideTable] = useState(false);
+  const [zoomTable, setZoomTable] = useState(false);
 
   const [isFirst, setIsFirst] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
@@ -229,8 +225,8 @@ const ModelingTypesComponent: React.FunctionComponent<
 
   const reset = () => {
     setIsEdit(false);
-    setIsAdd(false)
-    setSubmitted(false)
+    setIsAdd(false);
+    setSubmitted(false);
     getList({ company: companyName });
   };
 
@@ -262,11 +258,11 @@ const ModelingTypesComponent: React.FunctionComponent<
   const onSelectionChanged = () => {
     let selectedRow = gridRef.current?.api.getSelectedRows();
     if (selectedRow && selectedRow.length > 0 && selectedRow[0]) {
-      let data = selectedRow[0]
+      let data = selectedRow[0];
       let isHideAvailable = Object.keys(data).find((e) => e.includes("_hide"));
-    if (isHideAvailable) {
-      data[isHideAvailable.split("_hide")[0]] = data[isHideAvailable];
-    }
+      if (isHideAvailable) {
+        data[isHideAvailable.split("_hide")[0]] = data[isHideAvailable];
+      }
       setSearch(data);
       setIsEdit(true);
     }
@@ -276,232 +272,273 @@ const ModelingTypesComponent: React.FunctionComponent<
     <React.Fragment>
       {isLoading && <Loading />}
       <Grid container direction="column" spacing={2}>
-        <Grid item xs={12}>
-          <Paper elevation={4} component="div" sx={{ padding: 2 }}>
-            <Formik
-              enableReinitialize
-              initialValues={search}
-              validate={(values: any) => {
-                let errors: any = {};
-                fieldCaptions.forEach((ele) => {
-                  if (ele.userrequired != 0 && !values[ele.field_name]) {
-                    errors[ele.field_name] = "Required";
-                  }
-                });
-                if (!isEdit && !isAdd) {
-                  errors = {};
-                }
-                return errors;
-              }}
-              onSubmit={async (values, { setSubmitting }) => {
-                if (isEdit || isAdd) {
-                  // setLoading(true);
-                  const obj = { ...values };
-                  var objectArr: string[] = [];
-                  Object.keys(obj).forEach(function (key) {
-                    objectArr.push(key);
-                    objectArr.push(obj[key]);
+        {!zoomTable && (
+          <Grid item xs={12}>
+            <Paper elevation={4} component="div" sx={{ padding: 2 }}>
+              <Formik
+                enableReinitialize
+                initialValues={search}
+                validate={(values: any) => {
+                  let errors: any = {};
+                  fieldCaptions.forEach((ele) => {
+                    if (ele.userrequired != 0 && !values[ele.field_name]) {
+                      errors[ele.field_name] = "Required";
+                    }
                   });
-                  let transactionObj = await getTransactionObject(
-                    props.type,
-                    objectArr
-                  );
-                  if (transactionObj) {
-                    let result = await addOrUpdateObjectDetails(
+                  if (!isEdit && !isAdd) {
+                    errors = {};
+                  }
+                  return errors;
+                }}
+                onSubmit={async (values, { setSubmitting }) => {
+                  if (isEdit || isAdd) {
+                    // setLoading(true);
+                    const obj = { ...values };
+                    var objectArr: string[] = [];
+                    Object.keys(obj).forEach(function (key) {
+                      objectArr.push(key);
+                      objectArr.push(obj[key]);
+                    });
+                    let transactionObj = await getTransactionObject(
                       props.type,
-                      transactionObj
+                      objectArr
                     );
-                    if (result && result.errorNo === 0) {
-                      setLoading(false);
-                      updateStatus(result?.resultMessage, "success");
-                      setIsEdit(false)
-                      getList({company:companyName});
+                    if (transactionObj) {
+                      let result = await addOrUpdateObjectDetails(
+                        props.type,
+                        transactionObj
+                      );
+                      if (result && result.errorNo === 0) {
+                        setLoading(false);
+                        updateStatus(result?.resultMessage, "success");
+                        setIsEdit(false);
+                        getList({ company: companyName });
+                      } else {
+                        setLoading(false);
+                        updateStatus(result?.resultMessage, "error");
+                      }
                     } else {
                       setLoading(false);
-                      updateStatus(result?.resultMessage, "error");
                     }
-                  } else {
-                    setLoading(false);
                   }
-                }
-                setSubmitting(false);
-              }}
-            >
-              {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                isSubmitting,
-                setFieldValue,
-                resetForm,
-              }) => (
-                <form onSubmit={handleSubmit}>
-                  <Box
-                    component="div"
-                    justifyContent="space-between"
-                    display="flex"
-                  >
-                    <Typography
-                      variant="h6"
-                      fontWeight={700}
-                      textTransform="capitalize"
+                  setSubmitting(false);
+                }}
+              >
+                {({
+                  values,
+                  errors,
+                  touched,
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  isSubmitting,
+                  setFieldValue,
+                  resetForm,
+                }) => (
+                  <form onSubmit={handleSubmit}>
+                    <Box
+                      component="div"
+                      justifyContent="space-between"
+                      display="flex"
                     >
-                      {props.type ? props.type.replaceAll("_", " ") : "-"}
-                    </Typography>
-                    <Box component="div" display="flex" flexDirection="row">
-                      {isEdit ? (
+                      <Typography
+                        variant="h6"
+                        fontWeight={700}
+                        textTransform="capitalize"
+                      >
+                        {props.type ? props.type.replaceAll("_", " ") : "-"}
+                      </Typography>
+                      <Box component="div" display="flex" flexDirection="row">
+                        {isEdit ? (
+                          <AppButton
+                            btnText="Update"
+                            onClick={() => {
+                              if (!isSubmited) {
+                                setSubmitted(true);
+                              }
+                            }}
+                            startIcon={<EditIcon />}
+                            type="submit"
+                            variant="contained"
+                            color="secondary"
+                            fullWidth={true}
+                          />
+                        ) : (
+                          <AppButton
+                            btnText="Add"
+                            onClick={() => {
+                              setIsAdd(true);
+                              if (!isSubmited) {
+                                setSubmitted(true);
+                              }
+                            }}
+                            startIcon={<AddIcon />}
+                            type="submit"
+                            variant="contained"
+                            color="secondary"
+                            fullWidth={true}
+                          />
+                        )}
                         <AppButton
-                          btnText="Update"
+                          btnText="Reset"
                           onClick={() => {
-                            if (!isSubmited) {
-                              setSubmitted(true);
-                            }
+                            resetForm();
+                            reset();
                           }}
-                          startIcon={<EditIcon />}
-                          type="submit"
-                          variant="contained"
-                          color="secondary"
-                          fullWidth={true}
-                        />
-                      ) : (
-                        <AppButton
-                          btnText="Add"
-                          onClick={() => {
-                            setIsAdd(true);
-                            if (!isSubmited) {
-                              setSubmitted(true);
-                            }
-                          }}
-                          startIcon={<AddIcon />}
-                          type="submit"
-                          variant="contained"
-                          color="secondary"
-                          fullWidth={true}
-                        />
-                      )}
-                      <AppButton
-                        btnText="Reset"
-                        onClick={() => {
-                          resetForm();
-                          reset();
-                        }}
-                        startIcon={<ReplayIcon />}
-                        type="rest"
-                        variant="outlined"
-                        color="primary"
-                        fullWidth={true}
-                        className="ml-2"
-                      />
-
-                      {isEdit ? (
-                        <AppButton
-                          btnText="Delete"
-                          onClick={() => {
-                            handleDelete(values)
-                          }}
-                          startIcon={<DeleteIcon />}
-                          type="button"
-                          variant="contained"
-                          color="error"
-                          fullWidth={true}
-                          className="ml-2"
-                        />
-                      ) : (
-                        <AppButton
-                          btnText="Search"
-                          onClick={() => {
-                            getList(values);
-                          }}
-                          startIcon={<SearchIcon />}
-                          type="button"
-                          variant="contained"
+                          startIcon={<ReplayIcon />}
+                          type="rest"
+                          variant="outlined"
                           color="primary"
                           fullWidth={true}
                           className="ml-2"
                         />
-                      )}
+
+                        {isEdit ? (
+                          <AppButton
+                            btnText="Delete"
+                            onClick={() => {
+                              handleDelete(values);
+                            }}
+                            startIcon={<DeleteIcon />}
+                            type="button"
+                            variant="contained"
+                            color="error"
+                            fullWidth={true}
+                            className="ml-2"
+                          />
+                        ) : (
+                          <AppButton
+                            btnText="Search"
+                            onClick={() => {
+                              getList(values);
+                            }}
+                            startIcon={<SearchIcon />}
+                            type="button"
+                            variant="contained"
+                            color="primary"
+                            fullWidth={true}
+                            className="ml-2"
+                          />
+                        )}
+                      </Box>
                     </Box>
-                  </Box>
-                  <br />
-                  <Box
-                    sx={{
-                      height: hideTable ? "calc(100vh - 290px)" : "210px",
-                      overflow: "auto",
-                      padding: "0 24px",
-                    }}
-                  >
-                    <Grid container spacing={2}>
-                      {fieldCaptions.map((item, index) => (
-                        <React.Fragment key={index}>
-                          {item.uireturntype === "SINGLE" &&
-                            item.field_type === "STRING" && (
-                              <Grid item xs={12} sm={6} md={4} lg={3}>
-                                <AppTextInput
-                                  label={item.field_caption}
-                                  name={item.field_name}
-                                  required={item.userrequired != 0}
-                                  type="text"
-                                  disabled={item.readOnly != 0}
-                                  onBlur={handleBlur}
-                                  onChange={(e: any) => {
-                                    let tempValue = e.target.value;
-                                    setFieldValue(
-                                      item.field_name,
-                                      tempValue || undefined
-                                    );
-                                  }}
-                                  value={values[item.field_name] || ""}
-                                  error={
-                                    errors[item.field_name] &&
-                                    (touched[item.field_name] || isSubmited)
-                                      ? true
-                                      : false
-                                  }
-                                  helperText={
-                                    errors[item.field_name] &&
-                                    (touched[item.field_name] || isSubmited) &&
-                                    errors[item.field_name]
-                                  }
-                                />
-                              </Grid>
-                            )}
-                          {item.uireturntype === "SINGLE" &&
-                            item.field_type === "NUMERIC" && (
-                              <Grid item xs={12} sm={6} md={4} lg={3}>
-                                <AppTextInput
-                                  label={item.field_caption}
-                                  name={item.field_name}
-                                  required={item.userrequired != 0}
-                                  type="number"
-                                  disabled={item.readOnly != 0}
-                                  onBlur={handleBlur}
-                                  onChange={(e: any) => {
-                                    let tempValue = e.target.value;
-                                    setFieldValue(
-                                      item.field_name,
-                                      tempValue || undefined
-                                    );
-                                  }}
-                                  value={values[item.field_name] || ""}
-                                  error={
-                                    errors[item.field_name] &&
-                                    (touched[item.field_name] || isSubmited)
-                                      ? true
-                                      : false
-                                  }
-                                  helperText={
-                                    errors[item.field_name] &&
-                                    (touched[item.field_name] || isSubmited) &&
-                                    errors[item.field_name]
-                                  }
-                                />
-                              </Grid>
-                            )}
-                          {item.uireturntype === "SINGLE" &&
-                            item.field_type === "DATETIME" && (
+                    <br />
+                    <Box
+                      sx={{
+                        height: hideTable ? "calc(100vh - 290px)" : "210px",
+                        overflow: "auto",
+                        padding: "0 24px",
+                      }}
+                    >
+                      <Grid container spacing={2}>
+                        {fieldCaptions.map((item, index) => (
+                          <React.Fragment key={index}>
+                            {item.uireturntype === "SINGLE" &&
+                              item.field_type === "STRING" && (
+                                <Grid item xs={12} sm={6} md={4} lg={3}>
+                                  <AppTextInput
+                                    label={item.field_caption}
+                                    name={item.field_name}
+                                    required={item.userrequired != 0}
+                                    type="text"
+                                    disabled={item.readOnly != 0}
+                                    onBlur={handleBlur}
+                                    onChange={(e: any) => {
+                                      let tempValue = e.target.value;
+                                      setFieldValue(
+                                        item.field_name,
+                                        tempValue || undefined
+                                      );
+                                    }}
+                                    value={values[item.field_name] || ""}
+                                    error={
+                                      errors[item.field_name] &&
+                                      (touched[item.field_name] || isSubmited)
+                                        ? true
+                                        : false
+                                    }
+                                    helperText={
+                                      errors[item.field_name] &&
+                                      (touched[item.field_name] ||
+                                        isSubmited) &&
+                                      errors[item.field_name]
+                                    }
+                                  />
+                                </Grid>
+                              )}
+                            {item.uireturntype === "SINGLE" &&
+                              item.field_type === "NUMERIC" && (
+                                <Grid item xs={12} sm={6} md={4} lg={3}>
+                                  <AppTextInput
+                                    label={item.field_caption}
+                                    name={item.field_name}
+                                    required={item.userrequired != 0}
+                                    type="number"
+                                    disabled={item.readOnly != 0}
+                                    onBlur={handleBlur}
+                                    onChange={(e: any) => {
+                                      let tempValue = e.target.value;
+                                      setFieldValue(
+                                        item.field_name,
+                                        tempValue || undefined
+                                      );
+                                    }}
+                                    value={values[item.field_name] || ""}
+                                    error={
+                                      errors[item.field_name] &&
+                                      (touched[item.field_name] || isSubmited)
+                                        ? true
+                                        : false
+                                    }
+                                    helperText={
+                                      errors[item.field_name] &&
+                                      (touched[item.field_name] ||
+                                        isSubmited) &&
+                                      errors[item.field_name]
+                                    }
+                                  />
+                                </Grid>
+                              )}
+                            {item.uireturntype === "SINGLE" &&
+                              item.field_type === "DATETIME" && (
+                                <Grid
+                                  item
+                                  key={index}
+                                  xs={12}
+                                  sm={6}
+                                  md={4}
+                                  lg={3}
+                                >
+                                  <AppDatePicker
+                                    label={item.field_caption}
+                                    required={item.userrequired != 0}
+                                    name={item.field_name}
+                                    onBlur={handleBlur}
+                                    disabled={item.readOnly != 0}
+                                    onChange={(e: any) => {
+                                      let tempValue = "";
+                                      if (e) {
+                                        tempValue = moment(e).toISOString();
+                                      }
+                                      setFieldValue(item.field_name, tempValue);
+                                    }}
+                                    value={values[item.field_name] || ""}
+                                    error={
+                                      errors[item.field_name] &&
+                                      (touched[item.field_name] || isSubmited)
+                                        ? true
+                                        : false
+                                    }
+                                    helperText={
+                                      errors[item.field_name] &&
+                                      (touched[item.field_name] ||
+                                        isSubmited) &&
+                                      errors[item.field_name]
+                                    }
+                                  />
+                                </Grid>
+                              )}
+                            {item.uireturntype === "LIST" && (
                               <Grid
                                 item
                                 key={index}
@@ -510,20 +547,21 @@ const ModelingTypesComponent: React.FunctionComponent<
                                 md={4}
                                 lg={3}
                               >
-                                <AppDatePicker
-                                  label={item.field_caption}
+                                <AppSelectInput
                                   required={item.userrequired != 0}
+                                  menuItems={item.listValues}
+                                  label={item.field_caption}
                                   name={item.field_name}
-                                  onBlur={handleBlur}
                                   disabled={item.readOnly != 0}
+                                  onBlur={handleBlur}
                                   onChange={(e: any) => {
-                                    let tempValue = "";
-                                    if (e) {
-                                      tempValue = moment(e).toISOString();
-                                    }
-                                    setFieldValue(item.field_name, tempValue);
+                                    let tempValue = e.target.value;
+                                    setFieldValue(
+                                      item.field_name,
+                                      tempValue || ""
+                                    );
                                   }}
-                                  value={values[item.field_name] || ""}
+                                  value={values[item.field_name]}
                                   error={
                                     errors[item.field_name] &&
                                     (touched[item.field_name] || isSubmited)
@@ -538,65 +576,59 @@ const ModelingTypesComponent: React.FunctionComponent<
                                 />
                               </Grid>
                             )}
-                          {item.uireturntype === "LIST" && (
-                            <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                              <AppSelectInput
-                                required={item.userrequired != 0}
-                                menuItems={item.listValues}
-                                label={item.field_caption}
-                                name={item.field_name}
-                                disabled={item.readOnly != 0}
-                                onBlur={handleBlur}
-                                onChange={(e: any) => {
-                                  let tempValue = e.target.value;
-                                  setFieldValue(
-                                    item.field_name,
-                                    tempValue || ""
-                                  );
-                                }}
-                                value={values[item.field_name]}
-                                error={
-                                  errors[item.field_name] &&
-                                  (touched[item.field_name] || isSubmited)
-                                    ? true
-                                    : false
-                                }
-                                helperText={
-                                  errors[item.field_name] &&
-                                  (touched[item.field_name] || isSubmited) &&
-                                  errors[item.field_name]
-                                }
-                              />
-                            </Grid>
-                          )}
-                        </React.Fragment>
-                      ))}
-                    </Grid>
-                  </Box>
-                </form>
-              )}
-            </Formik>
-          </Paper>
-        </Grid>
+                          </React.Fragment>
+                        ))}
+                      </Grid>
+                    </Box>
+                  </form>
+                )}
+              </Formik>
+            </Paper>
+          </Grid>
+        )}
         <Grid item xs={12} paddingBottom={6}>
           <Paper elevation={4} component="div" sx={{ padding: 2 }}>
-            <Box component="div" display="flex">
-              <Typography
-                variant="subtitle2"
-                component="a"
-                color="primary"
-                onClick={() => {
-                  setHideTable(!hideTable);
-                }}
-                sx={{ cursor: "pointer", textDecoration: "underline" }}
-              >
-                {!hideTable ? "Hide" : "Show"}
-              </Typography>
+            <Box
+              component="div"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              {!zoomTable ? (
+                <Typography
+                  variant="subtitle2"
+                  component="a"
+                  color="primary"
+                  onClick={() => {
+                    setHideTable(!hideTable);
+                  }}
+                  sx={{ cursor: "pointer", textDecoration: "underline" }}
+                >
+                  {!hideTable ? "Hide" : "Show"}
+                </Typography>
+              ) : (
+                <span></span>
+              )}
+              {!hideTable ? (
+                <Typography
+                  variant="subtitle2"
+                  component="a"
+                  color="primary"
+                  onClick={() => {
+                    setZoomTable(!zoomTable);
+                  }}
+                  sx={{ cursor: "pointer", textDecoration: "underline" }}
+                >
+                  {!zoomTable ? "Maximize" : "Minimize"}
+                </Typography>
+              ) : (
+                <span></span>
+              )}
             </Box>
             <Collapse in={!hideTable}>
               <div
                 style={{
-                  height: "calc(100vh - 500px)",
+                  height: !zoomTable?"calc(100vh - 500px)":"calc(100vh - 184px)",
                 }}
               >
                 <AgGridReact
@@ -608,8 +640,7 @@ const ModelingTypesComponent: React.FunctionComponent<
                   rowHeight={36}
                   animateRows={true}
                   defaultColDef={defaultColDef}
-                  pagination={true}
-                  paginationPageSize={10}
+                  pagination={false}
                   onGridReady={onGridReady}
                   onSelectionChanged={onSelectionChanged}
                   suppressMovableColumns={true}
@@ -629,7 +660,6 @@ const ModelingTypesComponent: React.FunctionComponent<
           </Paper>
         </Grid>
       </Grid>
-
     </React.Fragment>
   );
 };
