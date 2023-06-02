@@ -31,7 +31,6 @@ const ModelingTypePage: React.FunctionComponent<ModelingTypePageProps> = () => {
     setcompanyName(company);
   }, [router]);
 
-  console.log("ModelingType -- ", data);
   return (
     <>
       <Head>

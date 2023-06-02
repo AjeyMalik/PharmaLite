@@ -111,7 +111,6 @@ const ModelingTypesComponent: React.FunctionComponent<
                     };
                   })
                 : [];
-            console.log("--list--", tempList);
             fieldCaptionsList.push({
               ...ele,
               field_name: ele.field_name
@@ -136,7 +135,6 @@ const ModelingTypesComponent: React.FunctionComponent<
             });
           }
         });
-      console.log("fieldCaptions", fieldCaptionsList);
       setFieldCaptions(fieldCaptionsList);
       setCompanyName(company || "");
       setLoading(false);
@@ -212,8 +210,6 @@ const ModelingTypesComponent: React.FunctionComponent<
             }, {});
             return itemstoReturn;
           });
-        console.log("columnDefs", colDefs);
-        console.log("rowData", row);
         if (!isFirstLoad) {
           setRowData(row || []);
           setIsFirst(false);

@@ -32,8 +32,6 @@ const ManageModelingType: React.FunctionComponent<ManageModelingTypeProps> = ({
   const { updateStatus } = React.useContext(StatusContext);
   const [isLoading, setLoading] = React.useState(false);
   const [isSubmited, setSubmitted] = React.useState(false);
-  console.log("--fieldCaptions--", fieldCaptions);
-  console.log("--modelingData--", modelingData);
 
   return (
     <React.Fragment>
