@@ -27,7 +27,9 @@ export default function AuthLayout({
     //   router.push("/");
     // }
     let token = getToken();
+    console.log("--on authlayout enter--", token);
     if (!token) {
+      console.log("--if no token--,router obj", router);
       router.push("/");
     }
   });

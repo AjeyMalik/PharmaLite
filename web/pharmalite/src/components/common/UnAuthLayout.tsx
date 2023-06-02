@@ -21,9 +21,12 @@ export default function UnAuthLayout({
     //   router.push("/dashboard");
     // }
     let token = getToken();
+    console.log("--on unauthlayout enter--", token);
     if (token) {
       let unauthUrls = ["/"];
       let currentUrl = router.route;
+      console.log("--if token, current route--", currentUrl);
+      console.log("--if token, router obj--", router);
       if (unauthUrls.includes(currentUrl)) {
         router.push("/dashboard");
       }
