@@ -24,7 +24,7 @@ export default function UnAuthLayout({
     console.log("--on unauthlayout enter--", token);
     if (token) {
       let unauthUrls = ["/"];
-      let currentUrl = router.route;
+      let currentUrl = router.asPath;
       console.log("--if token, current route--", currentUrl);
       console.log("--if token, router obj--", router);
       if (unauthUrls.includes(currentUrl)) {
