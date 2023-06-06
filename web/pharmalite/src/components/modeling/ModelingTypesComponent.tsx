@@ -449,6 +449,7 @@ const ModelingTypesComponent: React.FunctionComponent<
                                     label={item.field_caption}
                                     name={item.field_name}
                                     required={item.userrequired != 0}
+                                    encrypted={item.encrypted != 0}
                                     type={
                                       item.field_type === "NUMERIC"
                                         ? "number"
@@ -492,6 +493,7 @@ const ModelingTypesComponent: React.FunctionComponent<
                                   <AppDatePicker
                                     label={item.field_caption}
                                     required={item.userrequired != 0}
+                                    encrypted={item.encrypted != 0}
                                     name={item.field_name}
                                     onBlur={handleBlur}
                                     disabled={item.readOnly != 0}
@@ -529,6 +531,7 @@ const ModelingTypesComponent: React.FunctionComponent<
                               >
                                 <AppSelectInput
                                   required={item.userrequired != 0}
+                                  encrypted={item.encrypted != 0}
                                   menuItems={item.listValues}
                                   label={item.field_caption}
                                   name={item.field_name}
