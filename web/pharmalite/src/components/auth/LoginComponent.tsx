@@ -77,6 +77,7 @@ const LoginComponent: React.FunctionComponent<LoginComponentProps> = () => {
                     setLoading(false);
                     setErrorMessage("");
                     router.push("/dashboard");
+                    localStorage.setItem("path", "/dashboard");
                   } else {
                     setErrorMessage(result?.resultMessage);
                     setLoading(false);

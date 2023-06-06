@@ -21,6 +21,7 @@ export const removeToken = () => {
   localStorage.removeItem("company");
   localStorage.removeItem("selectedMenuGroup");
   localStorage.removeItem("selectedMenu");
+  localStorage.removeItem("path");
 };
 
 export const groupBy = (data: Array<any>, prop: string) => {
@@ -50,6 +51,13 @@ export function getUserRole() {
 
 export function getCompany() {
   let res = localStorage.getItem("company");
+  if (res === null || res === undefined) {
+    return "";
+  }
+  return res;
+}
+export function getPath() {
+  let res = localStorage.getItem("path");
   if (res === null || res === undefined) {
     return "";
   }

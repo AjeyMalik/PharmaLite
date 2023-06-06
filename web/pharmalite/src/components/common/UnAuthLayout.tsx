@@ -4,7 +4,11 @@ import { useEffect } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import * as React from "react";
 import Header from "./Header";
-import { getToken, isTokenExpired } from "index/services/util/UtilService";
+import {
+  getPath,
+  getToken,
+  isTokenExpired,
+} from "index/services/util/UtilService";
 import { ThemeProvider } from "@mui/material";
 import { THEME } from "index/utils/Styles";
 
@@ -29,9 +33,15 @@ export default function UnAuthLayout({
       console.log("--if token, router obj--", router);
       if (unauthUrls.includes(currentUrl)) {
         router.push("/dashboard");
+        localStorage.setItem("path", "/dashboard");
+      } else {
+        let path = getPath();
+        if (path) {
+          router.push(path);
+        }
       }
     }
-  });
+  }, []);
 
   return (
     <React.Fragment>

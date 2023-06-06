@@ -4,7 +4,11 @@ import { useEffect } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import * as React from "react";
 import Header from "./Header";
-import { getToken, isTokenExpired } from "index/services/util/UtilService";
+import {
+  getPath,
+  getToken,
+  isTokenExpired,
+} from "index/services/util/UtilService";
 import { ThemeProvider } from "@mui/material";
 import { THEME } from "index/utils/Styles";
 import StatusProvider from "../../providers/StatusProvider";
@@ -27,12 +31,17 @@ export default function AuthLayout({
     //   router.push("/");
     // }
     let token = getToken();
-    console.log("--on authlayout enter--", token);
     if (!token) {
       console.log("--if no token--,router obj", router);
       router.push("/");
+    } else {
+      console.log("--if token available--,router obj", router);
+      let path = getPath();
+      if (path) {
+        router.push(path);
+      }
     }
-  });
+  }, []);
 
   return (
     <React.Fragment>

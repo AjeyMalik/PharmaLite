@@ -166,6 +166,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
 
   const goto = (path: string) => {
     router.push(path || "");
+    localStorage.setItem("path", path || "/");
   };
 
   const toggleMenuGroup = (item: IMenuGroup) => {

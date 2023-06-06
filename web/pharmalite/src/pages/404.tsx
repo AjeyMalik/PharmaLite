@@ -1,11 +1,16 @@
 import { Box, Fab, Paper, Typography } from "@mui/material";
 import * as React from "react";
 import HomeIcon from "@mui/icons-material/Home";
-import Link from "next/link";
-
-const MyLink = (props: any) => <Link href="/dashboard" {...props} />;
+import { useRouter } from "next/router";
 
 export default function PageNotFound() {
+  const router = useRouter();
+
+  const goHome = () => {
+    router.push("/dashboard");
+    localStorage.setItem("path", "/dashboard");
+  };
+
   return (
     <React.Fragment>
       <Box sx={{ height: "100vh", display: "flex", alignItems: "center" }}>
@@ -28,7 +33,7 @@ export default function PageNotFound() {
             Looks like you are stranded... Lets go home
           </Typography>
           <br />
-          <Fab color="primary" aria-label="home" component={MyLink}>
+          <Fab color="primary" aria-label="home" onClick={() => goHome()}>
             <HomeIcon />
           </Fab>
         </Paper>
