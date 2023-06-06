@@ -358,6 +358,17 @@ const ModelingTypesComponent: React.FunctionComponent<
                         {props.type ? props.type.replaceAll("_", " ") : "-"}
                       </Typography>
                       <Box component="div" display="flex" flexDirection="row">
+                        <AppButton
+                          btnText="Search"
+                          onClick={() => {
+                            getList(values);
+                          }}
+                          startIcon={<SearchIcon />}
+                          type="button"
+                          variant="contained"
+                          color="primary"
+                          fullWidth={true}
+                        />
                         {isEdit ? (
                           <AppButton
                             btnText="Update"
@@ -371,6 +382,7 @@ const ModelingTypesComponent: React.FunctionComponent<
                             variant="contained"
                             color="secondary"
                             fullWidth={true}
+                            className="ml-2"
                           />
                         ) : (
                           <AppButton
@@ -386,8 +398,22 @@ const ModelingTypesComponent: React.FunctionComponent<
                             variant="contained"
                             color="secondary"
                             fullWidth={true}
+                            className="ml-2"
                           />
                         )}
+                        <AppButton
+                          btnText="Delete"
+                          disabled={!isEdit}
+                          onClick={() => {
+                            handleDelete(values);
+                          }}
+                          startIcon={<DeleteIcon />}
+                          type="button"
+                          variant="contained"
+                          color="error"
+                          fullWidth={true}
+                          className="ml-2"
+                        />
                         <AppButton
                           btnText="Reset"
                           onClick={() => {
@@ -401,34 +427,6 @@ const ModelingTypesComponent: React.FunctionComponent<
                           fullWidth={true}
                           className="ml-2"
                         />
-
-                        {isEdit ? (
-                          <AppButton
-                            btnText="Delete"
-                            onClick={() => {
-                              handleDelete(values);
-                            }}
-                            startIcon={<DeleteIcon />}
-                            type="button"
-                            variant="contained"
-                            color="error"
-                            fullWidth={true}
-                            className="ml-2"
-                          />
-                        ) : (
-                          <AppButton
-                            btnText="Search"
-                            onClick={() => {
-                              getList(values);
-                            }}
-                            startIcon={<SearchIcon />}
-                            type="button"
-                            variant="contained"
-                            color="primary"
-                            fullWidth={true}
-                            className="ml-2"
-                          />
-                        )}
                       </Box>
                     </Box>
                     <br />
