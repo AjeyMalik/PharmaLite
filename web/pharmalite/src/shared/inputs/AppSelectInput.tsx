@@ -1,5 +1,10 @@
 import React from "react";
-import { FormControl, Typography, MenuItem, Select } from "@mui/material";
+import {
+  FormControl,
+  Typography,
+  Autocomplete,
+  TextField,
+} from "@mui/material";
 
 function AppSelectInput({
   name,
@@ -29,14 +34,18 @@ function AppSelectInput({
   onBlur: any;
   errorText?: any;
   helperText?: any;
-  menuItems: { name: string; value?: string }[];
-  required?:boolean
-  encrypted?:boolean
+  menuItems: { label: string; value?: string }[];
+  required?: boolean;
+  encrypted?: boolean;
 }) {
   return (
     <FormControl fullWidth margin="dense">
-      <Typography variant="caption">{encrypted?'#':''}{label}{required?'*':''}</Typography>
-      <Select
+      <Typography variant="caption">
+        {encrypted ? "#" : ""}
+        {label}
+        {required ? "*" : ""}
+      </Typography>
+      {/* <Select
         variant="standard"
         size="small"
         name={name}
@@ -57,12 +66,34 @@ function AppSelectInput({
               {item.name}
             </MenuItem>
           ))}
-      </Select>
-      {(error || errorText) && (
+      </Select> */}
+      <Autocomplete
+        value={value ? menuItems.find((e) =>e.value === value) : ""}
+        className={className}
+        options={menuItems}
+        getOptionLabel={(option) =>
+          typeof option !== "string" ? option.label : option
+        }
+        onChange={(e, value) => {
+          onChange(value);
+        }}
+        onBlur={onBlur}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="standard"
+            size="small"
+            name={name}
+            error={error || errorText ? true : false}
+            helperText={errorText || helperText}
+          />
+        )}
+      />
+      {/* {(error || errorText) && (
         <Typography variant="caption" color="error">
           {errorText || helperText}
         </Typography>
-      )}
+      )} */}
     </FormControl>
   );
 }

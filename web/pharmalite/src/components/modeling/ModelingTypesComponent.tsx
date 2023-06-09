@@ -107,7 +107,7 @@ const ModelingTypesComponent: React.FunctionComponent<
                     );
                     return {
                       value: itemstoReturn.keyid,
-                      name: itemstoReturn.keyvalue,
+                      label: itemstoReturn.keyvalue,
                     };
                   })
                 : [];
@@ -536,7 +536,7 @@ const ModelingTypesComponent: React.FunctionComponent<
                                   disabled={item.readOnly != 0}
                                   onBlur={handleBlur}
                                   onChange={(e: any) => {
-                                    let tempValue = e.target.value;
+                                    let tempValue = e?.value || null;
                                     setFieldValue(item.field_name, tempValue);
                                   }}
                                   value={values[item.field_name]}
