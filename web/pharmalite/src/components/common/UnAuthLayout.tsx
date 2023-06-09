@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import * as React from "react";
 import Header from "./Header";
@@ -18,6 +18,7 @@ export default function UnAuthLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   useEffect(() => {
     // let hasTokenExpired = isTokenExpired();
@@ -25,6 +26,7 @@ export default function UnAuthLayout({
     //   router.push("/dashboard");
     // }
     let token = getToken();
+    setIsLoggedIn(token ? true : false);
     console.log("--on unauthlayout enter--", token);
     if (token) {
       let unauthUrls = ["/"];
@@ -49,7 +51,7 @@ export default function UnAuthLayout({
         <CssBaseline />
         <Header />
         <main style={{ height: "calc(100vh - 64px)", padding: "16px" }}>
-          {children}
+          {!isLoggedIn && children}
         </main>
       </ThemeProvider>
     </React.Fragment>
