@@ -605,8 +605,8 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                         <Table>
                           <TableHead style={{ backgroundColor: "#248f8f" }}>
                             <TableRow>
-                              {containerDetails.map((container) => (
-                                <TableCell>
+                              {containerDetails.map((container,index) => (
+                                <TableCell key={index}>
                                   <Typography
                                     fontWeight="bold"
                                     color="white"
