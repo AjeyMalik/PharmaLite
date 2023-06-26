@@ -4,17 +4,42 @@ import {
   Card,
   FormControl,
   Grid,
+  IconButton,
+  Table,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 } from "@mui/material";
 import { Formik } from "formik";
 import { IGRNdetails } from "index/vm";
 import TextFieldCommon from "../common/TextFieldCommon";
 import { useState } from "react";
+import QueueIcon from "@mui/icons-material/Queue";
+import CustomDialogComponent from "../common/CustomeDialogComponent";
+import GrnSearch from "./GrnSearchDialog";
 
 interface GrnComponentProps {}
 
 const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isDialog, setIsDialog] = useState(false);
+  const [data, setData] = useState(true);
+  const handleDialogClose = () => {
+    setIsDialog(false);
+  };
+  const containerDetails = [
+    { name: "Container ID" },
+    { name: "Vendor Batch No" },
+    { name: "Manufacturing Date" },
+    { name: "Exp Date" },
+    { name: "Material Status" },
+    { name: "Checklist" },
+    { name: "Net Quantity" },
+    { name: "Available Quantity" },
+    { name: "Distr.Note" },
+  ];
   return (
     <>
       <Grid container spacing={2}>
@@ -70,14 +95,14 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                 <Card sx={{ padding: 3 }}>
                   <form onSubmit={handleSubmit}>
                     <Grid container spacing={1}>
-                      <Grid item xs={3} sm={3} md={3} lg={3}>
+                      <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
                         <FormControl margin="normal" required fullWidth>
                           <TextFieldCommon
                             size="small"
                             name="grNumber"
                             label="GR Number"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -95,6 +120,18 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                           />
                         </FormControl>
                       </Grid>
+                      <Grid item xs={0.5}>
+                        <IconButton
+                          color="primary"
+                          onClick={() => setIsDialog(true)}
+                          sx={{
+                            backgroundColor: "whitesmoke",
+                            marginTop: "17%",
+                          }}
+                        >
+                          <QueueIcon />
+                        </IconButton>
+                      </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
                           <TextFieldCommon
@@ -102,7 +139,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="material"
                             label="Material"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -127,7 +164,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="vendorId"
                             label="Vendor Id"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -152,7 +189,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="preparedBy"
                             label="Prepared By"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -177,7 +214,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="arNo"
                             label="AR No"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -201,7 +238,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="grnDate"
                             label="GRN Date"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -225,7 +262,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="verifiedBy"
                             label="Verified By"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -250,7 +287,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="verifiedOn"
                             label="Verified On"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -275,7 +312,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="company"
                             label="Company"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -299,7 +336,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="shipmentNumber"
                             label="Shipment Number"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -326,7 +363,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="sentToQABy"
                             label="Sent to QA By"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -351,7 +388,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="sentToQAOn"
                             label="Sent to QA On"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -376,7 +413,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="analyzedBy"
                             label="Analyzed By"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -401,7 +438,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="analyzedOn"
                             label="Analyzed On"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -426,7 +463,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="qaRemarks"
                             label="QA Remarks"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -451,7 +488,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="qaTestDate"
                             label="QA Test Date"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -476,7 +513,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="qcApprovedBy"
                             label="QC Approved By"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -501,7 +538,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="qcApprovedOn"
                             label="QC Approved On"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -526,7 +563,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="qaApprovedBy"
                             label="QA Approved By"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -551,7 +588,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                             name="qaApprovedOn"
                             label="QA Approved On"
                             type="text"
-                            variant="standard"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -598,12 +635,51 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                     </Grid>
                   </form>
+                  {data && (
+                    <Grid item xs={12} >
+                      <Typography fontWeight="bold">
+                        Container Details
+                      </Typography>
+                      <TableContainer>
+                        <Table>
+                          <TableHead style={{ backgroundColor: "#248f8f" }}>
+                            <TableRow>
+                              {containerDetails.map((container) => (
+                                <TableCell>
+                                  <Typography
+                                    fontWeight="bold"
+                                    color="white"
+                                    fontSize={15}
+                                    maxWidth="100%"
+                                    lineHeight={1}
+                                  >
+                                    {container.name}
+                                  </Typography>
+                                </TableCell>
+                              ))}
+                            </TableRow>
+                          </TableHead>
+                        </Table>
+                      </TableContainer>
+                    </Grid>
+                  )}
                 </Card>
               )}
             </Formik>
           </Grid>
         </Grid>
       </Grid>
+      {isDialog && (
+        <CustomDialogComponent
+          title="GRN Search"
+          onClose={() => handleDialogClose()}
+          isOpen={true}
+          variant="lg"
+          hideCloseButton
+        >
+          <GrnSearch onClose={handleDialogClose} />
+        </CustomDialogComponent>
+      )}
     </>
   );
 };

@@ -2,7 +2,9 @@ import React, { ChangeEvent } from "react";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 
 interface TextFieldCommonProps extends Omit<TextFieldProps, "onChange"> {
-  onChange: (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
+  onChange: (
+    event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => void;
 }
 
 const TextFieldCommon: React.FC<TextFieldCommonProps> = ({
@@ -18,6 +20,7 @@ const TextFieldCommon: React.FC<TextFieldCommonProps> = ({
   InputProps,
   margin,
   variant,
+  fullWidth,
 }) => {
   return (
     <TextField
@@ -31,10 +34,21 @@ const TextFieldCommon: React.FC<TextFieldCommonProps> = ({
       onChange={onChange}
       onBlur={onBlur}
       name={name}
-      variant={variant}
+      fullWidth={fullWidth}
+      variant={variant || "outlined"}
       InputProps={InputProps}
       margin={margin}
-      sx={{backgroundColor:'white'}}
+      sx={{
+        backgroundColor: "white",
+        "& .MuiOutlinedInput-root": {
+          "& fieldset": {
+            border:0,
+            borderBottom: "3px dotted",
+           
+          },
+        },
+        borderTopColor:'white'
+      }}
     />
   );
 };
