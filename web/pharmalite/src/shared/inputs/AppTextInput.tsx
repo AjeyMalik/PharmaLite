@@ -69,6 +69,13 @@ function AppTextInput({
           "&.selectedText": {
             bgcolor: "background.grid",
           },
+          "& .MuiOutlinedInput-root": {
+            "& fieldset": {
+              border:0,
+              borderBottom: "3px dotted",
+             
+            },
+          },
         }}
         {...rest}
         InputProps={{

@@ -47,7 +47,7 @@ const TextFieldCommon: React.FC<TextFieldCommonProps> = ({
            
           },
         },
-        borderTopColor:'white'
+       
       }}
     />
   );

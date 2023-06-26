@@ -14,18 +14,20 @@ import {
 } from "@mui/material";
 import { Formik } from "formik";
 import { IGRNdetails } from "index/vm";
-import TextFieldCommon from "../common/TextFieldCommon";
+// import AppTextInput from "";
 import { useState } from "react";
 import QueueIcon from "@mui/icons-material/Queue";
 import CustomDialogComponent from "../common/CustomeDialogComponent";
 import GrnSearch from "./GrnSearchDialog";
+import AppTextInput from "index/shared/inputs/AppTextInput";
+import AppButton from "index/shared/inputs/AppButton";
 
 interface GrnComponentProps {}
 
 const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isDialog, setIsDialog] = useState(false);
-  const [data, setData] = useState(true);
+  const [data, setData] = useState(false);
   const handleDialogClose = () => {
     setIsDialog(false);
   };
@@ -42,7 +44,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
   ];
   return (
     <>
-      <Grid container spacing={2}>
+      <Grid container >
         <Grid item xs={12}>
           <Typography fontWeight="bold">GRN Details</Typography>
           <Grid item xs={12}>
@@ -91,18 +93,17 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                 handleBlur,
                 handleSubmit,
                 isSubmitting,
+                resetForm,
               }) => (
-                <Card sx={{ padding: 3 }}>
+                <Card sx={{ px:4 }}>
                   <form onSubmit={handleSubmit}>
                     <Grid container spacing={1}>
                       <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="grNumber"
                             label="GR Number"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -126,7 +127,7 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                           onClick={() => setIsDialog(true)}
                           sx={{
                             backgroundColor: "whitesmoke",
-                            marginTop: "17%",
+                            marginTop: "55%",
                           }}
                         >
                           <QueueIcon />
@@ -134,12 +135,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="material"
                             label="Material"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -159,12 +158,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="vendorId"
                             label="Vendor Id"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -184,12 +181,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="preparedBy"
                             label="Prepared By"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -209,12 +204,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="arNo"
                             label="AR No"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -233,12 +226,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="grnDate"
                             label="GRN Date"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -257,12 +248,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="verifiedBy"
                             label="Verified By"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -282,12 +271,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="verifiedOn"
                             label="Verified On"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -307,12 +294,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="company"
                             label="Company"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -331,12 +316,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="shipmentNumber"
                             label="Shipment Number"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -358,12 +341,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       <Grid item xs={3}></Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="sentToQABy"
                             label="Sent to QA By"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -383,12 +364,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="sentToQAOn"
                             label="Sent to QA On"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -408,12 +387,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="analyzedBy"
                             label="Analyzed By"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -433,12 +410,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="analyzedOn"
                             label="Analyzed On"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -458,12 +433,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={9} sm={9} md={9} lg={9}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="qaRemarks"
                             label="QA Remarks"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -483,12 +456,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="qaTestDate"
                             label="QA Test Date"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -508,12 +479,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="qcApprovedBy"
                             label="QC Approved By"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -533,12 +502,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="qcApprovedOn"
                             label="QC Approved On"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -558,12 +525,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="qaApprovedBy"
                             label="QA Approved By"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -583,12 +548,10 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
-                          <TextFieldCommon
-                            size="small"
+                          <AppTextInput
                             name="qaApprovedOn"
                             label="QA Approved On"
                             type="text"
-                            
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={
@@ -608,35 +571,33 @@ const GrnComponent: React.FunctionComponent<GrnComponentProps> = () => {
                       </Grid>
                       <Grid item xs={12} sm={12} md={12} lg={12}>
                         <br />
-                        <Grid container justifyContent="flex-end" spacing={2}>
+                        <Grid container justifyContent="flex-end" spacing={2} marginBottom={2}>
                           <Grid item>
-                            <Button
+                            <AppButton
                               variant="outlined"
                               color="primary"
                               className="clear-btn"
-                              // onClick={() => onClose()}
-                            >
-                              clear
-                            </Button>
+                              onClick={()=>resetForm()}
+                              btnText="Clear"/>
+                            
                           </Grid>
                           <Grid item>
-                            <Button
+                            <AppButton
                               type="submit"
                               variant="contained"
                               className="add-btn"
                               color="primary"
                               disabled={isSubmitting}
                               onClick={() => setIsSubmitted(true)}
-                            >
-                              Submit
-                            </Button>
+                              btnText="Submit"/>
+                            
                           </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
                   </form>
                   {data && (
-                    <Grid item xs={12} >
+                    <Grid item xs={12}>
                       <Typography fontWeight="bold">
                         Container Details
                       </Typography>
