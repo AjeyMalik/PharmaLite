@@ -23,6 +23,8 @@ function AppTextInput({
   disabled,
   required,
   encrypted,
+  startAdornment,
+  endAdornment,
   ...rest
 }: {
   type?: string;
@@ -44,6 +46,8 @@ function AppTextInput({
   disabled?: boolean;
   required?: boolean;
   encrypted?: boolean;
+  startAdornment?: string;
+  endAdornment?: any;
 }) {
   return (
     <FormControl fullWidth margin="dense">
@@ -72,14 +76,12 @@ function AppTextInput({
         }}
         {...rest}
         InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">{icon}</InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position="end" sx={{ color: "#e60000" }}>
-              {errorText ? <ErrorIcon /> : " "}
-            </InputAdornment>
-          ),
+          startAdornment:startAdornment? (
+            <InputAdornment position="start">{startAdornment}</InputAdornment>
+          ):undefined,
+          endAdornment:endAdornment? (
+            <InputAdornment position="end">{endAdornment}</InputAdornment>
+          ):undefined
         }}
       />
     </FormControl>

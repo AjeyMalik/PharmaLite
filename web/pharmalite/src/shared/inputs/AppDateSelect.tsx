@@ -44,6 +44,7 @@ function AppDatePicker({
         onChange={onChange}
         maxDate={maxDate}
         minDate={minDate}
+        disabled={disabled}
         slotProps={{
           textField: {
             name: name,
