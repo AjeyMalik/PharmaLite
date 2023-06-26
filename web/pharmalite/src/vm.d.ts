@@ -59,3 +59,26 @@ export interface IDrawerOpen {
   isOpen: boolean;
   index?: number;
 }
+export interface IGRNdetails{
+  grNumber:string,
+  material:string,
+  vendorId:string,
+preparedBy:string,
+arNo:string,
+grnDate:string,
+verifiedBy:string,
+verifiedOn:string,
+company:string,
+shipmentNumber:string,
+sentToQABy:string,
+sentToQAOn:string,
+analyzedBy:string,
+analyzedOn:string,
+qaRemarks:string,
+qaTestDate:string,
+qcApprovedBy:string,
+qcApprovedOn:string,
+qaApprovedBy:string,
+qaApprovedOn:string,
+  
+}
