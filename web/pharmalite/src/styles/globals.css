@@ -9,6 +9,10 @@ body {
   cursor: pointer;
 }
 
+.flex-1{
+  flex: 1;
+}
+
 .selected-side-menu-item {
   background-color: #009688 !important;
   color: #ffff !important;

@@ -1,17 +1,25 @@
 import * as React from "react";
-import { Grid, Card, CardContent, Button } from "@mui/material";
+import { Grid, Card, CardContent, IconButton } from "@mui/material";
 import AppTextInput from "index/shared/inputs/AppTextInput";
 import { Formik } from "formik";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import SearchIcon from "@mui/icons-material/Search";
+import { useState } from "react";
+import QueueIcon from "@mui/icons-material/Queue";
+import CustomDialogComponent from "../common/CustomeDialogComponent";
+import MaterialSearch from "./MaterialMaintenanceDialog";
 interface MaterialMaintenanceMainProps {}
 
 const MaterialMaintenanceMain: React.FC<MaterialMaintenanceMainProps> = () => {
+  const [isDialog, setIsDialog] = useState(false);
+  const handleDialogClose = () => {
+    setIsDialog(false);
+  };
   return (
     <React.Fragment>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <h2>Destruction Note</h2>
+          <h2>Material Receipts</h2>
         </Grid>
         <Grid item xs={12}>
           <Card>
@@ -20,14 +28,13 @@ const MaterialMaintenanceMain: React.FC<MaterialMaintenanceMainProps> = () => {
                 enableReinitialize
                 initialValues={{
                   material: "",
-                  type:"",
-                  UOM:"",
-                  materialId:"",
-                  description:"",
-                  grNumber:"",
-                  shipmentNumber:"",
-
-               }}
+                  type: "",
+                  UOM: "",
+                  materialId: "",
+                  description: "",
+                  grNumber: "",
+                  shipmentNumber: "",
+                }}
                 validate={(values) => {
                   let errors: any = {};
                   if (!values.shipmentNumber) {
@@ -55,28 +62,43 @@ const MaterialMaintenanceMain: React.FC<MaterialMaintenanceMainProps> = () => {
                     <Grid container spacing={2}>
                       <Grid item lg={12}>
                         <Grid container spacing={2} direction="row">
-                          <Grid item xs={12} sm={6} md={4} lg={4}>
-                            <AppTextInput
-                              disabled
-                              name="material"
-                              label="Material"
-                              type="text"
-                              value={values.material}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              endAdornment={
-                                <ContentCopyIcon
-                                  className="pointer"
-                                  onClick={() => {
-                                    console.log("test");
+                          <Grid item xs={12} sm={5} md={3} lg={4}>
+                            <Grid container>
+                              <Grid item className="flex-1">
+                                <AppTextInput
+                                  disabled
+                                  name="material"
+                                  label="Material"
+                                  type="text"
+                                  value={values.material}
+                                  onBlur={handleBlur}
+                                  onChange={handleChange}
+                                  //   endAdornment={
+                                  //     <ContentCopyIcon
+                                  //       className="pointer"
+                                  //       onClick={() => {
+                                  //         console.log("test");
+                                  //       }}
+                                  //     />
+                                  //   }
+                                ></AppTextInput>
+                              </Grid>
+                              <Grid item>
+                                <IconButton
+                                  color="primary"
+                                  onClick={() => setIsDialog(true)}
+                                  sx={{
+                                    backgroundColor: "#ddd",
+                                    marginTop: "10%",
                                   }}
-                                />
-                              }
-                             
-                            ></AppTextInput>
+                                >
+                                  <QueueIcon />
+                                </IconButton>
+                              </Grid>
+                            </Grid>
                           </Grid>
                           <Grid item xs={12} sm={6} md={4} lg={4}>
-                          <AppTextInput
+                            <AppTextInput
                               disabled
                               name="type"
                               label="Type"
@@ -87,7 +109,7 @@ const MaterialMaintenanceMain: React.FC<MaterialMaintenanceMainProps> = () => {
                             ></AppTextInput>
                           </Grid>
                           <Grid item xs={12} sm={6} md={4} lg={4}>
-                          <AppTextInput
+                            <AppTextInput
                               disabled
                               name="UOM"
                               label="UOM"
@@ -157,20 +179,16 @@ const MaterialMaintenanceMain: React.FC<MaterialMaintenanceMainProps> = () => {
                               onBlur={handleBlur}
                               onChange={(e: any) => {}}
                               error={
-                                touched.shipmentNumber &&
-                                errors.shipmentNumber
+                                touched.shipmentNumber && errors.shipmentNumber
                                   ? true
                                   : false
                               }
                               errorText={errors.shipmentNumber}
                             ></AppTextInput>
                           </Grid>
-                          <Grid item xs={12} sm={6} md={4} lg={4}>
-                            
-                          </Grid>
+                          <Grid item xs={12} sm={6} md={4} lg={4}></Grid>
                         </Grid>
                       </Grid>
-
                     </Grid>
                   </form>
                 )}
@@ -179,6 +197,17 @@ const MaterialMaintenanceMain: React.FC<MaterialMaintenanceMainProps> = () => {
           </Card>
         </Grid>
       </Grid>
+      {isDialog && (
+        <CustomDialogComponent
+          title="Material Search"
+          onClose={() => handleDialogClose()}
+          isOpen={true}
+          variant="lg"
+          hideCloseButton
+        >
+          <MaterialSearch onClose={handleDialogClose} />
+        </CustomDialogComponent>
+      )}
     </React.Fragment>
   );
 };
