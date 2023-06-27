@@ -88,22 +88,16 @@ const DestructionNoteMain: React.FC<DestructionNoteMainProps> = () => {
                               value={values.DESTRUCTION_NOTE_ID}
                               onBlur={handleBlur}
                               onChange={handleChange}
-                              endAdornment={
-                                <SearchIcon
-                                  className="pointer"
-                                  onClick={() => {
-                                    console.log("test");
-                                  }}
-                                />
-                              }
-                              error={
-                                touched.DESTRUCTION_NOTE_ID &&
+                              endAdornment={<SearchIcon
+                                className="pointer"
+                                onClick={() => {
+                                  console.log("test");
+                                } } />}
+                              error={touched.DESTRUCTION_NOTE_ID &&
                                 errors.DESTRUCTION_NOTE_ID
-                                  ? true
-                                  : false
-                              }
-                              errorText={errors.DESTRUCTION_NOTE_ID}
-                            ></AppTextInput>
+                                ? true
+                                : false}
+                              errorText={errors.DESTRUCTION_NOTE_ID} fullWidth={false}                            ></AppTextInput>
                           </Grid>
                           <Grid item xs={12} sm={6} md={4} lg={3}>
                             <AppDatePicker
@@ -123,8 +117,7 @@ const DestructionNoteMain: React.FC<DestructionNoteMainProps> = () => {
                               type="text"
                               value={values.requisitionFrom}
                               onBlur={handleBlur}
-                              onChange={(e: any) => {}}
-                            ></AppTextInput>
+                              onChange={(e: any) => { } } fullWidth={false}                            ></AppTextInput>
                           </Grid>
                           <Grid item xs={12} sm={6} md={4} lg={3}>
                             <AppSelectInput
@@ -153,8 +146,7 @@ const DestructionNoteMain: React.FC<DestructionNoteMainProps> = () => {
                               type="text"
                               value={values.material}
                               onBlur={handleBlur}
-                              onChange={(e: any) => {}}
-                            ></AppTextInput>
+                              onChange={(e: any) => { } } fullWidth={false}                            ></AppTextInput>
                           </Grid>
                           <Grid item xs={12} sm={6} md={4} lg={3}>
                             <AppTextInput
@@ -164,8 +156,7 @@ const DestructionNoteMain: React.FC<DestructionNoteMainProps> = () => {
                               type="text"
                               value={values.container}
                               onBlur={handleBlur}
-                              onChange={(e: any) => {}}
-                            ></AppTextInput>
+                              onChange={(e: any) => { } } fullWidth={false}                            ></AppTextInput>
                           </Grid>
                           <Grid item xs={12} sm={6} md={4} lg={3}>
                             <AppTextInput
@@ -175,8 +166,7 @@ const DestructionNoteMain: React.FC<DestructionNoteMainProps> = () => {
                               type="text"
                               value={values.quantity}
                               onBlur={handleBlur}
-                              onChange={(e: any) => {}}
-                            ></AppTextInput>
+                              onChange={(e: any) => { } } fullWidth={false}                            ></AppTextInput>
                           </Grid>
                           <Grid item xs={12} sm={6} md={4} lg={3}></Grid>
                         </Grid>
@@ -191,8 +181,7 @@ const DestructionNoteMain: React.FC<DestructionNoteMainProps> = () => {
                               type="text"
                               value={values.manufacturerOrSupplier}
                               onBlur={handleBlur}
-                              onChange={(e: any) => {}}
-                            ></AppTextInput>
+                              onChange={(e: any) => { } } fullWidth={false}                            ></AppTextInput>
                           </Grid>
                           <Grid item xs={12} sm={6} md={4} lg={3}>
                             <AppTextInput
@@ -202,8 +191,7 @@ const DestructionNoteMain: React.FC<DestructionNoteMainProps> = () => {
                               type="text"
                               value={values.batchNumber}
                               onBlur={handleBlur}
-                              onChange={(e: any) => {}}
-                            ></AppTextInput>
+                              onChange={(e: any) => { } } fullWidth={false}                            ></AppTextInput>
                           </Grid>
                           <Grid item xs={12} sm={6} md={4} lg={3}>
                             <AppDatePicker
@@ -237,8 +225,7 @@ const DestructionNoteMain: React.FC<DestructionNoteMainProps> = () => {
                               type="text"
                               value={values.ReasonForDestruction}
                               onBlur={handleBlur}
-                              onChange={(e: any) => {}}
-                            ></AppTextInput>
+                              onChange={(e: any) => { } } fullWidth={false}                            ></AppTextInput>
                           </Grid>
                         </Grid>
                       </Grid>
@@ -252,8 +239,7 @@ const DestructionNoteMain: React.FC<DestructionNoteMainProps> = () => {
                               type="text"
                               value={values.methodForDestruction}
                               onBlur={handleBlur}
-                              onChange={(e: any) => {}}
-                            ></AppTextInput>
+                              onChange={(e: any) => { } } fullWidth={false}                            ></AppTextInput>
                           </Grid>
                         </Grid>
                       </Grid>
