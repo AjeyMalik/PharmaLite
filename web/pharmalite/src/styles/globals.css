@@ -111,3 +111,6 @@ body {
 .mr-2 {
   margin-right: 16px !important;
 }
+.in-active-tab{
+  color:#fd8f6d !important;
+}

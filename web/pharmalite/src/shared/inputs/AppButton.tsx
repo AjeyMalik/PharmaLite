@@ -13,6 +13,7 @@ function AppButton({
   disabled,
   fullWidth,
   autoFocus,
+  children,
   ...rest
 }: {
   btnText: string;
@@ -26,6 +27,7 @@ function AppButton({
   disabled?: boolean;
   fullWidth?: boolean;
   autoFocus?: boolean;
+  children?: React.ReactNode;
 }) {
   return (
     <Button
@@ -41,6 +43,7 @@ function AppButton({
       autoFocus={autoFocus}
       {...rest}
     >
+      {children}
       {btnText}
     </Button>
   );
