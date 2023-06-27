@@ -82,3 +82,21 @@ qaApprovedBy:string,
 qaApprovedOn:string,
   
 }
+export interface IMaterialReturns{
+  order:string;
+  containerId:string;
+  workOrder:string;
+  materialDispatchNoteId:string;
+  line:string;
+  createdOn:string;
+  workOrderStatus:string;
+  batchSize:string;
+  status:string;
+  effectiveDate:string;
+  material:string;
+  sfgCode:string;
+  description:string;
+  quantityIssued:string;
+  materialReturnsNoteId:string;
+
+}

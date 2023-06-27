@@ -25,6 +25,7 @@ function AppTextInput({
   encrypted,
   startAdornment,
   endAdornment,
+  fullWidth,
   ...rest
 }: {
   type?: string;
@@ -48,10 +49,17 @@ function AppTextInput({
   encrypted?: boolean;
   startAdornment?: string;
   endAdornment?: any;
+  fullWidth: boolean;
 }) {
   return (
     <FormControl fullWidth margin="dense">
-      {label && <Typography variant="caption">{encrypted?'#':''}{label}{required?'*':''}</Typography>}
+      {label && (
+        <Typography variant="caption">
+          {encrypted ? "#" : ""}
+          {label}
+          {required ? "*" : ""}
+        </Typography>
+      )}
       <TextField
         variant="standard"
         size="small"
@@ -66,6 +74,7 @@ function AppTextInput({
         disabled={disabled}
         multiline={multiline || rows ? true : false}
         rows={rows || 1}
+        fullWidth={fullWidth}
         sx={{
           bgcolor: "background.grid",
           color: "background.grid",
@@ -73,15 +82,21 @@ function AppTextInput({
           "&.selectedText": {
             bgcolor: "background.grid",
           },
+          "& .MuiOutlinedInput-root": {
+            "& fieldset": {
+              border: 0,
+              borderBottom: "3px dotted",
+            },
+          },
         }}
         {...rest}
         InputProps={{
-          startAdornment:startAdornment? (
+          startAdornment: startAdornment ? (
             <InputAdornment position="start">{startAdornment}</InputAdornment>
-          ):undefined,
-          endAdornment:endAdornment? (
+          ) : undefined,
+          endAdornment: endAdornment ? (
             <InputAdornment position="end">{endAdornment}</InputAdornment>
-          ):undefined
+          ) : undefined,
         }}
       />
     </FormControl>
