@@ -199,7 +199,7 @@ const MaterialReturnComponent: React.FunctionComponent<
                       />
                     </FormControl>
                   </Grid>
-                  <Grid item xs={0.5} marginTop="3%">
+                  <Grid item xs={0.5} marginTop="3%" marginLeft='-1%'>
                     <IconButton
                       color="primary"
                       sx={{ backgroundColor: "lightgray" }}
@@ -459,7 +459,7 @@ const MaterialReturnComponent: React.FunctionComponent<
                       />
                     </FormControl>
                   </Grid>
-                  <Grid item xs={0.5} marginTop="3%">
+                  <Grid item xs={0.5} marginTop="3%" marginLeft='-1%'>
                     <IconButton
                       color="primary"
                       sx={{ backgroundColor: "lightgray" }}
