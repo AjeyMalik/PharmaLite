@@ -10,9 +10,10 @@ import {
   Typography,
 } from "@mui/material";
 import * as React from "react";
-import TextFieldCommon from "../common/TextFieldCommon";
+// import TextFieldCommon from "../common/TextFieldCommon";
 import SearchIcon from "@mui/icons-material/Search";
 import AppButton from "index/shared/inputs/AppButton";
+import AppTextInput from "index/shared/inputs/AppTextInput";
 
 interface MaterialProps {
   onClose: Function;
@@ -100,15 +101,14 @@ const MaterialSearch: React.FunctionComponent<MaterialProps> = ({
   return (
     <Grid container spacing={2} alignItems="center">
       <Grid item xs={9}>
-        <TextFieldCommon
+        <AppTextInput
           onChange={() => console.log("search")}
           type="search"
           label="Search For"
-          color="primary"
+          // color="primary"
           fullWidth={true}
-          variant="standard"
-          name="search"
-        />
+          // variant="standard"
+          name="search" onBlur={undefined} value={undefined}        />
       </Grid>
       <Grid item xs={3}>
         <Button
