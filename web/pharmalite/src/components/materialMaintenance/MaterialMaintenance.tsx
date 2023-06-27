@@ -208,7 +208,7 @@ const MaterialMaintenanceMain: React.FC<MaterialMaintenanceMainProps> = () => {
               </Formik>
             </CardContent>
           </Card>
-          {search && (
+          {search.NAME && (
             <React.Fragment>
               <Grid
                 container
@@ -254,7 +254,7 @@ const MaterialMaintenanceMain: React.FC<MaterialMaintenanceMainProps> = () => {
         onClose={() => containersDialog()}
         isOpen={true}
         variant="lg"
-        hideCloseButton
+        // hideCloseButton
       >
         <ContainersDialog onContainersClose={containersDialog} />
       </CustomDialogComponent>

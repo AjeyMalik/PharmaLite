@@ -10,9 +10,10 @@ import {
   Typography,
 } from "@mui/material";
 import * as React from "react";
-import TextFieldCommon from "../common/TextFieldCommon";
 import SearchIcon from "@mui/icons-material/Search";
 import AppButton from "index/shared/inputs/AppButton";
+import AppTextInput from "index/shared/inputs/AppTextInput";
+import { Formik } from "formik";
 
 interface MaterialProps {
   onClose: Function;
@@ -21,6 +22,7 @@ const MaterialSearch: React.FunctionComponent<MaterialProps> = ({
   onClose
 }) => {
   const [selectedIndex, setSelectedIndex] = React.useState<number>(-1);
+  const [search, setSearch] = React.useState<any>();
 
   const list = [
     { name: "MATERIAL_MASTERID" },
@@ -98,15 +100,41 @@ const MaterialSearch: React.FunctionComponent<MaterialProps> = ({
     },
   ];
   return (
+    <Formik
+    enableReinitialize
+    initialValues={search}
+    validate={(values) => {
+      let errors: any = {};
+      return errors;
+    }}
+    onSubmit={async (values, { setSubmitting, resetForm }) => {
+      console.log("test", values);
+      setSubmitting(false);
+    }}
+  >
+    {({
+      values,
+      errors,
+      touched,
+      handleChange,
+      handleBlur,
+      handleSubmit,
+      isSubmitting,
+      resetForm,
+    }) => (
+      <form onSubmit={handleSubmit}>
+
     <Grid container spacing={2} alignItems="center">
       <Grid item xs={9}>
-        <TextFieldCommon
+        <AppTextInput
           onChange={() => console.log("search")}
           type="search"
+          value=''
           label="Search For"
-          color="primary"
+          // color="primary"
           fullWidth={true}
-          variant="standard"
+          onBlur={handleBlur}
+          // variant="standard"
           name="search"
         />
       </Grid>
@@ -184,19 +212,21 @@ const MaterialSearch: React.FunctionComponent<MaterialProps> = ({
         <br />
         <Grid container justifyContent="flex-end" spacing={2}>
           <Grid item>
-            <Button
+            <AppButton
               size="medium"
-              sx={{
-                boxShadow: 4,
-                color: "black",
-                fontWeight: "bold",
-                borderRadius: 1,
-              }}
+              btnText="Cancel"
+              variant="outlined"
+              // sx={{
+              //   boxShadow: 4,
+              //   color: "black",
+              //   fontWeight: "bold",
+              //   borderRadius: 1,
+              // }}
+              type="button"
               className="cancel-btn"
-              onClick={() => onClose()}
-            >
-              Cancel
-            </Button>
+              color="primary"
+              onClick={() => onClose()}    
+            />
           </Grid>
           <Grid item>
             <AppButton
@@ -215,6 +245,9 @@ const MaterialSearch: React.FunctionComponent<MaterialProps> = ({
         <Typography>Status Message:</Typography>
       </Grid>
     </Grid>
+      </form>
+    )}
+    </Formik>
   );
 };
 export default MaterialSearch;
