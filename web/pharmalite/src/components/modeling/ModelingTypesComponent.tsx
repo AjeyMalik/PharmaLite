@@ -444,38 +444,31 @@ const ModelingTypesComponent: React.FunctionComponent<
                               item.field_type !== "DATETIME" && (
                                 <Grid item xs={12} sm={6} md={4} lg={3}>
                                   <AppTextInput
-                                    label={item.field_caption}
-                                    name={item.field_name}
-                                    required={item.userrequired != 0}
-                                    encrypted={item.encrypted != 0}
-                                    type={
-                                      item.field_type === "NUMERIC"
-                                        ? "number"
-                                        : "text"
-                                    }
-                                    disabled={item.readOnly != 0}
-                                    onBlur={handleBlur}
-                                    onChange={(e: any) => {
-                                      let tempValue = e.target.value;
-                                      setFieldValue(
-                                        item.field_name,
-                                        tempValue || undefined
-                                      );
-                                    }}
-                                    value={values[item.field_name] || ""}
-                                    error={
-                                      errors[item.field_name] &&
-                                      (touched[item.field_name] || isSubmited)
-                                        ? true
-                                        : false
-                                    }
-                                    helperText={
-                                      errors[item.field_name] &&
-                                      (touched[item.field_name] ||
-                                        isSubmited) &&
-                                      errors[item.field_name]
-                                    }
-                                  />
+                                  label={item.field_caption}
+                                  name={item.field_name}
+                                  required={item.userrequired != 0}
+                                  encrypted={item.encrypted != 0}
+                                  type={item.field_type === "NUMERIC"
+                                    ? "number"
+                                    : "text"}
+                                  disabled={item.readOnly != 0}
+                                  onBlur={handleBlur}
+                                  onChange={(e: any) => {
+                                    let tempValue = e.target.value;
+                                    setFieldValue(
+                                      item.field_name,
+                                      tempValue || undefined
+                                    );
+                                  } }
+                                  value={values[item.field_name] || ""}
+                                  error={errors[item.field_name] &&
+                                    (touched[item.field_name] || isSubmited)
+                                    ? true
+                                    : false}
+                                  helperText={errors[item.field_name] &&
+                                    (touched[item.field_name] ||
+                                      isSubmited) &&
+                                    errors[item.field_name]} fullWidth={false}                                  />
                                 </Grid>
                               )}
                             {item.uireturntype === "SINGLE" &&
