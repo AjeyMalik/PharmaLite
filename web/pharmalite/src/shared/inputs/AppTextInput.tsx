@@ -49,7 +49,7 @@ function AppTextInput({
   encrypted?: boolean;
   startAdornment?: string;
   endAdornment?: any;
-  fullWidth: boolean;
+  fullWidth?: boolean;
 }) {
   return (
     <FormControl fullWidth margin="dense">
