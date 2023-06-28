@@ -11,6 +11,7 @@ import {
   Tabs,
   Tab,
   Divider,
+  Typography,
 } from "@mui/material";
 import { Formik } from "formik";
 import { StatusContext } from "index/providers/StatusProvider";
@@ -78,7 +79,7 @@ const MaterialDispatch: React.FunctionComponent<MaterialDispatchProps> = () => {
       {isLoading && <Loading message="processing.." />}
       <Grid container spacing={2}>
         <Grid item xs={12}>
-        <h3 className="header">Material Dispatch</h3>
+        <Typography fontWeight="bold">Material Dispatch</Typography>
         </Grid>
          <Grid item xs={12}>
         <Card>
