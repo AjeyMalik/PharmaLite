@@ -1,4 +1,11 @@
-import { Divider, Grid, IconButton, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Divider,
+  Grid,
+  IconButton,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import { Formik } from "formik";
 import AppButton from "index/shared/inputs/AppButton";
 import AppDatePicker from "index/shared/inputs/AppDateSelect";
@@ -10,25 +17,59 @@ import CustomDialogComponent from "../common/CustomeDialogComponent";
 import VendorsDialog from "./VendorsDialog";
 interface ContainersDialogProps {
   onContainersClose: Function;
+  materialSearchData:any;
 }
 
 const ContainersDialog: React.FC<ContainersDialogProps> = ({
-  onContainersClose,
+  onContainersClose,materialSearchData
 }) => {
-  const [search, setSearch] = React.useState({});
-  const [isVendorDialog, setIsVendorDialog] = React.useState(false);
-  const vendorDialog = ()=>{
-    setIsVendorDialog(false)
-  }
-  const [shipmentSearch, setShipmentSearch] = React.useState<any>({
+  const [containerDetailsSearch, setContainerDetailsSearch] = React.useState({
     CONTAINER_ID: "",
     VENDOR_BATCH_NO: "",
     CONTROL_NUMBER: "",
     MANUFACTURED_BY: "",
     MANUFACTURING_DATE: "",
     EXPIRATION_DATE: "",
-    RECEIVED_BY: "",
-    RECEIVED_DATE: "",
+    RECEIVED_BY: materialSearchData.MODIFIEDBY,
+    RECEIVED_DATE: materialSearchData.MODIFIEDON,
+    RETEST_PERIOD: "",
+    RECEIVED_QUANTITY: "",
+    GROSS_WEIGHT: "",
+    GRADE: "",
+    NET_QUANTITY: "",
+    TARE_WEIGHT: "",
+    WAREHOUSE_LOCATIONID: "",
+    MATERIAL_STATUSID: "",
+  });
+  const [isVendorDialog, setIsVendorDialog] = React.useState(false);
+  const vendorDialog = (data:any) => {
+     console.log(materialSearchData)
+    if(data){
+      setShipmentSearch({
+        // ...shipmentSearch,
+        ...data,
+        NAME:materialSearchData.NAME,
+        Type:materialSearchData.Material_Type,
+        UOM:materialSearchData.UOM,
+      });
+    }
+    setIsVendorDialog(false);
+  };
+  const [shipmentSearch, setShipmentSearch] = React.useState({
+    NAME:materialSearchData.NAME,
+    Type:materialSearchData.Material_Type,
+    UOM: materialSearchData.UOM,
+    VENDOR_DETAILSID: "",
+    SHIPMENT_DETAILSID: "",
+    SHIPMENT_DT: "",
+    DELIVERY_CHALLAN_NO: "",
+    INVOICE_NUMBER: "",
+    INVOICE_DATE: "",
+    PO_NUMBER: "",
+    PO_DATE: "",
+    COA: "",
+    VEHICLE_DETAILS: "",
+    SHIPMENT_NOTES: "",
   });
   const [value, setValue] = React.useState("SHIPMENT DETAILS");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -95,22 +136,7 @@ const ContainersDialog: React.FC<ContainersDialogProps> = ({
           {value === "SHIPMENT DETAILS" && (
             <Formik
               enableReinitialize
-              initialValues={{ 
-                NAME:'',
-                Type:'',
-                UOM:'',
-                VENDOR_DETAILSID:'',
-                SHIPMENT_DETAILSID:'',
-                SHIPMENT_DT:'',
-                DELIVERY_CHALLAN_NO:'',
-                INVOICE_NUMBER:'',
-                INVOICE_DATE:'',
-                PO_NUMBER:'',
-                PO_DATE:'',
-                COA:'',
-                VEHICLE_DETAILS:'',
-                SHIPMENT_NOTES:'',
-               }}
+              initialValues={shipmentSearch}
               validate={(values: any) => {
                 let errors: any = {};
                 return errors;
@@ -179,17 +205,17 @@ const ContainersDialog: React.FC<ContainersDialogProps> = ({
                             ></AppTextInput>
                           </Grid>
                           <Grid item xs={12} sm={6} md={3} lg={3}>
-                          <Grid container>
+                            <Grid container>
                               <Grid item className="flex-1">
-                              <AppTextInput
-                              required
-                              name="VENDOR_DETAILSID"
-                              label="Vendor"
-                              type="text"
-                              value={values.VENDOR_DETAILSID}
-                              onBlur={handleBlur}
-                              onChange={(e: any) => {}}
-                            ></AppTextInput>
+                                <AppTextInput
+                                  required
+                                  name="VENDOR_DETAILSID"
+                                  label="Vendor"
+                                  type="text"
+                                  value={values.VENDOR_DETAILSID}
+                                  onBlur={handleBlur}
+                                  onChange={(e: any) => {}}
+                                ></AppTextInput>
                               </Grid>
                               <Grid item>
                                 <IconButton
@@ -215,7 +241,7 @@ const ContainersDialog: React.FC<ContainersDialogProps> = ({
                           alignItems="center"
                         >
                           <Grid item xs={12} sm={6} md={3} lg={3}>
-                          <AppSelectInput
+                            <AppSelectInput
                               name="SHIPMENT_DETAILSID"
                               label="Shipment Method"
                               value={values.SHIPMENT_DETAILSID}
@@ -269,7 +295,7 @@ const ContainersDialog: React.FC<ContainersDialogProps> = ({
                           alignItems="center"
                         >
                           <Grid item xs={12} sm={6} md={3} lg={3}>
-                          <AppDatePicker
+                            <AppDatePicker
                               disabled
                               name="INVOICE_DATE"
                               label="Invoice Date"
@@ -290,7 +316,7 @@ const ContainersDialog: React.FC<ContainersDialogProps> = ({
                             ></AppTextInput>
                           </Grid>
                           <Grid item xs={12} sm={6} md={3} lg={3}>
-                          <AppDatePicker
+                            <AppDatePicker
                               disabled
                               name="PO_DATE"
                               label="PO Date"
@@ -342,7 +368,7 @@ const ContainersDialog: React.FC<ContainersDialogProps> = ({
                             ></AppTextInput>
                           </Grid>
                           <Grid item xs={12} sm={6} md={6} lg={6}>
-                          <AppTextInput
+                            <AppTextInput
                               required
                               name="SHIPMENT_NOTES"
                               label="Shipment Notes"
@@ -352,7 +378,6 @@ const ContainersDialog: React.FC<ContainersDialogProps> = ({
                               onChange={(e: any) => {}}
                             ></AppTextInput>
                           </Grid>
-                          
                         </Grid>
 
                         <Grid item xs={12}>
@@ -399,24 +424,7 @@ const ContainersDialog: React.FC<ContainersDialogProps> = ({
           {value === "CONTAINER DETAILS" && (
             <Formik
               enableReinitialize
-              initialValues={{
-                CONTAINER_ID: "",
-                VENDOR_BATCH_NO: "",
-                CONTROL_NUMBER: "",
-                MANUFACTURED_BY: "",
-                MANUFACTURING_DATE: "",
-                EXPIRATION_DATE: "",
-                RECEIVED_BY: "",
-                RECEIVED_DATE: "",
-                RETEST_PERIOD: "",
-                RECEIVED_QUANTITY: "",
-                GROSS_WEIGHT: "",
-                GRADE: "",
-                NET_QUANTITY: "",
-                TARE_WEIGHT: "",
-                WAREHOUSE_LOCATIONID: "",
-                MATERIAL_STATUSID: "",
-              }}
+              initialValues={containerDetailsSearch}
               validate={(values: any) => {
                 let errors: any = {};
                 return errors;
@@ -707,14 +715,14 @@ const ContainersDialog: React.FC<ContainersDialogProps> = ({
       </Grid>
       {isVendorDialog && (
         <CustomDialogComponent
-        title="Containers"
-        onClose={() => vendorDialog()}
-        isOpen={true}
-        variant="lg"
-        hideCloseButton
-      >
-        <VendorsDialog onContainersClose={vendorDialog} />
-      </CustomDialogComponent>
+          title="Containers"
+          onClose={() => vendorDialog(undefined)}
+          isOpen={true}
+          variant="lg"
+          hideCloseButton
+        >
+          <VendorsDialog onContainersClose={vendorDialog} />
+        </CustomDialogComponent>
       )}
     </React.Fragment>
   );

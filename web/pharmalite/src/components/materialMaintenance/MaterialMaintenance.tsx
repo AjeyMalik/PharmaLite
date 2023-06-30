@@ -13,7 +13,10 @@ interface MaterialMaintenanceMainProps {}
 
 const MaterialMaintenanceMain: React.FC<MaterialMaintenanceMainProps> = () => {
   const [isDialog, setIsDialog] = useState(false);
-  const [isContainersDialog, setIsContainersDialog] = useState(false);
+  const [containersDialog, setContainersDialog] = useState({
+    isOpen:false,
+    data:undefined
+  } as {isOpen:boolean;data:any});
   const [search, setSearch] = useState({
     NAME: "",
     Material_Type: "",
@@ -23,9 +26,11 @@ const MaterialMaintenanceMain: React.FC<MaterialMaintenanceMainProps> = () => {
     GRN_NUMBER: "",
     shipmentNumber: "",
   });
+  let materialSearchData = {}
   const handleDialogClose = (data: any) => {
     if (data) {
       console.log(data);
+      materialSearchData = data
       setSearch({
         ...search,
         ...data,
@@ -33,8 +38,8 @@ const MaterialMaintenanceMain: React.FC<MaterialMaintenanceMainProps> = () => {
     }
     setIsDialog(false);
   };
-  const containersDialog = ()=>{
-    setIsContainersDialog(false)
+  const onContainersClose = ()=>{
+    setContainersDialog({isOpen:false,data:undefined})
   }
   return (
     <React.Fragment>
@@ -221,7 +226,10 @@ const MaterialMaintenanceMain: React.FC<MaterialMaintenanceMainProps> = () => {
                 <Grid item>
                   <AddIcon
                     color="primary"
-                    onClick={() => setIsContainersDialog(true)}
+                    onClick={() => setContainersDialog({
+                      isOpen:true,
+                      data:search
+                    })}
                     sx={{
                       backgroundColor: "#ddd",
                       marginTop: "10%",
@@ -248,15 +256,15 @@ const MaterialMaintenanceMain: React.FC<MaterialMaintenanceMainProps> = () => {
           <MaterialSearch onClose={handleDialogClose} />
         </CustomDialogComponent>
       )}
-      {isContainersDialog && (
+      {containersDialog.isOpen && (
         <CustomDialogComponent
         title="Containers"
-        onClose={() => containersDialog()}
+        onClose={() => setContainersDialog({isOpen:false,data:undefined})}
         isOpen={true}
         variant="lg"
         // hideCloseButton
       >
-        <ContainersDialog onContainersClose={containersDialog} />
+        <ContainersDialog materialSearchData={containersDialog.data} onContainersClose={onContainersClose} />
       </CustomDialogComponent>
       )}
     </React.Fragment>
