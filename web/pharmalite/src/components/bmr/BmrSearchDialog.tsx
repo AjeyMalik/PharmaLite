@@ -11,13 +11,14 @@ import {
 } from "@mui/material";
 import AppSelectInput from "index/shared/inputs/AppSelectInput";
 import React, { useEffect, useState } from "react";
-import TextFieldCommon from "../common/TextFieldCommon";
+
 import Select from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AppButton from "index/shared/inputs/AppButton";
 import MenuItem from '@mui/material/MenuItem';
 import { getAllGrn } from "index/services/grn/GrnService";
 import { IGRNdetails } from "index/vm";
+import AppTextInput from "index/shared/inputs/AppTextInput";
 
 interface BMRSearchProps {
   onClose: Function;
@@ -55,15 +56,14 @@ const BMRSearch: React.FunctionComponent<BMRSearchProps> = ({ onClose }) => {
   return (
     <Grid container spacing={2} alignItems="center">
       <Grid item xs={4.5}>
-        <TextFieldCommon
-          onChange={() => console.log("search")}
-          type="search"
-          label="Search For"
-          color="primary"
-          fullWidth={true}
-          variant="standard"
-          name="search"
-        />
+        <AppTextInput
+                  onChange={() => console.log("search")}
+                  type="search"
+                  label="Search For"
+
+                  fullWidth={true}
+
+                  name="search" onBlur={undefined} value={undefined}        />
       </Grid>
       <Grid item xs={4.5}>
             <AppSelectInput
