@@ -39,7 +39,7 @@ function AppSelectInput({
   encrypted?: boolean;
 }) {
   return (
-    <FormControl fullWidth margin="dense">
+    <FormControl fullWidth margin="dense" disabled={disabled}>
       <Typography variant="caption">
         {encrypted ? "#" : ""}
         {label}
@@ -71,6 +71,7 @@ function AppSelectInput({
         value={value ? menuItems.find((e) =>e.value === value) : ""}
         className={className}
         options={menuItems}
+        disabled={disabled}
         getOptionLabel={(option) =>
           typeof option !== "string" ? option.label : option
         }
@@ -83,6 +84,7 @@ function AppSelectInput({
             {...params}
             variant="standard"
             size="small"
+            disabled={disabled}
             name={name}
             error={error || errorText ? true : false}
             helperText={errorText || helperText}

@@ -9,6 +9,11 @@ body {
   cursor: pointer;
 }
 
+.selected-table-row td{
+  background: #283593;
+  color: #fff;
+}
+
 .flex-1{
   flex: 1;
 }
@@ -114,4 +119,7 @@ body {
 
 .mr-2 {
   margin-right: 16px !important;
+}
+.in-active-tab{
+  color:#fd8f6d !important;
 }

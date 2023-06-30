@@ -62,7 +62,7 @@ interface CustomDialogComponentProps {
   isOpen?: boolean;
   className?: string;
   onClose: Function;
-  variant?: "xs" | "sm" | "md" | "lg";
+  variant?: "xs" | "sm" | "md" | "lg" | "xl";
   fullWidth?: boolean;
   fullScreen?: boolean;
   showFooter?: boolean;
@@ -77,10 +77,10 @@ const CustomDialogComponent: React.FunctionComponent<
     <React.Fragment>
       <BootstrapDialog
         aria-labelledby="customized-dialog-title"
-        className={`custom-dialog ${props.className || ""}`}
-        open={props.isOpen === false ? false : true}
-        fullWidth={props.fullWidth || false}
-        maxWidth={props.variant ? props.variant : "sm"}
+        className={`custom-dialog ${props?.className || ""}`}
+        open={props?.isOpen === false ? false : true}
+        fullWidth={props?.fullWidth || false}
+        maxWidth={props?.variant ? props.variant : "sm"}
         sx={{borderRadius:1}}
         disableEscapeKeyDown={true}
         onClose={(event, reason) => {
@@ -88,19 +88,19 @@ const CustomDialogComponent: React.FunctionComponent<
             props.onClose();
           }
         }}
-        fullScreen={props.fullWidth !== undefined ? true : false}
+        fullScreen={props?.fullScreen ? true : false}
       >
         {props.title && (
           <BootstrapDialogTitle
             id="customized-dialog-title"
             onClose={() => props.onClose()}
-            hideCloseButton={props.hideCloseButton}
+            hideCloseButton={props?.hideCloseButton}
            
           >
-            {props.title}
+            {props?.title || ""}
           </BootstrapDialogTitle>
         )}
-        <DialogContent dividers>{props.children}</DialogContent>
+        <DialogContent dividers>{props?.children}</DialogContent>
         {props.showFooter && (
           <DialogActions>
             <Button autoFocus onClick={() => props.onClose()}>
