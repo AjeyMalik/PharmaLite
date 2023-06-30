@@ -54,7 +54,7 @@ function AppTextInput({
   return (
     <FormControl fullWidth margin="dense">
       {label && (
-        <Typography variant="caption">
+        <Typography variant="caption" color={disabled ? "#00000061" : ""}>
           {encrypted ? "#" : ""}
           {label}
           {required ? "*" : ""}
