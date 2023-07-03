@@ -279,7 +279,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
           width: SideMenuWidth,
           flexShrink: 0,
           "& .MuiDrawer-paper": {
-            width: SideMenuWidth,
+            width: "280px",
             boxSizing: "border-box",
           },
         }}
@@ -306,7 +306,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
           </IconButton>
         </Box>
         <Divider />
-        <List component="nav" dense={true}>
+        <List component="nav" >
           {menuGroups.map((groupItem, groupIndex) => (
             <ListItem
               sx={{
@@ -340,6 +340,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
               <Collapse
                 in={groupItem.MenuGroup === selectedMenuGroup}
                 timeout="auto"
+                sx={{width:"100%"}}
                 unmountOnExit
               >
                 {groupItem.MenuGroup === "Modeling" ? (

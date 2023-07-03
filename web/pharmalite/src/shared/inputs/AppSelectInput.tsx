@@ -40,7 +40,7 @@ function AppSelectInput({
 }) {
   return (
     <FormControl fullWidth margin="dense" disabled={disabled}>
-      <Typography variant="caption">
+      <Typography variant="caption" color={disabled ? "#00000061" : ""}>
         {encrypted ? "#" : ""}
         {label}
         {required ? "*" : ""}
@@ -68,7 +68,7 @@ function AppSelectInput({
           ))}
       </Select> */}
       <Autocomplete
-        value={value ? menuItems.find((e) =>e.value === value) : ""}
+        value={(value || value===0) ? menuItems.find((e) =>e.value === value) : ""}
         className={className}
         options={menuItems}
         disabled={disabled}

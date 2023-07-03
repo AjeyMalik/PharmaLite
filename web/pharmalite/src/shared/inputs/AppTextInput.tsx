@@ -26,6 +26,7 @@ function AppTextInput({
   startAdornment,
   endAdornment,
   fullWidth,
+  maxLength,
   ...rest
 }: {
   type?: string;
@@ -50,11 +51,12 @@ function AppTextInput({
   startAdornment?: string;
   endAdornment?: any;
   fullWidth?: boolean;
+  maxLength?:number;
 }) {
   return (
     <FormControl fullWidth margin="dense">
       {label && (
-        <Typography variant="caption">
+        <Typography variant="caption" color={disabled ? "#00000061" : ""}>
           {encrypted ? "#" : ""}
           {label}
           {required ? "*" : ""}
@@ -98,6 +100,7 @@ function AppTextInput({
             <InputAdornment position="end">{endAdornment}</InputAdornment>
           ) : undefined,
         }}
+        inputProps={{ maxLength: maxLength || undefined }}
       />
     </FormControl>
   );
