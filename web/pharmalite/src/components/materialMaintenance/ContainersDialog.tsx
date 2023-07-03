@@ -13,7 +13,7 @@ import AppSelectInput from "index/shared/inputs/AppSelectInput";
 import AppTextInput from "index/shared/inputs/AppTextInput";
 import QueueIcon from "@mui/icons-material/Queue";
 import * as React from "react";
-import CustomDialogComponent from "../common/CustomeDialogComponent";
+import CustomDialogComponent from "../common/CustomDialogComponent";
 import VendorsDialog from "./VendorsDialog";
 interface ContainersDialogProps {
   onContainersClose: Function;

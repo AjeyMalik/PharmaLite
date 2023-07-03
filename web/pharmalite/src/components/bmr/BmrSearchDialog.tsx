@@ -91,8 +91,8 @@ const BMRSearch: React.FunctionComponent<BMRSearchProps> = ({ onClose }) => {
           <Table style={{ border: "1px solid black" }}>
             <TableHead style={{ backgroundColor: "#248f8f" }}>
               <TableRow>
-                {list.map((plans) => (
-                  <TableCell>
+                {list.map((plans,index) => (
+                  <TableCell key={`plan_${index}`}>
                     <Typography
                       fontWeight="bold"
                       color="white"
@@ -109,7 +109,7 @@ const BMRSearch: React.FunctionComponent<BMRSearchProps> = ({ onClose }) => {
             <TableBody>
               {row &&
                 row.map((row, index) => (
-                  <TableRow>
+                  <TableRow key={`row_${index}`}>
                     <TableCell>{row.grNumber}</TableCell>
                   </TableRow>
                 ))}

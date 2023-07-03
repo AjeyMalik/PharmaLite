@@ -21,11 +21,10 @@ import AppTextInput from "index/shared/inputs/AppTextInput";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useState } from "react";
-import CustomDialogComponent from "index/components/common/CustomeDialogComponent";
+import CustomDialogComponent from "index/components/common/CustomDialogComponent";
 import ResourceCheckListDialog from "index/components/resourcechecklist/ResourceCheckListDialog";
 import ResourceBuyPlanDialog from "index/components/resourceannualplandialog/ResourceAnnualPlanDialog";
 interface AuditPlanProps {
-  onClick: Function;
 }
 
 const AuditPlan: React.FC<AuditPlanProps> = (props) => {

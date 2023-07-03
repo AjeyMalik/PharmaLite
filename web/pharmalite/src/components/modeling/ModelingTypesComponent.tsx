@@ -263,10 +263,10 @@ const ModelingTypesComponent: React.FunctionComponent<
     let selectedRow = gridRef.current?.api.getSelectedRows();
     if (selectedRow && selectedRow.length > 0 && selectedRow[0]) {
       let data = selectedRow[0];
-      let isHideAvailable = Object.keys(data).find((e) => e.includes("_hide"));
-      if (isHideAvailable) {
-        data[isHideAvailable.split("_hide")[0]] = data[isHideAvailable];
-      }
+      let hiddenColumns = Object.keys(data).filter((e) => e.includes("_hide"));
+      hiddenColumns.forEach(column=>{
+        data[column.split("_hide")[0]] = data[column];
+      })
       setSearch(data);
       setIsEdit(true);
     }

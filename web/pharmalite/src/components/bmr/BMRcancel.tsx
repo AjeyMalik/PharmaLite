@@ -22,7 +22,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import QueueIcon from "@mui/icons-material/Queue";
-import CustomDialogComponent from "../common/CustomeDialogComponent";
+import CustomDialogComponent from "../common/CustomDialogComponent";
 import AppSelectInput from "index/shared/inputs/AppSelectInput";
 import AppTextInput from "index/shared/inputs/AppTextInput";
 import AppButton from "index/shared/inputs/AppButton";
