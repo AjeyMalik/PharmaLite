@@ -17,7 +17,7 @@ import { IGRNdetails } from "index/vm";
 // import AppTextInput from "";
 import { useState } from "react";
 import QueueIcon from "@mui/icons-material/Queue";
-import CustomDialogComponent from "../common/CustomeDialogComponent";
+import CustomDialogComponent from "../common/CustomDialogComponent";
 import GrnSearch from "./GrnSearchDialog";
 import AppTextInput from "index/shared/inputs/AppTextInput";
 import AppButton from "index/shared/inputs/AppButton";

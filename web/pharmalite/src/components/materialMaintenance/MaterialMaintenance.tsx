@@ -5,7 +5,7 @@ import { Formik } from "formik";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import QueueIcon from "@mui/icons-material/Queue";
-import CustomDialogComponent from "../common/CustomeDialogComponent";
+import CustomDialogComponent from "../common/CustomDialogComponent";
 import MaterialSearch from "./MaterialSearchDialog";
 import AddIcon from '@mui/icons-material/Add';
 import ContainersDialog from "./ContainersDialog";
