@@ -1,5 +1,5 @@
 import AuthLayout from "index/components/common/AuthLayout";
-import DashboardComponent from "index/components/dashboard/DashboardComponent";
+import SelfInspectionResponseComponent from "index/components/quality-aussurance/self-inspection-response/SelfInspectionResponseComponent";
 import { getCompany } from "index/services/util/UtilService";
 import Head from "next/head";
 import * as React from "react";
@@ -22,7 +22,7 @@ const SelfInspectionResponsePage: React.FunctionComponent<SelfInspectionResponse
       </Head>
       <React.Fragment>
         <AuthLayout>
-          test
+          <SelfInspectionResponseComponent/>
         </AuthLayout>
       </React.Fragment>
     </>

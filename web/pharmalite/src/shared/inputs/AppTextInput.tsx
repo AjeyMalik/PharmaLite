@@ -26,6 +26,7 @@ function AppTextInput({
   startAdornment,
   endAdornment,
   fullWidth,
+  maxLength,
   ...rest
 }: {
   type?: string;
@@ -50,6 +51,7 @@ function AppTextInput({
   startAdornment?: string;
   endAdornment?: any;
   fullWidth?: boolean;
+  maxLength?:number;
 }) {
   return (
     <FormControl fullWidth margin="dense">
@@ -98,6 +100,7 @@ function AppTextInput({
             <InputAdornment position="end">{endAdornment}</InputAdornment>
           ) : undefined,
         }}
+        inputProps={{ maxLength: maxLength || undefined }}
       />
     </FormControl>
   );
