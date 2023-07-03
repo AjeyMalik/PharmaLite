@@ -10,28 +10,34 @@ import * as React from "react";
 interface ResourceCheckListDialogProps {
   onClose: Function;
   data: any;
+  curMonth: any;
+  resourceNames: any;
 }
-
-const list = [
-  {
-    value: "one",
-  },
-  {
-    value: "two",
-  },
-  {
-    value: "three",
-  },
-  {
-    value: "four",
-  },
-];
 
 const ResourceCheckListDialog: React.FC<ResourceCheckListDialogProps> = ({
   onClose,
   data,
+  curMonth,
+  resourceNames,
 }) => {
-  const [search, setSearch] = React.useState<any>({});
+  const list = [
+    {
+      value: "one",
+    },
+    {
+      value: "two",
+    },
+    {
+      value: "three",
+    },
+    {
+      value: "four",
+    },
+  ];
+  const [selectedValue, setValues] = React.useState("one");
+  const handleselectedChange = (newValue: any) => {
+    setValues(newValue?.value || undefined);
+  };
   React.useEffect(() => {
     console.log("test", data, onClose);
   }, []);
@@ -39,7 +45,7 @@ const ResourceCheckListDialog: React.FC<ResourceCheckListDialogProps> = ({
     <React.Fragment>
       <Formik
         enableReinitialize
-        initialValues={{ NAME: "", RESOURCEID: "" }}
+        initialValues={{ NAME: "", RESOURCEID: "", selectedCLType: "" }}
         validate={(values) => {
           let errors: any = {};
           return errors;
@@ -71,13 +77,14 @@ const ResourceCheckListDialog: React.FC<ResourceCheckListDialogProps> = ({
                           name="NAME"
                           label="Resource"
                           type="text"
-                          value={values.NAME}
+                          value={resourceNames}
                           onBlur={handleBlur}
                           onChange={handleChange}
                         ></AppTextInput>
                       </Grid>
                       <Grid item>
                         <IconButton
+                          disabled
                           color="primary"
                           sx={{
                             backgroundColor: "#ddd",
@@ -112,7 +119,8 @@ const ResourceCheckListDialog: React.FC<ResourceCheckListDialogProps> = ({
                     <AppSelectInput
                       name="selectedCLType"
                       label="Checklist Type"
-                      value="selectedCLType"
+                      // value={values.selectedCLType}
+                      value={selectedValue}
                       menuItems={list.map((x) => {
                         return {
                           label: x.value,
@@ -120,25 +128,27 @@ const ResourceCheckListDialog: React.FC<ResourceCheckListDialogProps> = ({
                         };
                       })}
                       onBlur={handleBlur}
-                      onChange={handleChange}
+                      onChange={handleselectedChange}
                     ></AppSelectInput>
                   </Grid>
                 </Grid>
               </Grid>
               <Grid item xs={12}>
-                <Grid
-                  container
-                  spacing={2}
-                  direction="row"
-                  justifyContent="center"
-                >
-                  <Grid item>
-                    <Typography fontWeight="bold" color="#f44336">
-                      You have selected an expired/future plan you can not take
-                      checklist now
-                    </Typography>
+                {curMonth != true && (
+                  <Grid
+                    container
+                    spacing={2}
+                    direction="row"
+                    justifyContent="center"
+                  >
+                    <Grid item>
+                      <Typography fontWeight="bold" color="#f44336">
+                        You have selected an expired/future plan you can not
+                        take checklist now
+                      </Typography>
+                    </Grid>
                   </Grid>
-                </Grid>
+                )}
               </Grid>
             </Grid>
             <Divider style={{ paddingTop: "10px" }} />
@@ -168,6 +178,9 @@ const ResourceCheckListDialog: React.FC<ResourceCheckListDialogProps> = ({
                   />
                 </Grid>
               </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography>Status Message:</Typography>
             </Grid>
           </form>
         )}

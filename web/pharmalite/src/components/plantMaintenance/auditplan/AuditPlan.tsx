@@ -25,84 +25,103 @@ import CustomDialogComponent from "index/components/common/CustomeDialogComponen
 import ResourceCheckListDialog from "index/components/resourcechecklist/ResourceCheckListDialog";
 import ResourceBuyPlanDialog from "index/components/resourceannualplandialog/ResourceAnnualPlanDialog";
 interface AuditPlanProps {
-  onClick: Function;
+  type: string;
 }
 
-const AuditPlan: React.FC<AuditPlanProps> = (props) => {
+interface Column {
+  id:
+    | "month"
+    | "january"
+    | "february"
+    | "march"
+    | "april"
+    | "may"
+    | "june"
+    | "july"
+    | "august"
+    | "september"
+    | "october"
+    | "november"
+    | "december";
+  label: string;
+  minWidth?: number;
+  align?: "right";
+  // weight:"bold"
+  format?: (value: number) => string;
+}
+
+interface Data {
+  month: string;
+  january: string;
+  february: string;
+  march: string;
+  april: string;
+  may: string;
+  june: string;
+  july: string;
+  august: string;
+  september: string;
+  october: string;
+  november: string;
+  december: string;
+}
+
+const AuditPlan: React.FC<AuditPlanProps> = ({
+  type
+  
+}) => {
   const [search, setSearch] = React.useState<any>({});
   const [resourceCheckListDialog, setResourceCheckListDialog] = useState({
-    isOpen:false,
-    data:undefined
-  }as {isOpen:boolean;data:any});
+    isOpen: false,
+    data: undefined,
+    curMonth: false,
+    resourceNames: "",
+    resourceMonth: "",
+    year: "",
+  } as { isOpen: boolean; data: any; curMonth: boolean; resourceNames: string; resourceMonth: string; year: string });
 
   const handleDialogClose = (data: any) => {
-    setResourceCheckListDialog({data:undefined,isOpen:false});
+    setResourceCheckListDialog({
+      data: undefined,
+      isOpen: false,
+      curMonth: false,
+      resourceNames: "",
+      resourceMonth: "",
+      year: "",
+    });
   };
+  
   const list = [
     {
       value: "2020",
-      key:"2020"
+      key: "2020",
     },
     {
       value: "2021",
-      key:"2021"
+      key: "2021",
     },
     {
       value: "2022",
-      key:"2022"
+      key: "2022",
     },
     {
       value: "2023",
-      key:"2023"
+      key: "2023",
     },
     {
       value: "2024",
-      key:"2024"
+      key: "2024",
     },
     {
       value: "2025",
-      key:"2025"
+      key: "2025",
     },
   ];
 
-  interface Column {
-    id:
-      | "month"
-      | "january"
-      | "february"
-      | "march"
-      | "april"
-      | "may"
-      | "june"
-      | "july"
-      | "august"
-      | "september"
-      | "october"
-      | "november"
-      | "december";
-    label: string;
-    minWidth?: number;
-    align?: "right";
-    // weight:"bold"
-    format?: (value: number) => string;
-  }
+  var today = new Date();
 
-  interface Data {
-    month: string;
-    january: string;
-    february: string;
-    march: string;
-    april: string;
-    may: string;
-    june: string;
-    july: string;
-    august: string;
-    september: string;
-    october: string;
-    november: string;
-    december: string;
-  }
-
+  let curMonth = false;
+  
   function createData(
     month: string,
     january: string,
@@ -140,7 +159,7 @@ const AuditPlan: React.FC<AuditPlanProps> = (props) => {
     { id: "january", label: "January", minWidth: 30 },
     { id: "february", label: "February", minWidth: 30 },
     { id: "march", label: "March", minWidth: 30 },
-    { id: "april", label: "april", minWidth: 30 },
+    { id: "april", label: "April", minWidth: 30 },
     { id: "may", label: "May", minWidth: 30 },
     { id: "june", label: "June", minWidth: 30 },
     { id: "july", label: "July", minWidth: 30 },
@@ -150,20 +169,21 @@ const AuditPlan: React.FC<AuditPlanProps> = (props) => {
     { id: "november", label: "November", minWidth: 30 },
     { id: "december", label: "December", minWidth: 30 },
   ];
+
   const rows = [
     createData(
       "Dispensing Booth",
       "",
       "Planned",
       "",
+      "Planned",
       "",
       "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
+      "Planned",
+      "Planned",
+      "Planned",
+      "Planned",
+      "Planned",
       ""
     ),
     createData(
@@ -456,9 +476,11 @@ const AuditPlan: React.FC<AuditPlanProps> = (props) => {
     createData("Sample", "", "", "", "", "", "", "", "", "", "", "", ""),
     createData("Resource", "", "", "", "", "", "", "", "", "", "", "", ""),
   ];
+
   const [yearValue, setYearValue] = React.useState("2023");
-  const handleYearChange = (event: React.SyntheticEvent, newValue: string) => {
-    setYearValue(newValue);
+  const handleYearChange = (newValue: any) => {
+    console.log(newValue);
+    setYearValue(newValue?.value || undefined);
   };
 
   return (
@@ -473,7 +495,13 @@ const AuditPlan: React.FC<AuditPlanProps> = (props) => {
           alignItems="center"
         >
           <Grid item>
-            <Typography fontWeight="bold">Annual Plan</Typography>
+            {type == 'Yearly' && (
+                          <Typography fontWeight="bold">Annual Plan</Typography>
+            )}
+            {type == 'Monthly' && (
+                          <Typography fontWeight="bold">Monthly Plan</Typography>
+            )}
+           
           </Grid>
           <Grid item>
             <AppButton
@@ -506,7 +534,6 @@ const AuditPlan: React.FC<AuditPlanProps> = (props) => {
                   }
 
                   return errors;
-                  return errors;
                 }}
                 onSubmit={async (values, { setSubmitting, resetForm }) => {
                   console.log("test", values);
@@ -532,16 +559,20 @@ const AuditPlan: React.FC<AuditPlanProps> = (props) => {
                               <TableCell align="left" colSpan={1}>
                                 Year
                               </TableCell>
-                              <TableCell align="left" colSpan={1}>
+                              <TableCell
+                                align="left"
+                                colSpan={1}
+                                style={{
+                                  width: "10%",
+                                }}
+                              >
                                 <AppSelectInput
                                   name="YEAR"
-                                  value="list"
+                                  value={yearValue}
                                   menuItems={list.map((x) => {
-                                   
                                     return {
                                       label: x.value,
                                       value: x.value,
-                                      
                                     };
                                   })}
                                   onBlur={handleBlur}
@@ -549,9 +580,16 @@ const AuditPlan: React.FC<AuditPlanProps> = (props) => {
                                 ></AppSelectInput>
                               </TableCell>
                               <TableCell align="center" colSpan={11}>
+                              {type == 'Yearly' && (
                                 <Typography fontWeight="bold">
                                   Preventive Maintenance Annual Schedule
                                 </Typography>
+                              )}
+                              {type == 'Monthly' && (
+                                <Typography fontWeight="bold">
+                                  Preventive Maintenance Monthly Schedule
+                                </Typography>
+                              )}
                               </TableCell>
                             </TableRow>
                             <TableRow>
@@ -579,17 +617,34 @@ const AuditPlan: React.FC<AuditPlanProps> = (props) => {
                                   tabIndex={-1}
                                   key={undefined}
                                 >
-                                  {columns.map((column) => {
+                                  {columns.map((column, columnIndex) => {
                                     const value = row[column.id];
                                     return (
                                       <TableCell
                                         key={column.id}
                                         align={column.align}
-                                        onDoubleClick={() => setResourceCheckListDialog({
-                                          isOpen:true,
-                                          data:value
-                                        })
-                                        }
+                                        style={{
+                                          fontWeight: "bold",
+                                        }}
+                                        onDoubleClick={() => {
+                                          let monthIndex = today.getMonth();
+                                          if (
+                                            monthIndex + 1 <= columnIndex ||
+                                            value
+                                          ) {
+                                            if (monthIndex + 1 == columnIndex) {
+                                              curMonth = true;
+                                            }
+                                            setResourceCheckListDialog({
+                                              isOpen: true,
+                                              data: value,
+                                              curMonth: curMonth,
+                                              resourceNames: row.month,
+                                              resourceMonth: column.label,
+                                              year: yearValue,
+                                            });
+                                          }
+                                        }}
                                       >
                                         {value}
                                       </TableCell>
@@ -602,6 +657,7 @@ const AuditPlan: React.FC<AuditPlanProps> = (props) => {
                         </Table>
                       </TableContainer>
                     </Paper>
+                    {type == 'Yearly' && (
                     <div style={{ padding: "16px" }}>
                       <form onSubmit={handleSubmit}>
                         <Grid container spacing={3}>
@@ -673,7 +729,7 @@ const AuditPlan: React.FC<AuditPlanProps> = (props) => {
                           </Grid>
                         </Grid>
                       </form>
-                      <Grid item lg={12}>
+                      <Grid item lg={12}  style={{ padding: "16px" }}>
                         <Grid
                           container
                           spacing={2}
@@ -699,6 +755,7 @@ const AuditPlan: React.FC<AuditPlanProps> = (props) => {
                         </Grid>
                       </Grid>
                     </div>
+                    )}
                   </div>
                 )}
               </Formik>
@@ -706,31 +763,40 @@ const AuditPlan: React.FC<AuditPlanProps> = (props) => {
           </Card>
         </Grid>
       </Grid>
-      {resourceCheckListDialog.isOpen && resourceCheckListDialog.data === 'Planned' &&(
+      {resourceCheckListDialog.isOpen && resourceCheckListDialog.data && (
         <CustomDialogComponent
           title="Resource Checklist"
           onClose={() => handleDialogClose(undefined)}
           isOpen={true}
-          
           variant="md"
           hideCloseButton
         >
-          <ResourceCheckListDialog data={resourceCheckListDialog.data} onClose={handleDialogClose} />
+          <ResourceCheckListDialog
+            data={resourceCheckListDialog.data}
+            onClose={handleDialogClose}
+            curMonth={resourceCheckListDialog.curMonth}
+            resourceNames={resourceCheckListDialog.resourceNames}
+          />
         </CustomDialogComponent>
       )}
-      {resourceCheckListDialog.isOpen && resourceCheckListDialog.data === ''  &&(
-        <CustomDialogComponent
-          
-          onClose={() => handleDialogClose(undefined)}
-          isOpen={true}
-          
-          variant="md"
-          hideCloseButton
-        >
-          <ResourceBuyPlanDialog data={resourceCheckListDialog.data} onClose={handleDialogClose} />
-        </CustomDialogComponent>
-      )}
-      
+      {resourceCheckListDialog.isOpen &&
+        resourceCheckListDialog.data === "" 
+         && (
+          <CustomDialogComponent
+            onClose={() => handleDialogClose(undefined)}
+            isOpen={true}
+            variant="md"
+            hideCloseButton
+          >
+            <ResourceBuyPlanDialog
+              data={resourceCheckListDialog.data}
+              resourceNames={resourceCheckListDialog.resourceNames}
+              resourceMonth={resourceCheckListDialog.resourceMonth}
+              year={resourceCheckListDialog.year}
+              onClose={handleDialogClose}
+            />
+          </CustomDialogComponent>
+        )}
     </React.Fragment>
   );
 };

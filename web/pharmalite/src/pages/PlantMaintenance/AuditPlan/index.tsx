@@ -4,13 +4,22 @@ import { getCompany } from "index/services/util/UtilService";
 import { useState, useEffect } from "react";
 import AuthLayout from "index/components/common/AuthLayout";
 import AuditPlan from "index/components/plantMaintenance/auditplan/AuditPlan";
+import { useRouter } from "next/router";
 
-export default function Home() {
+
+
+const Home=(pageProps:any)=> {
+  const [data, setData] = React.useState<any>({});
   const [companyName, setcompanyName] = useState("");
+ 
+  const router = useRouter();
   React.useEffect(() => {
+    let queryParams = router.query;
+    setData(queryParams);
     let company = getCompany();
     setcompanyName(company || "");
-  }, []);
+  }, [router.query]);
+
   return (
     <>
       <Head>
@@ -20,9 +29,13 @@ export default function Home() {
       </Head>
       <React.Fragment>
       <AuthLayout>
-          <AuditPlan />
+          <AuditPlan type={data && data["auditPlanType"]}/>
           </AuthLayout>
       </React.Fragment>
     </>
   );
 }
+
+
+
+export default Home

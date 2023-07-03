@@ -7,7 +7,10 @@ import AppTextInput from "index/shared/inputs/AppTextInput";
 import * as React from "react";
 interface ResourceBuyPlanDialogProps {
   onClose: Function;
-  data:any
+  data: any;
+  resourceNames: any;
+  resourceMonth: any;
+  year: any;
 }
 
 const list = [
@@ -27,20 +30,20 @@ const list = [
 
 const ResourceBuyPlanDialog: React.FC<ResourceBuyPlanDialogProps> = ({
   onClose,
-  data
+  data,
+  resourceMonth,
+  resourceNames,
+  year,
 }) => {
-  const [search, setSearch] = React.useState<any>({
-    
-  });
-  React.useEffect(()=>{
-    console.log("test",data,onClose)
-  },[]);
+  const [search, setSearch] = React.useState<any>({});
+  React.useEffect(() => {
+    console.log("test", data, onClose);
+  }, []);
   return (
     <React.Fragment>
-       <Formik
+      <Formik
         enableReinitialize
-        initialValues={{NAME: "",
-        RESOURCEID: ""}}
+        initialValues={{ NAME: "", RESOURCEID: "" }}
         validate={(values) => {
           let errors: any = {};
           return errors;
@@ -75,7 +78,9 @@ const ResourceBuyPlanDialog: React.FC<ResourceBuyPlanDialogProps> = ({
                     </Typography>
                   </Grid>
                   <Grid item>
-                    <p>Audit for Sorting Machine in 2023 August</p>
+                    <p>
+                      Audit for {resourceNames} in {year} {resourceMonth}
+                    </p>
                   </Grid>
                 </Grid>
                 <Divider style={{ paddingTop: "10px" }} />
@@ -111,7 +116,6 @@ const ResourceBuyPlanDialog: React.FC<ResourceBuyPlanDialogProps> = ({
           </div>
         )}
       </Formik>
-    
     </React.Fragment>
   );
 };
