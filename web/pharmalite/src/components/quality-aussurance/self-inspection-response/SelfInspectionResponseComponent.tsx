@@ -17,6 +17,8 @@ import QueueIcon from "@mui/icons-material/Queue";
 import AppDatePicker from "index/shared/inputs/AppDateSelect";
 import moment from "moment";
 import AppButton from "index/shared/inputs/AppButton";
+import CustomDialogComponent from "index/components/common/CustomDialogComponent";
+import ObjectSearchComponent from "index/shared/ObjectSerach";
 
 interface SelfInspectionResponseComponentProps {}
 
@@ -44,6 +46,17 @@ const SelfInspectionResponseComponent: React.FunctionComponent<
   const [inspectionStatuses, setInspectionStatuses] = useState([]);
   const [observations, setObservations] = useState([]);
   const [statuses, setStatuses] = useState([]);
+  const [dialogInfo, setDialogInfo] = useState({ isOpen: false, data: {} });
+
+  const handleDialogOpen = (data?: any) => {
+    setDialogInfo({ data, isOpen: true });
+  };
+  const handleDialogClose = (data?: any) => {
+    if (data) {
+      console.log(data);
+    }
+    setDialogInfo({ data: {}, isOpen: false });
+  };
 
   return (
     <React.Fragment>
@@ -114,6 +127,7 @@ const SelfInspectionResponseComponent: React.FunctionComponent<
                                     backgroundColor: "#efefef",
                                   },
                                 }}
+                                onClick={()=>handleDialogOpen()}
                               >
                                 <QueueIcon />
                               </IconButton>
@@ -475,6 +489,21 @@ const SelfInspectionResponseComponent: React.FunctionComponent<
           </Card>
         </Grid>
       </Grid>
+      {dialogInfo?.isOpen && (
+        <CustomDialogComponent
+          title="Inspection Report Search"
+          onClose={() => handleDialogClose()}
+          isOpen={true}
+          fullWidth
+          variant="lg"
+          hideCloseButton
+        >
+          <ObjectSearchComponent
+            data={dialogInfo?.data}
+            onClose={(data:any) => handleDialogClose(data)}
+          />
+        </CustomDialogComponent>
+      )}
     </React.Fragment>
   );
 };

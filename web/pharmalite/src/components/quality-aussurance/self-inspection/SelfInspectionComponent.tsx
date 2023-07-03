@@ -17,6 +17,8 @@ import QueueIcon from "@mui/icons-material/Queue";
 import AppDatePicker from "index/shared/inputs/AppDateSelect";
 import moment from "moment";
 import AppButton from "index/shared/inputs/AppButton";
+import CustomDialogComponent from "index/components/common/CustomDialogComponent";
+import ObjectSearchComponent from "index/shared/ObjectSerach";
 
 interface SelfInspectionComponentProps {}
 
@@ -39,6 +41,17 @@ const SelfInspectionComponent: React.FunctionComponent<
   });
   const [auditLocations, setAuditLocations] = useState([]);
   const [inspectionStatuses, setInspectionStatuses] = useState([]);
+  const [dialogInfo, setDialogInfo] = useState({ isOpen: false, data: {} });
+
+  const handleDialogOpen = (data?: any) => {
+    setDialogInfo({ data, isOpen: true });
+  };
+  const handleDialogClose = (data?: any) => {
+    if (data) {
+      console.log(data);
+    }
+    setDialogInfo({ data: {}, isOpen: false });
+  };
 
   return (
     <React.Fragment>
@@ -111,6 +124,9 @@ const SelfInspectionComponent: React.FunctionComponent<
                                   "&.MuiIconButton-root:hover": {
                                     backgroundColor: "#efefef",
                                   },
+                                }}
+                                onClick={() => {
+                                  handleDialogOpen();
                                 }}
                               >
                                 <QueueIcon />
@@ -395,6 +411,21 @@ const SelfInspectionComponent: React.FunctionComponent<
           </Card>
         </Grid>
       </Grid>
+      {dialogInfo?.isOpen && (
+        <CustomDialogComponent
+          title="Inspection Slip Search"
+          onClose={() => handleDialogClose()}
+          isOpen={true}
+          fullWidth
+          variant="lg"
+          hideCloseButton
+        >
+          <ObjectSearchComponent
+            data={dialogInfo?.data}
+            onClose={(data:any) => handleDialogClose(data)}
+          />
+        </CustomDialogComponent>
+      )}
     </React.Fragment>
   );
 };

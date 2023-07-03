@@ -17,6 +17,8 @@ import { Queue, PictureAsPdf } from "@mui/icons-material";
 import AppDatePicker from "index/shared/inputs/AppDateSelect";
 import moment from "moment";
 import AppButton from "index/shared/inputs/AppButton";
+import CustomDialogComponent from "index/components/common/CustomDialogComponent";
+import ObjectSearchComponent from "index/shared/ObjectSerach";
 
 interface SelfInspectionReportComponentProps {}
 
@@ -43,6 +45,17 @@ const SelfInspectionReportComponent: React.FunctionComponent<
     prepared_date: "",
   });
   const [auditLocations, setAuditLocations] = useState([]);
+  const [dialogInfo, setDialogInfo] = useState({ isOpen: false, data: {} });
+
+  const handleDialogOpen = (data?: any) => {
+    setDialogInfo({ data, isOpen: true });
+  };
+  const handleDialogClose = (data?: any) => {
+    if (data) {
+      console.log(data);
+    }
+    setDialogInfo({ data: {}, isOpen: false });
+  };
 
   return (
     <React.Fragment>
@@ -126,6 +139,7 @@ const SelfInspectionReportComponent: React.FunctionComponent<
                                     backgroundColor: "#efefef",
                                   },
                                 }}
+                                onClick={() => handleDialogOpen()}
                               >
                                 <Queue />
                               </IconButton>
@@ -390,8 +404,7 @@ const SelfInspectionReportComponent: React.FunctionComponent<
                                 }
                                 helperText={
                                   errors.major_observations &&
-                                  (touched.major_observations ||
-                                    isSubmited) &&
+                                  (touched.major_observations || isSubmited) &&
                                   errors.major_observations
                                 }
                               />
@@ -431,8 +444,7 @@ const SelfInspectionReportComponent: React.FunctionComponent<
                                 }
                                 helperText={
                                   errors.minor_observations &&
-                                  (touched.minor_observations ||
-                                    isSubmited) &&
+                                  (touched.minor_observations || isSubmited) &&
                                   errors.minor_observations
                                 }
                               />
@@ -571,6 +583,21 @@ const SelfInspectionReportComponent: React.FunctionComponent<
           </Card>
         </Grid>
       </Grid>
+      {dialogInfo?.isOpen && (
+        <CustomDialogComponent
+          title="Inspection Report Search"
+          onClose={() => handleDialogClose()}
+          isOpen={true}
+          fullWidth
+          variant="lg"
+          hideCloseButton
+        >
+          <ObjectSearchComponent
+            data={dialogInfo?.data}
+            onClose={(data: any) => handleDialogClose(data)}
+          />
+        </CustomDialogComponent>
+      )}
     </React.Fragment>
   );
 };
