@@ -40,7 +40,7 @@ function AppSelectInput({
 }) {
   return (
     <FormControl fullWidth margin="dense" disabled={disabled}>
-      <Typography variant="caption">
+      <Typography variant="caption" color={disabled ? "#00000061" : ""}>
         {encrypted ? "#" : ""}
         {label}
         {required ? "*" : ""}

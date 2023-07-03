@@ -26,19 +26,23 @@ const SelfInspectionReportComponent: React.FunctionComponent<
   const [isLoading, setLoading] = React.useState(false);
   const [isSubmited, setSubmitted] = React.useState(false);
   const [initialData, setInitialData] = useState({
-    inspection_initiamtion_slipid: "",
+    inspection_reportid: "",
     audit_locationsid: "",
-    inspection_slip_statusid: "",
-    inspection_date: "",
-    inspection_time: "",
-    inspection_by: "",
+    area_audited: "",
+    audited_date: "",
+    inspected_by1: "",
+    inspected_by2: "",
+    inspected_by3: "",
+    inspected_by4: "",
+    inspected_by5: "",
+    critical_observations: "",
+    major_observations: "",
+    minor_observations: "",
     prepared_by: "",
+    password: "",
     prepared_date: "",
-    approved_by: "",
-    approved_date: "",
   });
   const [auditLocations, setAuditLocations] = useState([]);
-  const [inspectionStatuses, setInspectionStatuses] = useState([]);
 
   return (
     <React.Fragment>
@@ -89,27 +93,26 @@ const SelfInspectionReportComponent: React.FunctionComponent<
                   <div style={{ padding: "16px" }}>
                     <form onSubmit={handleSubmit}>
                       <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6} md={4} lg={3}>
+                        <Grid item xs={12} sm={6} md={6} lg={6}>
                           <Box display="flex">
                             <AppTextInput
-                              name="inspection_initiamtion_slipid"
-                              label="Inspection"
+                              disabled={true}
+                              name="inspection_reportid"
+                              label="Report Number"
                               type="text"
-                              value={values.inspection_initiamtion_slipid}
+                              value={values.inspection_reportid}
                               onBlur={handleBlur}
                               onChange={handleChange}
                               error={
-                                errors.inspection_initiamtion_slipid &&
-                                (touched.inspection_initiamtion_slipid ||
-                                  isSubmited)
+                                errors.inspection_reportid &&
+                                (touched.inspection_reportid || isSubmited)
                                   ? true
                                   : false
                               }
                               helperText={
-                                errors.inspection_initiamtion_slipid &&
-                                (touched.inspection_initiamtion_slipid ||
-                                  isSubmited) &&
-                                errors.inspection_initiamtion_slipid
+                                errors.inspection_reportid &&
+                                (touched.inspection_reportid || isSubmited) &&
+                                errors.inspection_reportid
                               }
                             />
                             <div>
@@ -129,11 +132,11 @@ const SelfInspectionReportComponent: React.FunctionComponent<
                             </div>
                           </Box>
                         </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={3}>
+                        <Grid item xs={12} sm={6} md={6} lg={6}>
                           <AppSelectInput
                             required={true}
                             menuItems={auditLocations}
-                            label="To Department"
+                            label="Auditee"
                             name="audit_locationsid"
                             onBlur={handleBlur}
                             onChange={(e: any) => {
@@ -154,120 +157,314 @@ const SelfInspectionReportComponent: React.FunctionComponent<
                             }
                           />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={3}>
-                          <AppSelectInput
+                        <Grid item xs={12} sm={6} md={6} lg={6}>
+                          <AppTextInput
                             required={true}
-                            disabled={
-                              !values?.inspection_initiamtion_slipid
-                                ? true
-                                : false
-                            }
-                            menuItems={inspectionStatuses}
-                            label="Status"
-                            name="inspection_slip_statusid"
+                            label="Area Audited"
+                            name="area_audited"
                             onBlur={handleBlur}
                             onChange={(e: any) => {
                               let tempValue = e?.value || null;
-                              setFieldValue(
-                                "inspection_slip_statusid",
-                                tempValue
-                              );
+                              setFieldValue("area_audited", tempValue);
                             }}
-                            value={values.inspection_slip_statusid}
+                            value={values.area_audited}
                             error={
-                              errors.inspection_slip_statusid &&
-                              (touched.inspection_slip_statusid || isSubmited)
+                              errors.area_audited &&
+                              (touched.area_audited || isSubmited)
                                 ? true
                                 : false
                             }
                             helperText={
-                              errors.inspection_slip_statusid &&
-                              (touched.inspection_slip_statusid ||
-                                isSubmited) &&
-                              errors.inspection_slip_statusid
+                              errors.area_audited &&
+                              (touched.area_audited || isSubmited) &&
+                              errors.area_audited
                             }
                           />
                         </Grid>
                         <Grid item xs={12} sm={6} md={6} lg={6}>
                           <AppDatePicker
-                            label="Self Inspection Date"
+                            label="Audit Date"
                             required={true}
-                            name="inspection_date"
+                            name="audited_date"
                             onBlur={handleBlur}
                             onChange={(e: any) => {
                               let tempValue = "";
                               if (e) {
                                 tempValue = moment(e).toISOString();
                               }
-                              setFieldValue("inspection_date", tempValue);
+                              setFieldValue("audited_date", tempValue);
                             }}
-                            value={values?.inspection_date || ""}
-                            minDate={moment()}
+                            value={values?.audited_date || ""}
                             error={
-                              errors.inspection_date &&
-                              (touched.inspection_date || isSubmited)
+                              errors.audited_date &&
+                              (touched.audited_date || isSubmited)
                                 ? true
                                 : false
                             }
                             helperText={
-                              errors.inspection_date &&
-                              (touched.inspection_date || isSubmited) &&
-                              errors.inspection_date
-                            }
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6} lg={6}>
-                          <AppTextInput
-                            required={true}
-                            name="inspection_time"
-                            label="Inspection Time"
-                            type="text"
-                            value={values.inspection_time}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={
-                              errors.inspection_time &&
-                              (touched.inspection_time || isSubmited)
-                                ? true
-                                : false
-                            }
-                            helperText={
-                              errors.inspection_time &&
-                              (touched.inspection_time || isSubmited) &&
-                              errors.inspection_time
-                            }
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6} lg={6}>
-                          <AppTextInput
-                            required={true}
-                            name="inspection_by"
-                            label="Inspectors Name"
-                            type="text"
-                            value={values.inspection_by}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={
-                              errors.inspection_by &&
-                              (touched.inspection_by || isSubmited)
-                                ? true
-                                : false
-                            }
-                            helperText={
-                              errors.inspection_by &&
-                              (touched.inspection_by || isSubmited) &&
-                              errors.inspection_by
+                              errors.audited_date &&
+                              (touched.audited_date || isSubmited) &&
+                              errors.audited_date
                             }
                           />
                         </Grid>
                         <Grid item xs={12}>
                           <Grid container spacing={2}>
+                            <Grid item xs={12} sm={12} md={2} lg={1}>
+                              <Typography marginTop={1}>
+                                Inspected By
+                              </Typography>
+                            </Grid>
                             <Grid item xs={12} sm={12} md={6} lg={6}>
+                              <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                  <AppTextInput
+                                    required={true}
+                                    name="inspected_by1"
+                                    type="text"
+                                    value={values.inspected_by1}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={
+                                      errors.inspected_by1 &&
+                                      (touched.inspected_by1 || isSubmited)
+                                        ? true
+                                        : false
+                                    }
+                                    helperText={
+                                      errors.inspected_by1 &&
+                                      (touched.inspected_by1 || isSubmited) &&
+                                      errors.inspected_by1
+                                    }
+                                  />
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <AppTextInput
+                                    required={true}
+                                    name="inspected_by2"
+                                    type="text"
+                                    value={values.inspected_by2}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={
+                                      errors.inspected_by2 &&
+                                      (touched.inspected_by2 || isSubmited)
+                                        ? true
+                                        : false
+                                    }
+                                    helperText={
+                                      errors.inspected_by2 &&
+                                      (touched.inspected_by2 || isSubmited) &&
+                                      errors.inspected_by2
+                                    }
+                                  />
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <AppTextInput
+                                    required={true}
+                                    name="inspected_by3"
+                                    type="text"
+                                    value={values.inspected_by3}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={
+                                      errors.inspected_by3 &&
+                                      (touched.inspected_by3 || isSubmited)
+                                        ? true
+                                        : false
+                                    }
+                                    helperText={
+                                      errors.inspected_by3 &&
+                                      (touched.inspected_by3 || isSubmited) &&
+                                      errors.inspected_by3
+                                    }
+                                  />
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <AppTextInput
+                                    required={true}
+                                    name="inspected_by4"
+                                    type="text"
+                                    value={values.inspected_by4}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={
+                                      errors.inspected_by4 &&
+                                      (touched.inspected_by4 || isSubmited)
+                                        ? true
+                                        : false
+                                    }
+                                    helperText={
+                                      errors.inspected_by4 &&
+                                      (touched.inspected_by4 || isSubmited) &&
+                                      errors.inspected_by4
+                                    }
+                                  />
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <AppTextInput
+                                    required={true}
+                                    name="inspected_by5"
+                                    type="text"
+                                    value={values.inspected_by5}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={
+                                      errors.inspected_by5 &&
+                                      (touched.inspected_by5 || isSubmited)
+                                        ? true
+                                        : false
+                                    }
+                                    helperText={
+                                      errors.inspected_by5 &&
+                                      (touched.inspected_by5 || isSubmited) &&
+                                      errors.inspected_by5
+                                    }
+                                  />
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography fontWeight={800}>
+                            Inspection Observation
+                          </Typography>
+                          <Grid container spacing={2}>
+                            <Grid item xs={12} sm={12} md={12} lg={12}>
+                              <AppTextInput
+                                name="critical_observations"
+                                label="Critical"
+                                type="text"
+                                value={values.critical_observations}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                multiline={true}
+                                rows={2}
+                                error={
+                                  errors.critical_observations &&
+                                  (touched.critical_observations || isSubmited)
+                                    ? true
+                                    : false
+                                }
+                                helperText={
+                                  errors.critical_observations &&
+                                  (touched.critical_observations ||
+                                    isSubmited) &&
+                                  errors.critical_observations
+                                }
+                              />
+                              <Typography
+                                variant="caption"
+                                display="flex"
+                                justifyContent="end"
+                                color={
+                                  values?.critical_observations &&
+                                  String(values.critical_observations)?.length >
+                                    150
+                                    ? "red"
+                                    : "inherit"
+                                }
+                              >
+                                {values.critical_observations
+                                  ? String(values.critical_observations)?.length
+                                  : 0}
+                                /150
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={12} lg={12}>
+                              <AppTextInput
+                                name="major_observations"
+                                label="Major"
+                                type="text"
+                                value={values.major_observations}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                multiline={true}
+                                rows={2}
+                                error={
+                                  errors.major_observations &&
+                                  (touched.major_observations || isSubmited)
+                                    ? true
+                                    : false
+                                }
+                                helperText={
+                                  errors.major_observations &&
+                                  (touched.major_observations ||
+                                    isSubmited) &&
+                                  errors.major_observations
+                                }
+                              />
+                              <Typography
+                                variant="caption"
+                                display="flex"
+                                justifyContent="end"
+                                color={
+                                  values?.major_observations &&
+                                  String(values.major_observations)?.length >
+                                    150
+                                    ? "red"
+                                    : "inherit"
+                                }
+                              >
+                                {values.major_observations
+                                  ? String(values.major_observations)?.length
+                                  : 0}
+                                /150
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={12} lg={12}>
+                              <AppTextInput
+                                name="minor_observations"
+                                label="Minor"
+                                type="text"
+                                value={values.minor_observations}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                multiline={true}
+                                rows={2}
+                                error={
+                                  errors.minor_observations &&
+                                  (touched.minor_observations || isSubmited)
+                                    ? true
+                                    : false
+                                }
+                                helperText={
+                                  errors.minor_observations &&
+                                  (touched.minor_observations ||
+                                    isSubmited) &&
+                                  errors.minor_observations
+                                }
+                              />
+                              <Typography
+                                variant="caption"
+                                display="flex"
+                                justifyContent="end"
+                                color={
+                                  values?.minor_observations &&
+                                  String(values.minor_observations)?.length >
+                                    150
+                                    ? "red"
+                                    : "inherit"
+                                }
+                              >
+                                {values.minor_observations
+                                  ? String(values.minor_observations)?.length
+                                  : 0}
+                                /150
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography>Report prepared By</Typography>
+                          <Grid container spacing={2}>
+                            <Grid item xs={12} sm={12} md={4} lg={3}>
                               <AppTextInput
                                 required={true}
                                 disabled={true}
                                 name="prepared_by"
-                                label="Prepared By"
+                                label="User ID"
                                 type="text"
                                 value={values.prepared_by}
                                 onBlur={handleBlur}
@@ -285,12 +482,34 @@ const SelfInspectionReportComponent: React.FunctionComponent<
                                 }
                               />
                             </Grid>
-                            <Grid item xs={12} sm={12} md={6} lg={6}>
+                            <Grid item xs={12} sm={12} md={4} lg={3}>
+                              <AppTextInput
+                                name="password"
+                                label="Password"
+                                type="text"
+                                value={values.password}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={
+                                  errors.password &&
+                                  (touched.password || isSubmited)
+                                    ? true
+                                    : false
+                                }
+                                helperText={
+                                  errors.password &&
+                                  (touched.password || isSubmited) &&
+                                  errors.password
+                                }
+                              />
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={4} lg={3}>
                               <AppDatePicker
-                                label="Prepared Date"
                                 required={true}
                                 disabled={true}
                                 name="prepared_date"
+                                label="Prepared Date"
                                 onBlur={handleBlur}
                                 onChange={(e: any) => {
                                   let tempValue = "";
@@ -311,60 +530,6 @@ const SelfInspectionReportComponent: React.FunctionComponent<
                                   errors.prepared_date &&
                                   (touched.prepared_date || isSubmited) &&
                                   errors.prepared_date
-                                }
-                              />
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Grid container spacing={2}>
-                            <Grid item xs={12} sm={12} md={6} lg={6}>
-                              <AppTextInput
-                                required={true}
-                                name="prepared_by"
-                                label="Approved By"
-                                type="text"
-                                value={values.approved_by}
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                error={
-                                  errors.approved_by &&
-                                  (touched.approved_by || isSubmited)
-                                    ? true
-                                    : false
-                                }
-                                helperText={
-                                  errors.approved_by &&
-                                  (touched.approved_by || isSubmited) &&
-                                  errors.approved_by
-                                }
-                              />
-                            </Grid>
-                            <Grid item xs={12} sm={12} md={6} lg={6}>
-                              <AppDatePicker
-                                label="Approved Date"
-                                required={true}
-                                name="approved_date"
-                                onBlur={handleBlur}
-                                onChange={(e: any) => {
-                                  let tempValue = "";
-                                  if (e) {
-                                    tempValue = moment(e).toISOString();
-                                  }
-                                  setFieldValue("approved_date", tempValue);
-                                }}
-                                value={values?.approved_date || ""}
-                                minDate={moment()}
-                                error={
-                                  errors.approved_date &&
-                                  (touched.approved_date || isSubmited)
-                                    ? true
-                                    : false
-                                }
-                                helperText={
-                                  errors.approved_date &&
-                                  (touched.approved_date || isSubmited) &&
-                                  errors.approved_date
                                 }
                               />
                             </Grid>
