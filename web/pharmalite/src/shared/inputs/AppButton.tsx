@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, SxProps, Theme } from "@mui/material";
 import React from "react";
 
 function AppButton({
@@ -14,6 +14,7 @@ function AppButton({
   fullWidth,
   autoFocus,
   children,
+  sx,
   ...rest
 }: {
   btnText: string;
@@ -28,6 +29,7 @@ function AppButton({
   fullWidth?: boolean;
   autoFocus?: boolean;
   children?: React.ReactNode;
+  sx?: SxProps<Theme>;
 }) {
   return (
     <Button
@@ -41,6 +43,7 @@ function AppButton({
       color={color || "primary"}
       className={className}
       autoFocus={autoFocus}
+      sx={sx}
       {...rest}
     >
       {children}
