@@ -529,7 +529,14 @@ const ModelingTypesComponent: React.FunctionComponent<
                                   disabled={item.readOnly != 0}
                                   onBlur={handleBlur}
                                   onChange={(e: any) => {
-                                    let tempValue = e?.value || null;
+                                    let tempValue = e?.value;
+                                    if(!e?.value){
+                                      if(e?.value === 0){
+                                        tempValue = 0;
+                                      }else{
+                                        tempValue = e?.value || null
+                                      }
+                                    }
                                     setFieldValue(item.field_name, tempValue);
                                   }}
                                   value={values[item.field_name]}

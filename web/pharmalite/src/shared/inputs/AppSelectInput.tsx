@@ -68,7 +68,7 @@ function AppSelectInput({
           ))}
       </Select> */}
       <Autocomplete
-        value={value ? menuItems.find((e) =>e.value === value) : ""}
+        value={(value || value===0) ? menuItems.find((e) =>e.value === value) : ""}
         className={className}
         options={menuItems}
         disabled={disabled}
