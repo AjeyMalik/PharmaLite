@@ -1,5 +1,5 @@
 import AuthLayout from "index/components/common/AuthLayout";
-import BMRcancel from "index/components/bmr/BMRcancel";
+
 import { getCompany } from "index/services/util/UtilService";
 import Head from "next/head";
 import * as React from "react";

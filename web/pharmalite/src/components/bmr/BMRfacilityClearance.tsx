@@ -26,6 +26,8 @@ import CustomDialogComponent from "../common/CustomDialogComponent";
 import AppSelectInput from "index/shared/inputs/AppSelectInput";
 import AppTextInput from "index/shared/inputs/AppTextInput";
 import AppButton from "index/shared/inputs/AppButton";
+import AppDateSelect from "index/shared/inputs/AppDateSelect";
+
 interface BMRfacilityClearanceProps {};
 const BMRfacilityClearance: React.FunctionComponent<BMRfacilityClearanceProps> = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -49,21 +51,25 @@ const BMRfacilityClearance: React.FunctionComponent<BMRfacilityClearanceProps> =
     <>
       <Grid container >
         <Grid item xs={12}>
-          <Typography fontWeight="bold">BMR Cancellation Requisition</Typography>
+          <Typography fontWeight="bold">Facility Clearance</Typography>
           <Grid item xs={12}>
             <Formik
               initialValues={
                 {
-                  bmrNumber: "",
-                  Product: "",
-                  BatchNumber: "",
-                  ReasonCanc: "",
-                  MFGdate: "",
-                  EXPdate: "",
-                  CancelWreq:"",
-                  matDisp:"",
-                  Warehouse:"",
-                  RetNum:"",
+                  fmrNumber: "",
+                  ReqDate: "",
+                  Description: "",
+                  WorkOrderType: "facility clearance",
+                  FmrStatus: "",
+                  TypeClean: "",
+                  Area:"",
+                  ProdLine:"",
+                  LastProdMan:"",
+                  LastBatchCompDate:"",
+                  NextProdPlanned:"",
+                  NextBatchDate:"",
+                  RequestBy:"superadmin",
+                  ReceivedBy:"",
                  
                 } 
                 
@@ -88,16 +94,16 @@ const BMRfacilityClearance: React.FunctionComponent<BMRfacilityClearanceProps> =
                 <Card sx={{ px:8 ,my:2}}>
                   <form onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
-                      <Grid item xs={5} sm={5} md={5} lg={5}>
+                    <Grid item xs={5} sm={5} md={5} lg={5}>
                         <FormControl margin="normal" required fullWidth>
                           <AppTextInput
-                            name="bmrNumber"
-                            label="BMR Number"
+                            name="fmrNumber"
+                            label="FMR Number"
                             type="text"
                             onChange={handleChange}
                             onBlur={handleBlur}
                            
-                            value={values.bmrNumber}
+                            value={values.fmrNumber}
                           />
                         </FormControl>
                       </Grid>
@@ -115,35 +121,35 @@ const BMRfacilityClearance: React.FunctionComponent<BMRfacilityClearanceProps> =
                       </Grid>
                       <Grid item xs={6} sm={6} md={6} lg={6}>
                         <FormControl margin="normal" required fullWidth>
-                          <AppTextInput
-                            name="Product"
-                            label="Product"
-                            type="text"
+                          <AppDateSelect 
+                            name="ReqDate"
+                            label="Requisition Date"
+                            
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={values.Product}
+                            value={values.ReqDate}
                           />
                         </FormControl>
                       </Grid>
-                      <Grid item xs={6} sm={6} md={6} lg={6}>
+                      <Grid item xs={10} sm={10} md={10} lg={10}>
                         <FormControl margin="normal" required fullWidth>
                           <AppTextInput
-                            name="BatchNumber"
-                            label="Batch Number"
+                            name="Description"
+                            label="Description"
                             type="text"
                             onChange={handleChange}
                             onBlur={handleBlur}
                             
-                            value={values.BatchNumber}
+                            value={values.Description}
                           />
                         </FormControl>
                       </Grid>
-                      <Grid item xs={6} sm={6} md={6} lg={6}>
+                      <Grid item xs={2} sm={2} md={2} lg={2}>
                         <FormControl margin="normal" required fullWidth>
                           <AppSelectInput
-                            name="ReasonCanc"
-                            label="Reason For Cancellation"
-                            menuItems={[{label:"sjcbjd",value:"sjvbsbdv"}]}
+                            name="WorkOrderType"
+                            label="Work Order Type"
+                            menuItems={[{label:"Facility Clearance",value:"Facility Clearance"}]}
                            onChange={(e: any) => {
 
                                     let tempValue = e?.value || null;
@@ -153,131 +159,175 @@ const BMRfacilityClearance: React.FunctionComponent<BMRfacilityClearanceProps> =
  }}
                             onBlur={handleBlur}
                            
-                            value={values.ReasonCanc}
+                            value={values.WorkOrderType}
                           ></AppSelectInput>
                         </FormControl>
                       </Grid>
-                      <Grid item xs={6} sm={6} md={6} lg={6}>
+                      <Grid item xs={3} sm={3} md={3} lg={3}>
+                        <FormControl margin="normal" required fullWidth>
+                          <AppSelectInput
+                            name="FmrStatus"
+                            label="FMR Status"
+                            menuItems={[{label:"Not Started",value:"0"},{label:"Partially Completed" ,value:"1"},{label:"Completed",value:"2"}]}
+                           onChange={(e: any) => {
+
+                                    let tempValue = e?.value || null;
+
+                                    setFieldValue("ReasonCanc", tempValue);
+
+ }}
+                            onBlur={handleBlur}
+                           
+                            value={values.WorkOrderType}
+                          ></AppSelectInput>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={3} sm={3} md={3} lg={3}>
+                        <FormControl margin="normal" required fullWidth>
+                          <AppSelectInput
+                            name="TypeClean"
+                            label="Type of cleaning"
+                            menuItems={[{label:"Type-A Cleaning",value:"A"},{label:"Type-B Cleaning" ,value:"B"},{label:"Type-C Cleaning",value:"C"}]}
+                           onChange={(e: any) => {
+
+                                    let tempValue = e?.value || null;
+
+                                    setFieldValue("ReasonCanc", tempValue);
+
+ }}
+                            onBlur={handleBlur}
+                           
+                            value={values.WorkOrderType}
+                          ></AppSelectInput>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
                           <AppTextInput
-                            name="MFGdate"
-                            label="MFG Date"
+                            name="Area"
+                            label="Area"
                             type="text"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                        
-                            value={values.MFGdate}
+                            value={values.Area}
                           />
                         </FormControl>
                       </Grid>
-                      <Grid item xs={6} sm={6} md={6} lg={6}>
+                      <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl margin="normal" required fullWidth>
                           <AppTextInput
-                            name="EXPdate"
-                            label="EXP Date"
+                            name="ProdLine"
+                            label="Production Line"
+                            type="text"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.ProdLine}
+                          />
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={5} sm={5} md={5} lg={5}>
+                        <FormControl margin="normal" required fullWidth>
+                          <AppTextInput
+                            name="LastProdMan"
+                            label="Last Product Manufactured"
                             type="text"
                             onChange={handleChange}
                             onBlur={handleBlur}
                            
-                            value={values.EXPdate}
+                            value={values.LastProdMan}
                           />
                         </FormControl>
                       </Grid>
-
-                      <Grid item xs={12} sm={12} md={12} lg={12}>
+                      <Grid item xs={1}>
+                        <IconButton
+                          color="primary"
+                          onClick={() => setIsDialog(true)}
+                          sx={{
+                            backgroundColor: "whitesmoke",
+                            marginTop: "55%",
+                          }}
+                        >
+                          <QueueIcon />
+                        </IconButton>
+                      </Grid>
+                   
+                      <Grid item xs={6} sm={6} md={6} lg={6}>
                         <FormControl margin="normal" required fullWidth>
-                                <FormLabel id="demo-row-radio-buttons-group-label">Whether the cancelled returned along with request</FormLabel>
-                                <RadioGroup
-                                    row
-                                    aria-labelledby="demo-row-radio-buttons-group-label"
-                                
-                                    name="CancelWreq"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}                    
-                                    value={values.CancelWreq}
-                                                        
-                                >
-                                    <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                                    <FormControlLabel value="no" control={<Radio />} label="No" />
-                                </RadioGroup>
+                          <AppDateSelect 
+                            name="LastBatchCompDate"
+                            label="Last Batch Completion Date"
+                            
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.LastBatchCompDate}
+                          />
                         </FormControl>
                       </Grid>
-
-                      <Grid item xs={12} sm={12} md={12} lg={12}>
-                        <FormControl margin="normal" required fullWidth>
-                                <FormLabel id="demo-row-radio-buttons-group-label">Whether Material Dispensed</FormLabel>
-                                <RadioGroup
-                                    row
-                                    aria-labelledby="demo-row-radio-buttons-group-label"
-                                
-                                    name="matDisp"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}                    
-                                    value={values.matDisp}
-                                                        
-                                >
-                                    <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                                    <FormControlLabel value="no" control={<Radio />} label="No" />
-                                </RadioGroup>
-                        </FormControl>
-                      </Grid>
-                       
-
-                     {(values.matDisp=='yes')?<Grid item xs={12} sm={12} md={12} lg={12}>
-                        <FormControl margin="normal" required fullWidth>
-                                <FormLabel id="demo-row-radio-buttons-group-label">If yes, whether returned to Warehouse</FormLabel>
-                                <RadioGroup
-                                    row
-                                    aria-labelledby="demo-row-radio-buttons-group-label"
-                                
-                                    name="Warehouse"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}                    
-                                    value={values.Warehouse}
-                                                        
-                                >
-                                    <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                                    <FormControlLabel value="no" control={<Radio />} label="No" />
-                                </RadioGroup>
-                        </FormControl>
-                      </Grid>:<Grid item xs={12} sm={12} md={12} lg={12}>
-                        <FormControl margin="normal" required fullWidth>
-                                <FormLabel id="demo-row-radio-buttons-group-label">If yes, whether returned to Warehouse</FormLabel>
-                                <RadioGroup
-                                   
-                                    row
-                                    aria-labelledby="demo-row-radio-buttons-group-label"
-                                
-                                    name="Warehouse"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}                    
-                                    value={values.Warehouse}
-                                                        
-                                >
-                                    <FormControlLabel  disabled value="yes" control={<Radio />} label="Yes" />
-                                    <FormControlLabel  disabled value="no" control={<Radio />} label="No" />
-                                </RadioGroup>
-                        </FormControl>
-                      </Grid>}  
-                      <Grid item xs={12} sm={12} md={12} lg={12}>
+                      <Grid item xs={5} sm={5} md={5} lg={5}>
                         <FormControl margin="normal" required fullWidth>
                           <AppTextInput
-                            name="RetNum"
-                            label="Material Return Note number"
+                            name="NextProdPlanned"
+                            label="Next Product Planned"
                             type="text"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                        
-                            value={values.RetNum}
+                            value={values.NextProdPlanned}
                           />
                         </FormControl>
                       </Grid>
-                      
-                      
-                      
-                     
-                     
-                     
+                      <Grid item xs={1}>
+                        <IconButton
+                          color="primary"
+                          onClick={() => setIsDialog(true)}
+                          sx={{
+                            backgroundColor: "whitesmoke",
+                            marginTop: "55%",
+                          }}
+                        >
+                          <QueueIcon />
+                        </IconButton>
+                      </Grid>
+                      <Grid item xs={6} sm={6} md={6} lg={6}>
+                        <FormControl margin="normal" required fullWidth>
+                          <AppDateSelect 
+                            name="LastBatchCompDate"
+                            label="Next Batch Planned on Date"
+                            
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.NextBatchDate}
+                          />
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={6} sm={6} md={6} lg={6}>
+                        <FormControl margin="normal" required fullWidth>
+                          <AppTextInput
+                            name="RequestBy"
+                            label="Request By"
+                            type="text"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                           
+                            value={values.RequestBy}
+                          />
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={6} sm={6} md={6} lg={6}>
+                        <FormControl margin="normal" required fullWidth>
+                          <AppTextInput
+                            name="ReceivedBy"
+                            label="Received By"
+                            type="text"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                           
+                            value={values.ReceivedBy}
+                          />
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={8} sm={8} md={8} lg={8}>
+                      </Grid>
+                       
                       <Grid item xs={12} sm={12} md={12} lg={12}>
                         <br />
                         <Grid container justifyContent="flex-end" spacing={2} marginBottom={2}>
@@ -298,11 +348,12 @@ const BMRfacilityClearance: React.FunctionComponent<BMRfacilityClearanceProps> =
                               color="primary"
                               disabled={isSubmitting}
                               onClick={() => setIsSubmitted(true)}
-                              btnText="Submit"/>
+                              btnText="Save"/>
                             
                           </Grid>
                         </Grid>
                       </Grid>
+
                     </Grid>
                   </form>
                   {data && (
