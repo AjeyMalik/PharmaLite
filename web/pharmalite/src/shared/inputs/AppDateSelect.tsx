@@ -3,7 +3,7 @@ import { FormControl } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import moment from "moment";
 
-function AppDatePicker({
+function AppDateSelect({
   name,
   value,
   label,
@@ -18,10 +18,11 @@ function AppDatePicker({
   minDate,
   required,
   encrypted,
+  type,
   ...rest
 }: {
   name?: string;
-  value: any;
+  value: string;
   className?: string;
   label?: string;
   disabled?: boolean;
@@ -32,14 +33,17 @@ function AppDatePicker({
   helperText?: any;
   maxDate?: any;
   minDate?: any;
-  required?:boolean
-  encrypted?:boolean
+  required?:boolean;
+  encrypted?:boolean;
+  type:DateConstructor;
 }) {
   return (
     <FormControl fullWidth margin="dense">
       <DatePicker
         label={`${encrypted?'#':''}${label}${required?'*':''}`}
         format="DD/MM/YYYY"
+               
+        
         value={value ? moment(value) : ""}
         onChange={onChange}
         maxDate={maxDate}
@@ -47,6 +51,7 @@ function AppDatePicker({
         disabled={disabled}
         slotProps={{
           textField: {
+            
             name: name,
             variant: "standard",
             onBlur: onBlur,
@@ -55,9 +60,10 @@ function AppDatePicker({
           },
         }}
         {...rest}
+        
       />
     </FormControl>
   );
 }
 
-export default AppDatePicker;
+export default AppDateSelect;

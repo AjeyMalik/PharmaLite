@@ -12,7 +12,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { Formik } from "formik";
+import { Form, Formik, FormikContext } from "formik";
 import { IGRNdetails } from "index/vm";
 import BMRSearch from "./BmrSearchDialog";
 // import AppTextInput from "";
@@ -27,6 +27,7 @@ import AppSelectInput from "index/shared/inputs/AppSelectInput";
 import AppTextInput from "index/shared/inputs/AppTextInput";
 import AppButton from "index/shared/inputs/AppButton";
 import AppDateSelect from "index/shared/inputs/AppDateSelect";
+import { setConstantValue } from "typescript";
 
 interface BMRfacilityClearanceProps {};
 const BMRfacilityClearance: React.FunctionComponent<BMRfacilityClearanceProps> = () => {
@@ -47,6 +48,11 @@ const BMRfacilityClearance: React.FunctionComponent<BMRfacilityClearanceProps> =
     { name: "Available Quantity" },
     { name: "Distr.Note" },
   ];
+  const handleChange1=(values:any)=>{
+      
+  }
+ 
+  
   return (
     <>
       <Grid container >
@@ -79,6 +85,7 @@ const BMRfacilityClearance: React.FunctionComponent<BMRfacilityClearanceProps> =
                 const obj = { ...values };
                 console.log(obj);
               }}
+
             >
               {({
                 values,
@@ -121,13 +128,23 @@ const BMRfacilityClearance: React.FunctionComponent<BMRfacilityClearanceProps> =
                       </Grid>
                       <Grid item xs={6} sm={6} md={6} lg={6}>
                         <FormControl margin="normal" required fullWidth>
-                          <AppDateSelect 
+                          <AppDateSelect
+                           
                             name="ReqDate"
                             label="Requisition Date"
+                            type={Date}
                             
-                            onChange={handleChange}
-                            onBlur={handleBlur}
+                            onChange={(e: any) => {
+
+                              let tempValue = e?.value || null;
+
+                              setFieldValue("ReqDate", tempValue);
+
+}}
                             value={values.ReqDate}
+                            
+                            onBlur={handleBlur}
+                            
                           />
                         </FormControl>
                       </Grid>
@@ -256,10 +273,17 @@ const BMRfacilityClearance: React.FunctionComponent<BMRfacilityClearanceProps> =
                           <AppDateSelect 
                             name="LastBatchCompDate"
                             label="Last Batch Completion Date"
+                            type={Date}
+                            onChange={(e: any) => {
+
+                              let tempValue = e?.value || null;
+
+                              setFieldValue("LastBatchCompDate", tempValue);
+
+}}
                             
-                            onChange={handleChange}
-                            onBlur={handleBlur}
                             value={values.LastBatchCompDate}
+                            onBlur={handleBlur}
                           />
                         </FormControl>
                       </Grid>
@@ -290,12 +314,18 @@ const BMRfacilityClearance: React.FunctionComponent<BMRfacilityClearanceProps> =
                       <Grid item xs={6} sm={6} md={6} lg={6}>
                         <FormControl margin="normal" required fullWidth>
                           <AppDateSelect 
-                            name="LastBatchCompDate"
+                            name="NextBatchDate"
                             label="Next Batch Planned on Date"
-                            
-                            onChange={handleChange}
-                            onBlur={handleBlur}
+                            type={Date}
+                            onChange={(e: any) => {
+
+                              let tempValue = e?.value || null;
+
+                              setFieldValue("NextBatchDate", tempValue);
+
+}}
                             value={values.NextBatchDate}
+                            onBlur={handleBlur}
                           />
                         </FormControl>
                       </Grid>
