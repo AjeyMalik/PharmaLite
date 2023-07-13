@@ -132,7 +132,7 @@ const BMRfacilityClearance: React.FunctionComponent<BMRfacilityClearanceProps> =
                            
                             name="ReqDate"
                             label="Requisition Date"
-                            type={Date}
+                            
                             
                             onChange={(e: any) => {
 
@@ -273,7 +273,7 @@ const BMRfacilityClearance: React.FunctionComponent<BMRfacilityClearanceProps> =
                           <AppDateSelect 
                             name="LastBatchCompDate"
                             label="Last Batch Completion Date"
-                            type={Date}
+                           
                             onChange={(e: any) => {
 
                               let tempValue = e?.value || null;
@@ -316,7 +316,7 @@ const BMRfacilityClearance: React.FunctionComponent<BMRfacilityClearanceProps> =
                           <AppDateSelect 
                             name="NextBatchDate"
                             label="Next Batch Planned on Date"
-                            type={Date}
+                            
                             onChange={(e: any) => {
 
                               let tempValue = e?.value || null;
