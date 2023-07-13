@@ -18,7 +18,7 @@ function AppDateSelect({
   minDate,
   required,
   encrypted,
-  type,
+ 
   ...rest
 }: {
   name?: string;
@@ -35,7 +35,7 @@ function AppDateSelect({
   minDate?: any;
   required?:boolean;
   encrypted?:boolean;
-  type:DateConstructor;
+  
 }) {
   return (
     <FormControl fullWidth margin="dense">
